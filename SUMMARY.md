@@ -1,5 +1,5 @@
 # Table of contents
 
-* [Module 0：Welcome to the self-driving cars specialization](README.md)
-* [Module 1：The Requirements for Autonomy](module-1-the-requirements-for-autonomy.md)
+* [Module 0：Welcome to the self-driving cars specialization](Module0-Welcome to the self-driving cars specialization/Module0 - Welcome to the self-driving cars specialization.md)
+* [Module 1：The Requirements for Autonomy](Module1-The Requirements for Autonomy/Module1 - The Requirements for Autonomy.md)
 
