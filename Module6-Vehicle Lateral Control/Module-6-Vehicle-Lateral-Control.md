@@ -10,7 +10,7 @@
 
 ---
 
-# Learning Objectives
+## Learning Objectives
 
 Welcome to this week's first lesson. In the previous module, we learned some basic longitudinal control for autonomous car controlled development. In this module, we will go through the lateral control. We will cover four lessons this week.
 
@@ -203,7 +203,7 @@ Let's summarize. In this lesson, we defined the class of geometric path tracking
 
 ---
 
-## Lesson 3: Geometric Lateral Control - Stanley
+# Lesson 3: Geometric Lateral Control - Stanley
 
 Welcome back. In the last lesson, we derived the pure pursuit controller, a geometric path tracking controller that defined steering input based on a look ahead reference point. 
 
@@ -217,7 +217,7 @@ Let's get started.
 
 ---
 
-### 1. Stanley Controller Approach
+## 1. Stanley Controller Approach
 
 The Stanley controller is a geometric path tracking controller which is simple but useful for autonomous robotics and autonomous cars. 
 
@@ -238,7 +238,7 @@ Dr. Hoffman was seeking a control law with global convergence to the path and pr
 
 ---
 
-### 2. Heading control law
+## 2. Heading control law
 
 Let's define each of the terms of the Stanley controller. 
 
@@ -267,17 +267,13 @@ The similarities with the pure pursuit controller are not surprising, as both ar
 
 ---
 
-### 3. Combind steering law
+## 3. Combind steering law
 
 The final control law simply combines these three elements to set the steering angle of the car as follows. 
 
 $$\delta(t) = \psi(t) + tan^{-1}(\frac{ke(t)}{v_f(t)}),  \delta(t)\in[\delta_{min},\delta_{max}]$$
 
 Let's now take a look at what's steering angle is requested for different error signals.  For heading error, the steering command points in the opposite direction to the heading error, causing the vehicle to turn to correct the misalignment with the path. For large heading errors, for example, if the heading error exceeds the maximum steering angle, this part of the controller requests the maximum steering command until alignment falls back within the available balance. 
-
----
-
-### 4. Combined steering law
 
 For large positive cross track error, ke over vf becomes large and the inverse tangent approaches Pi over 2. So we can approximate the Stanley control law as the heading error plus Pi over 2. 
 
@@ -295,7 +291,7 @@ The vehicle then proceeds straight to the path until the cross track error decre
 
 ---
 
-### 5. Error Dynamics
+## 4. Error Dynamics
 
 As it turns out, it's possible to use our expression for the cross track aerodynamics defined in the first video of this module to get a sense for the convergence characteristics of the Stanley controller. 
 
@@ -311,7 +307,7 @@ This leads to the realization that the cross track error evolution follows a fir
 
 ---
 
-### 6. Case Study
+## 5. Case Study
 
 Let's now dive into a simulation example of the error dynamics for the Stanley controller to observe its convergence characteristics. 
 
@@ -337,7 +333,7 @@ In fact, it comes with a global stability proof, meaning that no matter what the
 
 ---
 
-### 7. Adjustment
+## 6. Adjustment
 
 During low-speed operation, the pure pursuit and Stanley controllers can behave quite aggressively when confronted with noisy velocity estimates. 
 
@@ -351,13 +347,13 @@ Finally, for curved paths with high curvature, the controller fails to track the
 
 ---
 
-### 8. Summary
+## 7. Summary
 
 In this lesson, you learned how to apply the Stanley controller as a geometric path tracking controller, what the convergence properties are for the Stanley controller and how to add further enhancements that improve the controllers real-world performance. In the next video, we'll introduce the model predictive control method and advanced model-based control method that can overcome many of the limitations of geometric controllers. See you next time.
 
 ---
 
-## Lesson 4: Advanced Steering Control - MPC
+# Lesson 4: Advanced Steering Control - MPC
 
 Welcome back. In the last video, we studied the Stanley controller for lateral path tracking control. In this video, we will explore an advanced applied control strategy, known as Model Predictive Control or MPC, to understand how to incorporate dynamic modeling into controller design. 
 
@@ -371,7 +367,7 @@ Let's dive in.
 
 ---
 
-### 1. Model predictive control
+## 1. Model predictive control
 
 First, let's quickly go through the key aspects of Model Predictive Control. **MPC refers to the control design approach that numerically solves an optimization problem at each time-step**. Because solving an optimization problem at each time step can take time, MPC was originally applied to slow processes such as industrial chemical processing. 
 
@@ -395,7 +391,7 @@ It is certainly possible to create optimization formulations that are too expens
 
 ---
 
-### 2. Receding horizon Control
+## 2. Receding horizon Control
 
 Before we start designing MPC controllers, let's take a closer look at the concept of Receding Horizon. Receding Horizon Control solves a fixed size optimization at each time-step, which identifies optimal control inputs to apply from the current time to the end of the horizon based on the objectives constraints and current state of the vehicle. One issue that arises in implementation however, is that because optimization can take some amount of time, the state of the vehicle when starting the optimization, will be different from the state of the vehicle when completing the optimization. 
 
@@ -407,7 +403,7 @@ First, we define the receding horizon length t. Then, we set the initial state f
 
 ---
 
-### 3. MPC structure
+## 3. MPC structure
 
 We can visualize the Receding Horizon or MPC Algorithm, using the following block diagram for a control. 
 
@@ -419,7 +415,7 @@ The optimizer also receives updated constraints and the cost function to use, wh
 
 ---
 
-### 4. Linear MPC formulation
+## 4. Linear MPC formulation
 
 Now, let's take a look at the linear MPC design in particular. We use the state space formulation which represents a motion model in discrete form. The future states are linearly related to the current states and the actuator signals. Note that, A and B are the coefficient matrices and are assumed to be time-invariant.
 
@@ -441,7 +437,7 @@ $$\delta x_{j|t}=x_{j|t,des}-x_{j|t} \\ J(x(t),U) = \sum_{j=t}^{t+T-1}x^{T}_{j|t
 
 ---
 
-### 5. Linear MPC SOLUTION
+## 5. Linear MPC SOLUTION
 
 This is a famous optimization formulation and has a closed form solution, the Linear Quadratic Regulator or LQR. The closed form solution uses full state feedback, meaning that all states are used in the control response. **The LQR solution defines a control gain matrix K**, which can be computed from the A and B matrices of the state-space model and the Q and R matrices of the cost function. 
 
@@ -457,7 +453,7 @@ Linear quadratic regulator,provides a closed form solution
 
 ---
 
-### 6. (Non)Linear MPC formulation
+## 6. (Non)Linear MPC formulation
 
 In the more general case, the objective function is any differentiable non-linear function of a state and inputs over the receding horizon. The constraints imposed on the optimization can include; non-linear dynamic models of motion, state and input bounds that capture things like maximum steering angles, and any other inequality constraints g are equality constraints h that affect our system. 
 
@@ -467,7 +463,7 @@ For such a general optimization problem however, no closed form solution exists.
 
 ---
 
-### 7. Vehicle Lateral Control
+## 7. Vehicle Lateral Control
 
 Let's now look at the implementation of an MPC controller for trajectory tracking on a self-driving car. 
 
@@ -477,7 +473,7 @@ MPC will be used in the same feedback structure presented earlier, but we includ
 
 ---
 
-### 8.Model Predictive Controller
+## 8.Model Predictive Controller
 
 The MPC optimization will be set up as follows to perform a double lane change maneuver. First, we define a cost for tracking the desired trajectory, which includes deviation from the desired trajectory and minimization of control command magnitude. Next, we define motion constraints on the vehicle, which rely on the lateral and longitudinal models developed in earlier videos. We also impose maximum limits on the tire forces to restrict them to fall within the linear tire region to avoid extreme responses to control our errors. 
 
@@ -487,7 +483,7 @@ These costs and constraints define the optimization used in our example, which t
 
 ---
 
-### 9. Simulation : Vehicle trajectory(double lane change)
+## 9. Simulation : Vehicle trajectory(double lane change)
 
 This simulation is done for the double lane change scenario, where the vehicle first accelerates to a steady-state speed of 17 meters per second or 60 kilometers per hour, then maneuvers four meters to the left, and returns four meters to the right immediately thereafter. 
 
@@ -501,6 +497,6 @@ Let's summarize what we've discussed in this video. We first explored the defini
 
 ---
 
-## End of the module
+# End of the module
 
 Congratulations, you've made it to the end of the module. In this module, you learned how to define the lateral path tracking problem, applied two geometric path tracking controllers, the pure pursuit and Stanley controllers to the path tracking problem, and defined a Model Predictive Controller for joint, lateral, and longitudinal control. In the final module in this course, you'll get your first hands on look at the Carlos simulator where you'll design lateral and longitudinal controllers to navigate a vehicle around a race track.

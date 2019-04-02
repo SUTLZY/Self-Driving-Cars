@@ -2,7 +2,7 @@
 
 > Longitudinal control of an autonomous vehicle involves tracking a speed profile along a fixed path, and can be achieved with reasonable accuracy using classic control techniques.This week, you will learn how to develop a baseline controller that is applicable for a significant subset of driving conditions, which include most non-evasive(不回避) or highly-dynamic motion.
 
-### 本章学习目标
+## Learning Objectives
 
 - Design a PID controller for a linear system
 - Decompose a coupled nonlinear vehicle model and extract a linear decoupled longitudinal model(分解耦合非线性车辆模型并提取线性解耦纵向模型)
@@ -10,7 +10,7 @@
 
 ---
 
-## Lesson 1: Proportional-Integral-Derivative (PID) Control
+# Lesson 1: Proportional-Integral-Derivative (PID) Control
 
 Welcome to week five of this course. In the previous module, you learned how to develop vehicle models to capture longitudinal and lateral dynamics. In this module, we will go through **the concepts of longitudinal vehicle control** to regulate the speed of our self-driving car.
 
@@ -26,7 +26,7 @@ In this video, we will briefly review some of the basics of linear time-invarian
 
 ---
 
-### 1. Control Development
+## 1. Control Development
 
 In module three of this course, we learned how to develop **the dynamic and kinematic models** for a vehicle based on the **bicycle model**. These models aim to capture how the dynamic system reacts to input commands from the driver such as steering gas and break and how it reacts to disturbances such as wind, road surface and different vehicle loads.
 
@@ -36,7 +36,7 @@ The effects of the inputs and disturbances on the states such as velocity and ro
 
 ---
 
-### 2. Typical Feedback Control Loop
+## 2. Typical Feedback Control Loop
 
 > Compensator：补偿器Actuators：执行器Plant(G(s))：加工Sensors(H(s)):传感器
 
@@ -48,7 +48,7 @@ The plant or process model takes the actuator signals as the input and generates
 
 ---
 
-### 3. Plant System or Process
+## 3. Plant System or Process
 
 > System Representation:The plant system could by linear or nonlinearPlant representation : state-space form and transfer functionsLinear time-invariant systems can be expressed using transfer functions
 
@@ -66,7 +66,7 @@ When working with the transfer functions, the numerator and denominator roots pr
 
 ---
 
-### 4. Controller or Compensator
+## 4. Controller or Compensator
 
 > Some simple algorithms,widely used in industry
 
@@ -80,7 +80,7 @@ In the rest of this video, we will go into more detail on the PID control combin
 
 ---
 
-### 5. PID Controller
+## 5. PID Controller
 
 PID control is mathematically formulated by adding three terms dependent on the error function. A proportional term directly proportional to the error E, an integral term proportional to the integral of the error, and a derivative term proportional to the derivative of the error.
 
@@ -94,7 +94,7 @@ Taking the Laplace transform of the PID control yields the transfer function Gc 
 
 ---
 
-### 6. Proportional-Integral Derivative Controller
+## 6. Proportional-Integral Derivative Controller
 
 The PID transfer function contains a single pole at the origin which comes from the integral term. It also contains a second-order numerator with two zeros that can be placed anywhere in the complex plane by selecting appropriate values for the gains.
 
@@ -104,7 +104,7 @@ PID control design therefore, boils down to selecting zero locations to achieve 
 
 ---
 
-### 7. Characteristics of P,I,and D Gains
+## 7. Characteristics of P,I,and D Gains
 
 The effects of each P, I and D action are summarized in the following table.
 
@@ -116,7 +116,7 @@ Finally, an increase in Ki can eliminate steady-state errors but may lead to inc
 
 ---
 
-### 8. Second Order System
+## 8. Second Order System
 
 Now, let’s take a look at the well-known second-order spring-mass damper model as shown in the figure.
 
@@ -130,7 +130,7 @@ Finally, the transfer function is formed which represents the relation between t
 
 ---
 
-### 9. Open-Loop Step Response & Closed-Loop Response
+## 9. Open-Loop Step Response & Closed-Loop Response
 
 To evaluate the system characteristics, we excite the system by using a unit step input. This is normally the first step to evaluate the dynamic characteristics of a plant.
 
@@ -144,7 +144,7 @@ For unity feedback, the sensor transfer function is assumed to be one and in gen
 
 ---
 
-### 10. Step Response
+## 10. Step Response
 
 Let’s look at the step response for a few different PID controllers.
 
@@ -168,7 +168,7 @@ As can be seen in the plot, the system approaches the reference at much more qui
 
 ---
 
-### 11. Summary
+## 11. Summary
 
 In this video, we’ve covered the concepts of controller design and why we integrate controllers into a dynamic model. We also reviewed the PID controller and learned how to control the step response of a spring-mass damper system with PID control.
 
@@ -190,7 +190,7 @@ What are the main reasons of using the Laplace transform in control loop systems
 
 ---
 
-## Lesson 2: Longitudinal Speed Control with PID
+# Lesson 2: Longitudinal Speed Control with PID
 
 > In the previous video, we briefly reviewed the design of PID controllers and classical controller design. In this video, we’ll apply PID control to our longitudinal vehicle model. So, by the end of this video, you’ll be able to:
 
@@ -199,7 +199,7 @@ What are the main reasons of using the Laplace transform in control loop systems
 
 ---
 
-### 1. Architecture of Vehicle Control Strategy
+## 1. Architecture of Vehicle Control Strategy
 
 Let’s take a closer look at the vehicle control architecture and how it fits into the overall autonomy software stack. We can divide the structure into four sections. These sections are connected to each other.
 
@@ -215,7 +215,7 @@ For both the lateral and longitudinal control of an autonomous vehicle, the only
 
 ---
 
-### 2. Longitudinal Speed Control
+## 2. Longitudinal Speed Control
 
 Let’s look at an example of longitudinal vehicle control.
 
@@ -234,7 +234,7 @@ In practice, this two-stage approach allows us to go beyond just PID control and
 
 ---
 
-### 3. Upper Level Controller
+## 3. Upper Level Controller
 
 Let’s take a closer look at the high level controller.
 
@@ -248,7 +248,7 @@ In the previous lesson, we learned how to design a PID controller and studied ho
 
 ---
 
-### 4. Lower Level Controller
+## 4. Lower Level Controller
 
 In the low-level controller ,throttle input is calculated such that the vehicle track the desired acceleration determined by the upper level controller.In designing a low-level controller, we make some assumptions to simplify our problem.
 
@@ -278,7 +278,7 @@ Finally, we can put the pieces of our vehicle controller together and simulate t
 
 ---
 
-### 5. Simulation Example
+## 5. Simulation Example
 
 ![](./assets/-811ce196-4209-41a3-a371-b42c4068d528untitled)
 
@@ -286,7 +286,7 @@ In the results plot, on the left, we see the throttle opening as a percentage, w
 
 ---
 
-### 6. Summary
+## 6. Summary
 
 In this video, we covered the concept of longitudinal speed control for a cruise control system.
 
@@ -297,7 +297,7 @@ This is the first case in designing a controller for the autonomous car to follo
 
 ---
 
-## Lesson 3: Feedforward Speed Control
+# Lesson 3: Feedforward Speed Control
 
 In the last lesson, we saw how to build a feedback controller for the longitudinal speed tracking problem that used PID control to generate acceleration commands together, with a low level controller to define throttle and brake inputs.In this final video of the module, we will modify our control architecture to incorporate feedforward commands, which will improve tracking performance, particularly in dynamic maneuvers.Let’s get started.
 
@@ -308,7 +308,7 @@ In the last lesson, we saw how to build a feedback controller for the longitudin
 
 ---
 
-### 1. Feedback vs. Feedforward Control
+## 1. Feedback vs. Feedforward Control
 
 First of all, let’s compare the feedback versus feedforward block diagrams.
 
@@ -320,7 +320,7 @@ First of all, let’s compare the feedback versus feedforward block diagrams.
 
 ---
 
-### 2. Combined Feedforward and Feedback Control
+## 2. Combined Feedforward and Feedback Control
 
 In many applications, feedforward and feedback loops are combined to improve controller performance. This block diagram shows how a typical feedback, feedforward control structure works.
 
@@ -334,7 +334,7 @@ Because autonomous vehicles require non-zero steering commands to maintain a con
 
 ---
 
-### 3. Vehicle Speed Control
+## 3. Vehicle Speed Control
 
 Now let’s take a look at the combined feedback and feedforward controllers to generate vehicle actuation for longitudinal speed control.
 
@@ -344,7 +344,7 @@ The reference speed or drive cycle is defined by a higher level planner. And it 
 
 ---
 
-### 4. Controller Actuators
+## 4. Controller Actuators
 
 The role of the low-level controller achieving the desired acceleration through the use of a mapping from accelerations to engine commands is now going to be handled by the feedforward block.
 
@@ -356,7 +356,7 @@ This feedforward approach works well at steady state, but ignores the internal d
 
 ---
 
-### 5. Feedforward Table
+## 5. Feedforward Table
 
 Let’s look at the steps needed to **develop the actuator commands from a feedforward lookup table**.
 
@@ -368,7 +368,7 @@ Then assuming steady state operation, the dynamics of the powertrain says that t
 
 ---
 
-### 6. Feedforward Simulation Results
+## 6. Feedforward Simulation Results
 
 Let’s have a look at the comparison between PID control method described in the previous video and the combined feedforward, feedback method we’ve discussed in this video.
 
@@ -380,7 +380,7 @@ As the feedforward model becomes more precise, the feedback components can focus
 
 ---
 
-### 7. Summary
+## 7. Summary
 
 In this video, we’ve covered the concept of feedforward controllers and the integrated feedback in feedforward controller to enhance the performance of reference tracking. We also applied the feedback and feedforward loops for autonomous vehicle speed control.
 
