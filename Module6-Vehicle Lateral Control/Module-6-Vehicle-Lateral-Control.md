@@ -1,12 +1,13 @@
 # Module 6: Vehicle Lateral Control
 
-> Longitudinal control of an autonomous vehicle involves tracking a speed profile along a fixed path, and can be achieved with reasonable accuracy using classic control techniques. **This week, you will learn how to develop a baseline controller that is applicable for a significant subset of driving conditions, which include most non-evasive or highly-dynamic motions.**
+> This week, you will learn about how lateral vehicle control ensures that a fixed path through the environment is tracked accurately. You will see how to define geometry of the path following control problem and develop both a simple geometric control and a dynamic model predictive control approach.
 
 学习目标：
 
-- Design a PID controller for a linear system
-- Decompose a coupled nonlinear vehicle model and extract a linear decoupled longitudinal model
-- Develop a feedforward controller for longitudinal vehicle control
+- Define the geometry of the lateral control problem, including heading and cross track errors
+- Design a geometric steering controller to track a straight line segment
+- Identify the limits of geometric controllers as wheel slip increases
+- Explore options for dynamic control, including model predictive control
 
 ---
 
