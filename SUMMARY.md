@@ -12,4 +12,7 @@
   * [Module 7：Putting it all together](Part1：Introduction to Self-Driving Cars/Module7-Putting it all together/module-7-putting-it-all-together.md)
 * [Part2：State Estimation and Localization for Self-Driving Cars](Part2：State Estimation and Localization for Self-Driving Cars/README.md)
   * [Module 1：Least Squares](Part2：State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md)
+* [Part3：Visual Perception for Self-Driving Cars](Part3：Visual Perception for Self-Driving Cars/README.md)
+
+- [Part4：Motion Planning for Self-Driving Cars](Part4：Motion Planning for Self-Driving Cars/README.md)
 
