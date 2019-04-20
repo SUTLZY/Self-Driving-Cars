@@ -246,10 +246,9 @@ In this video, we discussed how certain measurements may come from sensors with 
 
 ### Lesson 2: Recursive Least Squares
 
-In this lesson, we'll discuss recursive least squares, a technique to compute least squares on the fly. By the end of the lesson, you'll be able to extend the batch least squares solution we discussed in the previous two videos to one that works recursively. Use this method of recursive least squares to keep a running estimate of the least squares solution as new measurements stream in. Let's begin. We've already explored the problem of computing a value for some unknown but constant parameter from a set of measurements. One of our assumptions was that we had all of the data at hand. That is, we assumed that we collected
-a batch of measurements and we wanted to use those measurements to compute our estimated quantities
-of interest. This is sometimes a completely reasonable assumption. What can we do if instead we have a stream of data? Do we need to recompute the least squares solution every time we receive a new measurement? For example, let's say we have a multimeter that can measure resistance 10 times per second. Ideally, we'd like to use as many measurements as possible to get an accurate estimate of the resistance. If we use the method of least squares however, the amount of computational resources we will need to solve our normal equations will grow with the measurement vector size. Alternatively, we can try and use a recursive method one that keeps a running estimate of the optimal parameter for all of the
-measurements that we've collected up to the previous time step and then updates that estimate given the measurement at the current time step. To do this we use a recursive algorithm, incrementally updating our estimate as we go along. Let us assume that we have our best optimal estimate at time k minus 1. At time k we receive a new measurement that will assume follows linear measurement model with additive
+In this lesson, we'll discuss recursive least squares, a technique to compute least squares on the fly. By the end of the lesson, you'll be able to extend the batch least squares solution we discussed in the previous two videos to one that works recursively. Use this method of recursive least squares to keep a running estimate of the least squares solution as new measurements stream in. Let's begin. 
+
+We've already explored the problem of computing a value for some unknown but constant parameter from a set of measurements. One of our assumptions was that we had all of the data at hand. That is, we assumed that we collected a batch of measurements and we wanted to use those measurements to compute our estimated quantities of interest. This is sometimes a completely reasonable assumption. What can we do if instead we have a stream of data? Do we need to recompute the least squares solution every time we receive a new measurement? For example, let's say we have a multimeter that can measure resistance 10 times per second. Ideally, we'd like to use as many measurements as possible to get an accurate estimate of the resistance. If we use the method of least squares however, the amount of computational resources we will need to solve our normal equations will grow with the measurement vector size. Alternatively, we can try and use a recursive method one that keeps a running estimate of the optimal parameter for all of the measurements that we've collected up to the previous time step and then updates that estimate given the measurement at the current time step. To do this we use a recursive algorithm, incrementally updating our estimate as we go along. Let us assume that we have our best optimal estimate at time k minus 1. At time k we receive a new measurement that will assume follows linear measurement model with additive
 Gaussian noise. Our goal is to compute an updated optimal estimate at time k, given our measurement and the previous estimate. A linear recursive estimate is given by the following expression. Here k is called an
 estimator gain matrix. The term in brackets is called the innovation. It quantifies how well our current measurement matches our previous best estimate. Even without knowing the expression for k. We can already see how this recursive structure works. Our new estimate is simply the sum of the old estimate and corrective term based on the difference between what we expected the measurement to be and what we
 actually measured. In fact, if the innovation were equal to zero, we would not change our old estimate at all. Now, how do we compute k? Well, for that, we'll need to use a recursive least squares criterion and some matrix calculus as before. This time the math is significantly more involved, so, only work through
@@ -257,3 +256,493 @@ a few steps and let the more curious learners refer to the textbook for more inf
 criterion and in this case will be the expected value of r squared errors for our estimate at time k. For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance, sigma squared sub k. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. This is exactly like our former least squares criterion except now we have to talk about expectations. Instead of minimizing the error directly, we minimize its expected value which is actually the estimator variance. The lower the variance, the more we are certain of our estimate. It turns out that we can formulate a recursive definition for this state covariance matrix P_k. By using matrix calculus and taking derivatives, we can show that this criterion is minimized when k has the following value. The full derivation is a bit beyond the scope of our course but can be found in any standard estimation text. Finally, by using this formulation, we can also rewrite our recursive definition for P_k into something much simpler. Take a second to think about this equation. The larger our gain matrix k, the smaller our new estimator covariance will be. Intuitively, you can think of this gain matrix as balancing the information we get from our prior estimate and the information we receive from our new measurement. Putting everything
 together, our least squares algorithm looks like this. We initialize the algorithm with estimate of our unknown parameters and a corresponding covariance matrix. This initial guess could come from the first
 measurement we take and the covariance could come from technical specifications. Next, we set up our measurement model and pick values for our measurement covariance. Finally, every time a measurement is recorded, we compute the measurement gain and then use it to update our estimate of the parameters and our estimator covariance or uncertainty. Every time we get a new measurement our parameter uncertainty shrinks. Why is recursive least squares an important algorithm? As we've seen, it enables us to minimize computational effort in our estimation process which is always a good thing. More importantly, recursive least squares forms the update step of the linear Kalman filter. We'll discuss this in more detail in the next module. In your upcoming graded assessment, you'll get some hands on experience using recursive least squares to determine a voltage value from a series of measurements. To summarize, the recursive least squares algorithm lets us produce a running estimate of a parameter without having to have the entire batch of measurements at hand and recursive least squares is a recursive linear estimator that minimizes the variance of the parameters at the current time. In the next and final video of this module, we'll discuss why minimizing squared errors is a reasonable thing to do by connecting the method of least squares with another technique from statistics, maximum likelihood estimation.
+
+
+
+---
+
+### Lesson 3: Least Squares and the Method of Maximum Likelihood
+
+Welcome to the final lesson of module one. 
+
+We'll finish off the module by 
+
+discussing an important connection, 
+
+that will help to provide further intuition 
+
+for the method of least squares. 
+
+Specifically, by the end of this lesson, 
+
+you'll be able to state the connection 
+
+between the method of least squares 
+
+and maximum likelihood estimation 
+
+with Gaussian random variables. 
+
+Let's begin by recalling 
+
+the least squares criterion from 
+
+the very first video in this module. 
+
+We found the best estimates 
+
+of some unknown, 
+
+but constant parameters by 
+
+determining the values that 
+
+minimize the sum of 
+
+squared errors based on our measurements. 
+
+But we can ask, why squared errors? 
+
+Why not cubed errors, 
+
+or square root errors, or something else? 
+
+This is actually a particularly 
+
+deep question and there is 
+
+a whole field of robust statistics 
+
+dedicated to it. 
+
+You can indeed use 
+
+different error functions, 
+
+but we'll go over two reasons why 
+
+squared errors are attractive and relevant. 
+
+The first is simple. 
+
+Squared errors allow us to solve for 
+
+the optimal parameters with 
+
+relatively straightforward algebra. 
+
+If the measurement model is linear, 
+
+minimizing the squared error criterion 
+
+amounts to solving a linear 
+
+system of equations. 
+
+The second reason has to do with 
+
+probability and a deep connection between 
+
+least squares and 
+
+maximum likelihood estimators 
+
+under the assumption of Gaussian noise. 
+
+As you may have guessed, 
+
+this connection was first derived 
+
+in a particular form by Gauss. 
+
+So, it's no surprise that it involves 
+
+Gaussian random variables or 
+
+equivalently Gaussian noise. 
+
+To understand this fundamental connection, 
+
+let's first discuss maximum likelihood. 
+
+Instead of writing down a loss, 
+
+we can approach the problem of 
+
+optimal parameter estimation by asking, 
+
+which parameters make 
+
+our recorded measurements the most likely? 
+
+To keep things simple, 
+
+we'll stick to a single scalar parameter 
+
+to build our intuition. 
+
+For example, let's look 
+
+again at measuring resistance. 
+
+Given what we know about probability, 
+
+if we have four possible values 
+
+for this unknown resistance parameter, 
+
+capital X, small x sub A 
+
+through small x sub D, 
+
+and each gives rise to 
+
+the following conditional probability 
+
+on our measurement Y, 
+
+which value would maximize 
+
+the conditional likelihood given 
+
+the measurement Y sub mes? 
+
+That's right. X sub A. 
+
+The highest probability density at 
+
+the measured location is 
+
+given by the green curve, 
+
+which means that X sub A is 
+
+our most likely parameter 
+
+value given this measurement. 
+
+Now, if we take 
+
+our simple measurement model, 
+
+we can convert it to 
+
+a probability density by 
+
+assuming a density for our additive noise. 
+
+The unknown parameter, X, 
+
+becomes the mean of this density 
+
+and the variance is simply 
+
+our noise variance. 
+
+Recall that the probability density of 
+
+a Gaussian random variable is 
+
+given by the following equation. 
+
+This means that we can express 
+
+our measurement likelihood for 
+
+a single measurement as follows. 
+
+If we have multiple 
+
+independent measurements, 
+
+each with the same noise variance, 
+
+we can simply take the product 
+
+of multiple Gaussians, 
+
+which results in another Gaussian.
+
+We can try to maximize this likelihood with 
+
+respect to the mean parameter X half. 
+
+To do this, we'll use a technique that's 
+
+often used in optimization. 
+
+Instead of maximizing 
+
+the likelihood directly, 
+
+we'll take it's logarithm 
+
+and maximize that. 
+
+Since the likelihood will 
+
+always be a positive number and 
+
+because the logarithm is 
+
+a monotonically increasing function, 
+
+this will not affect the final result, 
+
+which is very convenient. 
+
+Once we apply 
+
+the logarithm to this likelihood, 
+
+we see that something pops out that 
+
+looks a lot like the sum of squared errors. 
+
+The constant C in this expression 
+
+refers to terms that are 
+
+not a function of X and 
+
+ones which we can safely ignore. 
+
+The last step is now to 
+
+realize that the arg max of the function 
+
+F is the same as 
+
+the arg min of the 
+
+negative of that function. 
+
+Using this fact, we can turn 
+
+our likelihood maximization into 
+
+a minimization of 
+
+the sum of squared errors.
+
+For that, minimizing the sum 
+
+of squared errors is 
+
+equivalent to maximizing the likelihood 
+
+of a set of measurements, 
+
+assuming that the measurements 
+
+are corrupted by additive, 
+
+independent, Gaussian noise 
+
+that's of equal variance. 
+
+Furthermore, if we 
+
+maintain the same assumptions, 
+
+but change the variance of 
+
+the Gaussian noise for each measurement, 
+
+we can arrive at the same criterion as 
+
+we saw in our weighted least squares video. 
+
+So, in both cases, 
+
+the maximum likelihood estimate, 
+
+given additive Gaussian noise, 
+
+is equivalent to the least squares or 
+
+weighted least squares solutions 
+
+we derived earlier. 
+
+So, why is this result so important? 
+
+Our self-driving car will 
+
+have to deal with many, 
+
+many sources of error. 
+
+Some of which are very difficult to model. 
+
+However, the central limit theorem, 
+
+tells us that when 
+
+combining all of these errors together, 
+
+they can reasonably be modeled by 
+
+a single Gaussian error distribution. 
+
+We would like to model our system 
+
+probabilistically 
+
+and yet maintain simplicity 
+
+in calculations. 
+
+If our errors are Gaussian, 
+
+then the best maximum likelihood estimate 
+
+of the parameters of interest, 
+
+is exactly the least squares solution 
+
+we're already familiar with. 
+
+Easy. To finish off, 
+
+let's discuss one important 
+
+caveat for this method. 
+
+When we use the method of least squares, 
+
+measurement outliers can have 
+
+a significant effect on our final estimate. 
+
+To understand why, 
+
+consider that under 
+
+a Gaussian distribution, 
+
+a sample that is two standard 
+
+deviations away from the mean, 
+
+has less than a five 
+
+percent probability of occurring. 
+
+As a result, if there are 
+
+some outliers in our measurement data, 
+
+the method of maximum likelihood, 
+
+and equivalently, 
+
+the method of least squares, 
+
+will put significant importance 
+
+on these measurements. 
+
+So, the estimated value of 
+
+our parameter will be pulled 
+
+strongly by these outliers. 
+
+Our optimal method will be skewed 
+
+so that the outlying measurement 
+
+is more likely. 
+
+This can happen to many estimators 
+
+using sensor data from a 
+
+self-driving vehicle. 
+
+Outliers might result from people 
+
+walking in the middle of a Lidar scan, 
+
+for example, or from a bad GPS signal. 
+
+Consider our resistor example. 
+
+With one outlying measurement 
+
+that may come from a simple accident, 
+
+the final estimate is pulled significantly 
+
+away from that of the outlier free case. 
+
+We always want to be 
+
+cognizant of outliers and try 
+
+to quantify the error distribution 
+
+whenever possible, 
+
+before blindly applying 
+
+maximum likelihood or least squares. 
+
+Now, 
+
+that we've derived this connection between 
+
+maximum likelihood and least squares, 
+
+we're ready to extend 
+
+our recursive least squares 
+
+estimator to the full common filter, 
+
+one of the most famous algorithms 
+
+of the 20th century. 
+
+To summarize, 
+
+we've learned that the method of 
+
+least squares and weighted least squares 
+
+produce the same estimates as 
+
+maximum likelihood, given Gaussian noise. 
+
+This is particularly important because 
+
+many complex noise sources, 
+
+when added, will tend towards a Gaussian. 
+
+However, 
+
+it's always important to be wary of 
+
+outlier measurements that can 
+
+significantly affect 
+
+our final estimate values. 
+
+In the next module, 
+
+we'll take a look at how we can 
+
+now extend what we've learned 
+
+about least squares and 
+
+parameter estimation 
+
+to continually varying states, 
+
+that may have more complex nonlinear models 
+
+associated with them. See you there.
