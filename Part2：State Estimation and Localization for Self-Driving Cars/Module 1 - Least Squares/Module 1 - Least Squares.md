@@ -61,6 +61,8 @@ Gauss summarized the approach as follows:
 
 #### 3. Example
 
+> 以电阻值测量为例，说明测量误差的存在。应用最小二乘法，进行阻值的估计
+
 To illustrate how this works, let's take a simple example. Suppose you are trying to measure the value in ohms of a simple resistor within the drive system of an autonomous vehicle. 
 
 ![1555593522437](assets/1555593522437.png)
@@ -87,9 +89,9 @@ To minimize the squared error criterion, we'll rewrite our errors in matrix nota
 $$
 \mathbf{e}=\left[ \begin{array}{l}{e_{1}} \\ {e_{2}} \\ {e_{3}} \\ {e_{4}}\end{array}\right]=\mathbf{y}-\mathbf{H} x=\left[ \begin{array}{l}{y_{1}} \\ {y_{2}} \\ {y_{3}} \\ {y_{4}}\end{array}\right]-\left[ \begin{array}{l}{1} \\ {1} \\ {1} \\ {1}\end{array}\right] x
 $$
-This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We'll define an error vector identified as bold e, that is a function of our observations stacked into a vector y and a matrix H called the Jacobian. 
+This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We'll define an error vector identified as $\mathbf{e}$, that is a function of our observations stacked into a vector y and a matrix $\mathbf{H}$ called the Jacobian. 
 
-Finally, our true resistance x. H has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate. In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We'll see later that it can be a vector comprising multiple unknowns.
+Finally, our true resistance x. **$\mathbf{H}$ has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate.** In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We'll see later that it can be a vector comprising multiple unknowns.
 
 With these definitions in mind, we can convert our squared error criterion to vector notation as follows. 
 $$
@@ -362,7 +364,7 @@ Let's begin by recalling the least squares criterion from the very first video i
 $$
 \mathscr{L}_{\mathrm{LS}}(x)=\left(y_{1}-x\right)^{2}+\left(y_{2}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}
 $$
-We found the best estimates of some unknown, but constant parameters by determining the values that minimize the sum of squared errors based on our measurements. We've said that the optimal estimate , $\hat{x}​$ ,is the one that minimizes this 'loss':
+We found the best estimates of some unknown, but constant parameters by determining the values that minimize the sum of squared errors based on our measurements. We've said that the optimal estimate , $\hat{x}$ ,is the one that minimizes this 'loss':
 $$
 \hat{x}_{\mathrm{LS}}=\operatorname{argmin}_{x} \mathscr{L}_{\mathrm{LS}}(x)=\operatorname{argmin}_{x}\left(e_{1}^{2}+e_{2}^{2}+\ldots+e_{m}^{2}\right)
 $$
