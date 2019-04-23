@@ -23,7 +23,7 @@ Welcome back. In module two, we'll learn about one of the most famous algorithms
 
 By the end of this lesson, you'll be able to 
 
-- Describe the common filter as a state estimator that works in two stages：（1）prediction and （2）correction. 
+- Describe the common filter as a state estimator that works in two stages：（1）prediction（2）correction. 
 
 - Understand the difference between motion and measurement models
 
@@ -46,6 +46,8 @@ The engineers at NASA's Ames Research Center, adopted Kalman's linear theory and
 ---
 
 ### 3. The Kalman Filter | Prediction and Correction
+
+> 虽然递推最小二乘法更新了静态参数的估计，但卡尔曼滤波器能够更新和估计一个进化状态
 
 The Kalman filter is very similar to the linear recursive least squares filter we discussed earlier. While recursive least squares updates the estimate of a static parameter, but Kalman filter is able to update and estimate of an evolving state. **The goal of the Kalman filter is to take a probabilistic estimate of this state and update it in real time using two steps; prediction and correction.** To make these ideas more concrete, let's consider a problem of estimating the 1D position of the vehicle. 
 
@@ -124,3 +126,90 @@ This uncertainty reduction occurs because our measurement model is fairly accura
 ### 7. Summary
 
 To summarize, the Kalman filter is similar to recursively squares, but also adds a motion model that defines how our state evolves over time. The Kalman filter works in two stages: First, predicting the next state using the motion model, and second, correcting this prediction using a measurement. But how can we be sure that the Kalman filter is giving us an accurate state estimate? In the next video, we'll discuss a few appealing theoretical properties of the Kalman filter that have made it such a staple in the engineering field.
+
+---
+
+## Lesson 2: Kalman Filter and The Bias BLUEs
+
+Now, we've introduced the Kalman Filter, let's discuss little bit about what makes it such an appealing estimation method. By the end of this lesson, you'll be able to define a few terms that are important in state estimation. 
+
+- Define bias
+- Define consistency
+- Explain why the Kalman filter is the Best Linear Unbiased Estimator(BLUE)
+
+---
+
+### 1. Bias in State Estimation
+
+Let's dive in. First, let's discuss bias. Let's consider our Kalman Filter from the previous lesson and use it to estimate the position of our autonomous car. If we have some way of knowing the true position of the vehicle, for example, an oracle tells us, we can then use this to record a position error of our filter at each time step k. Since we're dealing with random noise, doing this once is not enough. We'll need to repeat this same process over and over and record our position error at each time step. 
+
+![1556028440311](assets/1556028440311.png)
+
+Once we've collected these errors, if they average to zero at a particular time step k, then we say the Kalman Filter estimate is unbiased at this time step. 
+
+![1556028641962](assets/1556028641962.png)
+
+Graphically, this is what the situation may look like. Say the particular time step, we know that the true position is the following. We build a histogram of the positions that our filter reports over multiple trials, and then compute the difference between the average of these estimates and the true position. If this difference does not approach zero, then our estimate is biased. However, if this difference does approach zero as we repeat this experiment many more times, and if this happens for all time intervals, then we say that our filter is unbiased. 
+
+This filter is an unbiased if for all k
+$$
+E\left[\hat{e}_{k}\right]=E\left[\hat{p}_{k}-p_{k}\right]=E\left[\hat{p}_{k}\right]-p_{k}=0
+$$
+Although we could potentially verify this lack of bias empirically, what we'd really like are some theoretical guarantees. Let's consider the error dynamics of our filter. 
+
+- Predicted state error：$\check{\mathbf{e}}_{k}=\check{\mathbf{x}}_{k}-\mathbf{x}_{k}$
+- Corrected estimate error : $\hat{\mathbf{e}}_{k}=\hat{\mathbf{x}}_{k}-\mathbf{x}_{k}$
+
+Defining our predicted and corrected state errors, we can then use the common filter equations to write the following relations. 
+$$
+\begin{aligned} \check{\mathbf{e}}_{k} &=\mathbf{F}_{k-1} \check{\mathbf{e}}_{k-1}-\mathbf{w}_{k} \\ \hat{\mathbf{e}}_{k} &=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \check{\mathbf{e}}_{k}+\mathbf{K}_{k} \mathbf{v}_{k} \end{aligned}
+$$
+For the Kalman Filter, we can show the expectation value of these errors is equal to zero exactly. For this to be true, we need to ensure that our initial state estimate is unbiased and that our noise is white, uncorrelated, and zero mean. 
+
+![1556029088893](assets/1556029088893.png)
+
+While this is a great result for linear systems, remember that this doesn't guarantee that our estimates will be error free for a given trial, only that the expected value of the error is zero. 
+
+---
+
+### 2. Consistency in State Estimation
+
+Kalman Filters are also what is called consistent. By consistency we mean that for all time steps k, the filter co-variants P sub k matches the expected value of the square of our error. 
+
+![1556029158538](assets/1556029158538.png)
+
+For scalar parameters, this means that the empirical variance of our estimate should match the variance reported by the filter. 
+
+The filter is consistent if for all k,
+$$
+E\left[\hat{e}_{k}^{2}\right]=E\left[\left(\hat{p}_{k}-p_{k}\right)^{2}\right]=\hat{P}_{k}
+$$
+Practically, this means that our filter is neither overconfident, nor underconfident in the estimate it has produced. A filter that is overconfident, and hence inconsistent, will report a covariance that is optimistic. That is, the filter will essentially place too much emphasis on its own estimate and will be less sensitive to future measurement updates, which may provide critical information. 
+
+One can also show (with more algebra!) that for all k,
+$$
+E\left[\mathbf{è}_{k} \check{\mathbf{e}}_{k}^{T}\right]=\check{\mathbf{P}}_{k} \quad E\left[\hat{\mathbf{e}}_{k} \hat{\mathbf{e}}_{k}^{T}\right]=\hat{\mathbf{P}}_{k}
+$$
+Consistent predictions !
+
+Provided,
+$$
+E\left[\hat{\mathbf{e}}_{0} \hat{\mathbf{e}}_{0}^{T}\right]=\check{\mathbf{P}}_{0} \quad E[\mathbf{v}]=\mathbf{0} \quad E[\mathbf{w}]=\mathbf{0}
+$$
+It's easy to see how an overconfident filter might have a negative or dangerous effect on the performance of self-driving car. Showing the consistency property formally is outside of the scope of the course. You can take my word that it is indeed true for a common filter. So long as our initial estimate is consistent, and we have white zero mean noise, then all estimates will be consistent. 
+
+---
+
+### 3. The Kalman Filter is the BLUE | Best Linear Unbiased Estimator
+
+Putting everything together, we've shown that given white uncorrelated zero mean noise, the Kalman Filter is unbiased and consistent. 
+
+In general , if we have white ,uncorrelated zero-mean noise ,the Kalman filter is the best (i,e.., lowest variance ) unbiased estimator that uses only a linear combination of measurements
+
+Because of these two facts, we say that the Kalman Filter is the BLUE, the best linear unbiased estimator. It produces unbiased estimates with the minimum possible variance. 
+
+---
+
+### 4. Summary
+
+To summarize, in this lesson we've defined the terms bias and consistency, and showed that the Kalman Filter is unbiased, consistent, and the Best Linear Unbiased Estimator, or BLUE. Remember that best here refers to the fact that the Kalman Filter minimizes the state variance. Although this is a fantastic result, most real systems are not linear. For self-driving cars, we'll generally need to estimate non-linear quantities like vehicle poses, position, and orientation in 2D and 3D. To do this, we'll need to extend the linear Kalman Filter into the non-linear domain. We'll do this in the next lesson.
