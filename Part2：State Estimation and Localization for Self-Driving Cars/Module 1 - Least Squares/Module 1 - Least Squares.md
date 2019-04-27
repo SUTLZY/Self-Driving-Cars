@@ -89,13 +89,13 @@ To minimize the squared error criterion, we'll rewrite our errors in matrix nota
 $$
 \mathbf{e}=\left[ \begin{array}{l}{e_{1}} \\ {e_{2}} \\ {e_{3}} \\ {e_{4}}\end{array}\right]=\mathbf{y}-\mathbf{H} x=\left[ \begin{array}{l}{y_{1}} \\ {y_{2}} \\ {y_{3}} \\ {y_{4}}\end{array}\right]-\left[ \begin{array}{l}{1} \\ {1} \\ {1} \\ {1}\end{array}\right] x
 $$
-This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We'll define an error vector identified as $\mathbf{e}$, that is a function of our observations stacked into a vector y and a matrix $\mathbf{H}$ called the Jacobian. 
+This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We'll define an **error vector identified** as $\mathbf{e}$, that is a function of our observations stacked into a vector y and a matrix $\mathbf{H}$ called the Jacobian. 
 
 Finally, our true resistance x. **$\mathbf{H}$ has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate.** In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We'll see later that it can be a vector comprising multiple unknowns.
 
 With these definitions in mind, we can convert our squared error criterion to vector notation as follows. 
 $$
-\begin{aligned} \mathscr{L}_{\mathrm{LS}}(x)=e_{1}^{2}+e_{2}^{2}+e_{3}^{2}+e_{4}^{2} &=\mathbf{e}^{T} \mathbf{e} \\ &=(\mathbf{y}-\mathbf{H} x)^{T}(\mathbf{y}-\mathbf{H} x) \\ &=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x \end{aligned}
+\begin{aligned} \mathscr{L}_{\mathrm{LS}}(x)=e_{1}^{2}+e_{2}^{2}+e_{3}^{2}+e_{4}^{2} &=\mathbf{e}^{T} \mathbf{e} \\ &=(\mathbf{y}-\mathbf{H} x)^{T}(\mathbf{y}-\mathbf{H} x) \\ &=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{H}^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x \end{aligned}
 $$
 
 ---
@@ -138,14 +138,18 @@ Perhaps this is something you thought of doing all along. Now, we have another j
 
 First, we've assumed that our measurement model is linear. This is a very important assumption that is often broken in complex systems. We'll discuss non-linear measurement models in later lessons. Second, we've assumed that all of our measurements have an equal weight in our error equation. To put this another way, we've assumed that we care about each of our measurements equally.
 
+---
+
+#### 6. Summary
+
 To summarize, in this video, you've learned that the method of least squares was pioneered by Carl Friedrich Gauss who used it to accurately predict the orbit of a new planet like object called Ceres. You saw how we can minimize the least squares criterion to solve for parameter values of interest. We noted that the method of ordinary least squares assumes a linear measurement model and can't handle measurements of unequal importance. In the next video, we'll extend the method of least squares to the method of weighted least squares, which can account for measurements of varying importance.
 
 ---
 
 ### Lesson 1 (Part 2): Squared Error Criterion and the Method of Least Squares
 
-> - Derive the weighted least squares criterion given varying measurement noise variance
-> - Compare weighted least squares to ordinary least squares
+> - **Derive the weighted least squares criterion given varying measurement noise variance**
+> - **Compare weighted least squares to ordinary least squares**
 
 In the last video, we saw how we could use the method of least squares to solve for a more correct value of resistance given a set of noisy measurements. In this video, we'll ask the question, what can we do if we suspect that some of our measurements are of better quality than others? By the end of this video, you'll be able to derive and minimize the weighted least squares criterion that will let us handle measurements of different quality and compare this new method to the method of regular or ordinary least squares that we discussed in the previous video. Let's begin. 
 
@@ -220,9 +224,9 @@ Let's take a look at an example of how this method of weighted least squares wor
 ![1555596933164](assets/1555596933164.png)
 
 Be careful here, the numbers we list are standard deviations which is why they have the units of ohms. In order to use them in our formulation, we will need to square them to get the variances. 
-$$
-\mathbf{H}=\left[ \begin{array}{l}{1} \\ {1} \\ {1} \\ {1}\end{array}\right] \quad \mathbf{y}=\left[ \begin{array}{c}{1068} \\ {988} \\ {1002} \\ {996}\end{array}\right] \quad \mathbf{R}=\left[ \begin{array}{c}{\sigma_{1}^{2}} \\ {\sigma_{2}^{2}} \\ {\sigma_{3}^{2}} \\ {\sigma_{3}^{2}}\end{array}\right]=\left[ \begin{array}{c}{400} \\ {400} \\ {4}\end{array}\right]
-$$
+
+![1556198649329](assets/1556198649329.png)
+
 Defining our variables and then evaluating our weighted least squares solution, we can see that the final resistance value we get is much closer to what the more accurate multimeter measured as expected.Here's a quick summary of the methods of least squares and weighted least squares. 
 
 ![1555597136611](assets/1555597136611.png)
@@ -242,7 +246,7 @@ It's important to be comfortable working with different measurement variances an
 > - Measurements can come from sensors that have different noisy characteristics
 > - Weighted least squares lets us weight each measurement according to noise variance
 
-In this video, we discussed how certain measurements may come from sensors with better noise characteristics and should therefore be weighted more heavily in our least squares criterion. Using this intuition, we derived the weighted least squares criterion and the associated weighted normal equations that can be solved to yield the weighted least squares estimate of a set of constant parameters. In the next video, we'll look at modifying the method of least squares to work recursively, that is to compute an optimal estimate based on a stream of measurements without having to acquire the entire set beforehand. This will be very important when we look at state estimation, or the problem of estimating quantities that change continuously over time.
+In this video, we discussed how certain measurements may come from sensors with better noise characteristics and should therefore be weighted more heavily in our least squares criterion. Using this intuition, we derived the weighted least squares criterion and the associated weighted normal equations that can be solved to yield the weighted least squares estimate of a set of constant parameters. In the next video, we'll look at modifying the method of least squares to work recursively, that is to **compute an optimal estimate based on a stream of measurements without having to acquire the entire set beforehand.** This will be very important when we look at state estimation, or the problem of estimating quantities that change continuously over time.
 
 ---
 
@@ -290,8 +294,7 @@ A linear recursive estimate is given by the following expression.
 $$
 \hat{\mathbf{x}}_{k}=\hat{\mathbf{x}}_{k-1}+\mathbf{K}_{k}\left(\mathbf{y}_{k}-\mathbf{H}_{k} \hat{\mathbf{x}}_{k-1}\right)
 $$
-Here k is called an estimator gain matrix. The term in brackets is called the innovation. It quantifies how well our current measurement matches our previous best estimate. Even without knowing the expression for k. We can already see how this recursive structure works. Our new estimate is simply the sum of the old estimate and corrective term based on the difference between what we expected the measurement to be and what we
-actually measured. In fact, if the innovation were equal to zero, we would not change our old estimate at all. 
+Here k is called an estimator gain matrix. The term in brackets is called the innovation. **It quantifies how well our current measurement matches our previous best estimate.** Even without knowing the expression for k. We can already see how this recursive structure works. Our new estimate is simply the sum of the old estimate and corrective term based on the difference between what we expected the measurement to be and what we actually measured. In fact, if the innovation were equal to zero, we would not change our old estimate at all. 
 
 ---
 
@@ -301,7 +304,7 @@ Now, how do we compute k? Well, for that, we'll need to use a recursive least sq
 $$
 \begin{aligned} \mathscr{L}_{\mathrm{RLS}}&=\mathbb{E}\left[\left(x_{k}-\hat{x_{k}}\right)^{2}\right] \\ &=\sigma_{k}^{2} \end{aligned}
 $$
-For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance, sigma squared sub k. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. 
+For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance $\sigma_{k}^{2}$. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. 
 $$
 \begin{aligned} \mathscr{L}_{\mathrm{RLS}} &=\mathbb{E}\left[x_{1 k}-\hat{x}_{1 k}\right)^{2}+\ldots+\left(x_{n k}-\hat{x}_{n k}\right)^{2} ] \\ &=\operatorname{Trace}\left(\mathbf{P}_{k}\right) \end{aligned}
 $$
