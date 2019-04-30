@@ -204,7 +204,7 @@ To summarize, in this video we learned that a 6 degree of freedom IMU is compose
 
 ---
 
-### Lesson 3: The Global Navigation Satellite Systems (GNSS)
+## Lesson 3: The Global Navigation Satellite Systems (GNSS)
 
 Welcome back. In this video, we'll talk about a particular type of sensor that most of you will be very familiar with, the Global Navigation Satellite Systems or GNSS receiver. We'll learn about why this navigation sensor is so important for a self-driving car. It's able to provide a position fix anywhere in the world with bounded error which is key. Specifically, we'll develop a model for GNSS based on the principles of pseudoranging and trilateration. We'll then familiarize ourselves with sources of GNSS positioning error and talk about some ways to improve one type of GNSS.
 
