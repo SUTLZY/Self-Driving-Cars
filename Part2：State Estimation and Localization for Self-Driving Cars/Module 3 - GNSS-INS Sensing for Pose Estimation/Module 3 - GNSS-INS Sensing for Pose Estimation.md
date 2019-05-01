@@ -1,6 +1,10 @@
 # Module 3: GNSS/INS Sensing for Pose Estimation
 
-To navigate reliably, autonomous vehicles require an estimate of their pose (position and orientation) in the world (and on the road) at all times. Much like for modern aircraft, this information can be derived from a combination of GPS measurements and inertial navigation system (INS) data. This module introduces sensor models for inertial measurement units and GPS (and, more broadly, GNSS) receivers; performance and noise characteristics are reviewed. The module describes ways in which the two sensor systems can be used in combination to provide accurate and robust vehicle pose estimates.
+> 主要介绍了GPS和IMU两种感知传感器及其性能
+
+To navigate reliably, autonomous vehicles require an estimate of their pose (position and orientation) in the world (and on the road) at all times. **Much like for modern aircraft, this information can be derived from a combination of GPS measurements and inertial navigation system (INS) data.** 
+
+This module introduces sensor models for inertial measurement units and GPS (and, more broadly, GNSS) receivers; performance and noise characteristics are reviewed. The module describes ways in which the two sensor systems can be used in combination to provide accurate and robust vehicle pose estimates.
 
 ### 学习目标
 
@@ -35,11 +39,13 @@ We will use the following notation:
 
 ![1556603885578](assets/1556603885578.png)
 
-In frame a, the vector r has notation r sub a. Likewise in frame b, it has the coordinates r sub b. To convert from one set of coordinates to another, we will require a **rotation matrix** that tells us exactly how one frame is rotated with respect to the other. For this, we will use the notation bold capital C with the subscripts indicating the initial and final reference frames from right to left. 
+In frame a, the vector r has notation $r_a$. Likewise in frame b, it has the coordinates $r_b$. To convert from one set of coordinates to another, we will require a **rotation matrix** that tells us exactly how one frame is rotated with respect to the other. For this, we will use the **notation bold capital C** with the subscripts indicating the initial and final reference frames from right to left. 
 
 ---
 
 ### 3. Transformations
+
+> 目前，描述两个坐标系之间关系的常用方法主要有**欧拉角法**、**方向余弦矩阵法**和**四元数法**
 
 Often, it will also be useful for us to discuss how the coordinates of points change as we move from one reference frame to another. For example, we may know the position of a building in some frame, and now we'd like to know its position in our current vehicle frame. 
 
@@ -53,15 +59,23 @@ A critical component of tracking reference frames is tracking their orientation 
 
 ### 4. How Can We Represent a Rotation ?
 
-There are many different ways to represent rotations. The most common is to use a three by three rotation matrix as we've done before. This matrix defines the relationship between the basis vectors of two reference frames in terms of dot products. For this reason, it's often called the direction cosine matrix. An important property to remember is that the inverse of a rotation matrix is just its transpose. 
+> **方法1 ：** 方向余弦矩阵
+>
+> **解释：**有许多不同的方式来表示旋转。 最常见的是使用我们之前完成的**三乘三旋转矩阵**。 该矩阵根据**点积**定义两个参考帧的基矢量之间的关系。 因此，它通常被称为**方向余弦矩阵**。 要记住的一个重要特性是旋转矩阵的逆是它的转置。
+
+There are many different ways to represent rotations. The most common is to use a three by three rotation matrix as we've done before. This matrix defines the relationship between the basis vectors of two reference frames in terms of dot products. For this reason, it's often called the **direction cosine matrix**. An important property to remember is that the inverse of a rotation matrix is just its transpose. 
 
 ![1556604082039](assets/1556604082039.png)
 
-A second way to represent rotations is to use something called unit quaternions. Quaternions are an interesting mathematical topic in their own right, but for us, it's sufficient to note that a unit quaternion can be represented as a four-dimensional vector of unit length that parameterizes a rotation about an axis defined by the vector u, and an angle phi about that vector. We can convert a quaternion to a rotation matrix by using this somewhat tedious but straightforward algebraic expression. Why would we ever want to use quaternions? Well, they don't suffer from singularities and they only need four parameters instead of nine. 
+> **方法2 ：** 四元数法
+
+A second way to represent rotations is to use something called **unit quaternions**. Quaternions are an interesting mathematical topic in their own right, but for us, it's sufficient to note that a unit quaternion can be represented as a four-dimensional vector of unit length that parameterizes a rotation about an axis defined by the vector u, and an angle phi about that vector. We can convert a quaternion to a rotation matrix by using this somewhat tedious but straightforward algebraic expression. **Why would we ever want to use quaternions? Well, they don't suffer from singularities and they only need four parameters instead of nine.** 
 
 ![1556604140349](assets/1556604140349.png)
 
-Finally, another way of representing a rotation is using three numbers called Euler angles. These angles represent an arbitrary rotation as the composition of three separate rotations about different principal axes. Euler angles are attractive in part because they are a parsimonious representation requiring only three parameters instead of nine for a full rotation matrix. Unfortunately, Euler angle representations are subject to what are called singularities. Singularities complicate state estimation because they represent particular rotations from which to Euler angles are indistinguishable. Neither quaternions nor rotation matrices suffer from this problem at the expense of using more parameters. 
+> **方法3 ：** 欧拉角
+
+Finally, another way of representing a rotation is using three numbers called **Euler angles.** These angles represent an arbitrary rotation as the composition of three separate rotations about different principal axes. Euler angles are attractive in part because they are a parsimonious representation requiring only three parameters instead of nine for a full rotation matrix. Unfortunately, Euler angle representations are subject to what are called singularities. Singularities complicate state estimation because they represent particular rotations from which to Euler angles are indistinguishable. Neither quaternions nor rotation matrices suffer from this problem at the expense of using more parameters. 
 
 ![1556604196634](assets/1556604196634.png)
 
@@ -73,11 +87,13 @@ So, which of these representations do self-driving vehicle engineers use? Well, 
 
 ![1556604258163](assets/1556604258163.png)
 
-A rotation matrix can represent any rotation but requires nine parameters and had six constraints. A unit quaternion can also be used to represent any rotation, but it also has a constraint. To use a unit quaternion to actually rotate a vector, we also require some additional algebra beyond simple matrix multiplication. Finally, Euler angles are unconstrained, intuitive to visualize and use only three parameters, but are subject to singularities. 
+**A rotation matrix can represent any rotation but requires nine parameters and had six constraints.** A unit quaternion can also be used to represent any rotation, but it also has a constraint. To use a unit quaternion to actually rotate a vector, we also require some additional algebra beyond simple matrix multiplication. Finally, Euler angles are unconstrained, intuitive to visualize and use only three parameters, but are subject to singularities. 
 
 ---
 
 ### 6. Reference Frames | ECIF | ECEF
+
+> **地心惯性框架**
 
 Finally, let's look at four important reference frames that we'll use when localizing our vehicle. The first frame is the Earth-Centered Inertial Frame or ECIF. 
 
@@ -99,7 +115,7 @@ Although ECEF and ECIF are useful when we discuss satellites and inertial sensin
 
 ![1556604493339](assets/1556604493339.png)
 
-For this, we'll use what we referred to as the navigation frame. A very common navigation frame is one that is attached to some germane starting point and aligned with north, east, and down. Finally, we also often need to think about a sensor frame that is rigidly attached to a sensor like a LIDAR, a GPS receiver, or an inertial measurement unit. 
+For this, we'll use what we referred to as the **navigation frame**. A very common navigation frame is one that is attached to some germane starting point and aligned with north, east, and down. Finally, we also often need to think about a sensor frame that is rigidly attached to a sensor like a LIDAR, a GPS receiver, or an inertial measurement unit. 
 
 ![1556604564506](assets/1556604564506.png)
 

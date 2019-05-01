@@ -13,8 +13,9 @@
 * [Part2：State Estimation and Localization for Self-Driving Cars](Part2：State Estimation and Localization for Self-Driving Cars/README.md)
   * [Module 1：Least Squares](Part2：State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md)
   * [Module 2 - State Estimation - Linear and Nonlinear Kalman Filters](Part2：State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md)
-  * [Module 3 - GNSSINS Sensing for Pose Estimation](Part2：State Estimation and Localization for Self-Driving Cars/Module 3 - GNSSINS Sensing for Pose Estimation/Module 3 - GNSSINS Sensing for Pose Estimation.md)
+  * [Module 3 - GNSSINS Sensing for Pose Estimation](Part2：State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md)
   * [Module 4 - LIDAR Sensing](Part2：State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md)
+  * [Module 5 - Putting It together - An Autonomous Vehicle State Estimator](Part2：State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md)
 * [Part3：Visual Perception for Self-Driving Cars](Part3：Visual Perception for Self-Driving Cars/README.md)
 
 - [Part4：Motion Planning for Self-Driving Cars](Part4：Motion Planning for Self-Driving Cars/README.md)
