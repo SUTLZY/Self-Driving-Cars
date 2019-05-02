@@ -216,32 +216,211 @@ To summarize, in this lesson we've defined the terms bias and consistency, and s
 
 ---
 
-## Lesson3 - Going Nonlinear - The Extended Kalman Filter
+## Lesson 3 - Going Nonlinear - The Extended Kalman Filter
 
-So far in this module, you've learned how to use the linear Kalman filter for state estimation and you also saw that the Kalman filter is the best linear unbiased estimator or blue. However, the linear Kalman filter cannot be used directly to estimate states that are nonlinear functions of either the measurements or the control inputs. For example, the pose of the car includes its orientation which is not a linear quantity, orientations in 3D live on a sphere, in fact. So, we need to look for something else. In this video, we'll be learning about one important and widely used variation of a Kalman filter called the Extended Kalman Filter or EKF. The EKF is designed to work with nonlinear systems and it's often considered one of the workhorses of state estimation because it's used in all sorts of applications including self-driving cars. By the end of the video, you'll be able to describe how the EKF uses first-order linearization to turn a nonlinear problem into a linear one, understand the role of Jacobian matrices in the EKF and how to compute them, and apply the EKF to a simple nonlinear tracking problem. The filter works by first predicting the mean and co-variance of
-the updated state estimate at some time step k based on the previous state and any inputs we give to the system, such as the position of the accelerator pedal. The filter then uses a measurement model to predict what measurements should arrive based on the state estimate and compares these predictions with the measurements that actually arrive from our sensors. The Kalman gain tells us how to weight all of these pieces of information, so that we can optimally combine them into a corrected estimate, that is, a new state and an updated co-variance. This is sometimes called a predictor-corrector architecture. As we saw in the last video, the Kalman filter is actually the best of all possible estimators for linear systems. Unfortunately, there is a catch. Linear systems don't exist in reality. Even a very simple system like a resistor with a voltage
-applied isn't truly linear, at least not all the time. For a certain range of voltages, the current is a linear function of the voltage and follows Ohm's Law. But as the voltage gets higher, the resistor heats up which alters the resistance in a nonlinear way. Since the systems that we encounter in practice are nonlinear, this raises an important question. Can we still use the Kalman filter for nonlinear systems? If so, how? The key concept in the Extended Kalman Filter is the idea of linearizing a nonlinear system. For this reason, the EKF is sometimes referred to as the Linearized Kalman filter. Linearizing a system just means picking some operating point a and finding a linear approximation to the nonlinear function in the neighborhood of a. In two dimensions, this means finding the tangent line to the function f of x when x equals a. Mathematically, we do this by taking the Taylor series expansion of the function. Thinking back to your calculus courses, you may remember that the Taylor series expansion is a way of representing a function as an infinite possibly, some whose terms are calculated from the function's derivatives at a single point. For linearization, we're
-only interested in the first order terms of the Taylor series expansion highlighted in red. Let's return to
-our general nonlinear motion and measurement models and try to linearize them. What should we choose as the operating point for our Taylor's expansion? Ideally, we would like to linearize the models about the true value of the state but we can't do that because we already knew the true value of the state, we wouldn't need to estimate it. So instead, let's pick the next best thing, the most recent estimate of the state. For our emotion model, we'll linearize about the posterior estimate of the previous state and for the measurement model, we'll linearize about our prediction of the current state based on the motion model. So, now we have a linear system in state space and the matrices F, L, H and M are called Jacobian matrices of the system. Computing these matrices correctly is the most important and difficult step in the Extended Kalman filter algorithm, and it's also the most common place to make mistakes. But what are these Jacobian matrix exactly? In vector calculus, a Jacobian or Jacobian matrix is the matrix of all first-order partial derivatives of a vector valued function. Each column of the Jacobian contains the derivatives of the function outputs with respect to a given input. For example, if your function takes a three-dimensional vector and spits out a two-dimensional vector, the Jacobian would be a two by three matrix. Intuitively, the Jacobian matrix tells you how fast each output of your function is changing along each input dimension, just like how the derivative of a scalar function tells you how fast the output is changing as you vary the input. The Jacobian is really just a generalization of the first derivative to multiple dimensions. Here's a simple example of the Jacobian of a two-dimensional function with two inputs. The Jacobian matrix captures the first derivatives of each of the two output variables with respect to each of the two input variables. The best way to get comfortable with driving Jacobian is just practice. Try deriving the Jacobian of
-this vector valued function. Now, we know how to compute the Jacobian matrices needed for the EKF, and all that's left is to plug them into our standard Kalman filter equations. There are a couple of differences to notice in the EKF equations compared to the Kalman filter equations we saw in module two. First, in the prediction and correction steps, we're still using the nonlinear models to propagate the mean of the state estimate and to compute the measurement residual or innovation. That's because we linearized our motion model about the previous state estimate, and we linearized the measurement model about the predicted state. By definition, the linearized model exactly coincides with the nonlinear model at the operating points. The second difference is the appearance of the L and M Jacobians related to the process and measurement noise. In many cases, both of these matrices will be identity since noise is often assumed to be additive but this is not always the case. So far, this has all been very abstract. So, let's walk through a concrete example of actually using the EKF. We'll use the same example from module two but with a twist. We're going to track the position and velocity of a car moving along a rail. But now, instead of receiving periodic GPS measurements that tell us our position, we're going to use an on-board sensor like a camera to measure the altitude of distant landmarks relative to the horizon. We'll keep the same linear motion model as in the original example, and assume we know both the height of the landmark and its position in a global reference frame. Because our sensor is measuring an angle, our measurement model has a nonlinear dependence on the position of the car. We're going to need to linearize the measurement model and use it in our Extended Kalman Filter. The Jacobians for this problem look like this. Notice that the F matrix in this problem is exactly the same as the F matrix in the original problem. That's because our motion model is already linear in the state. Also notice that the noise Jacobians, L and M, are both identity since both the emotion and the measurement model have additive noise. Try using the data given here
-to estimate the position of the vehicle at time one using the EKF. Here is the result of the prediction step for the mean and co-variance of the state. Notice that the result is identical to the linear Kalman filter case because the motion model actually is linear. For the correction step, this is what you should get. Keep in mind that you should use the nonlinear measurement model to compute the measurement residual, not the linearized model. Also note that in this case, even though the corrected mean at the state estimate is different from the predicted mean, the corrected co-variance didn't change that much from the predicted co-variance. This is because the Azimuth angle changes slowly at this distance and doesn't provide much information about the vehicle state compared to a GPS measurement. So, to recap, we saw that the Extended Kalman Filter or EKF uses linearization to adopt the Kalman filter to nonlinear systems. We'll encounter several different nonlinear systems to which we can apply the EKF or its cousin, the UKF, in the upcoming course project. Linearization works by computing a local linear approximation to a nonlinear function using a first-order Taylor series expansion about an operating point. This requires several Jacobian matrices which contain the set of first-order partial derivatives. In the next video, we'll discuss an alternative formulation of the EKF called the error state Extended Kalman Filter. This would be a useful tool later in the course when we talk about estimating the vehicle orientation in 3D space.
+So far in this module, you've learned how to use the linear Kalman filter for state estimation and you also saw that the Kalman filter is the best linear unbiased estimator or blue. However, the linear Kalman filter cannot be used directly to estimate states that are nonlinear functions of either the measurements or the control inputs. For example, the pose of the car includes its orientation which is not a linear quantity, orientations in 3D live on a sphere, in fact. So, we need to look for something else. In this video, we'll be learning about one important and widely used variation of a Kalman filter called the Extended Kalman Filter or EKF. 
 
----
+The EKF is designed to work with nonlinear systems and it's often considered one of the workhorses of state estimation because it's used in all sorts of applications including self-driving cars. By the end of the video, you'll be able to 
 
-## Lesson 4
-
-In the last video, we introduced the Extended Kalman Filter, which uses local linearization as a way to allow us to apply the Kalman filter equations to non-linear systems. In this video, we're going to look at a variant of the EKF called the Error-State Extended Kalman Filter, or ES-EKF, which has a couple of nice properties that will come in handy later in the course. By the end of this video, you'll be able to describe the error state formulation of the Extended Kalman Filter, and describe the advantages of the error state EKF
-over the vanilla EKF that you learned about in the previous video. The idea behind the error state EKF is really very simple. We're going to start thinking about our vehicle state, x, as being composed of two parts; a large part called the nominal state, x hat, and a small part called the error state, Delta x. We can think of
-a simple example of tracking the position of a car over time. The green line shows the true position of the car, which is the quantity we're trying to estimate. The red line is the nominal state, or our best guess what the true state could be based on what we know about the car's motion model and acceleration and breaking inputs. Of course, our motion model is never perfect, and there is always some random process noise. These errors build up over time as we integrate the motion model. We can think of the error state as the place where all of these modelling errors and process noise accumulate over time, so that the error state is just the difference between the nominal state and the true state at any given time. If we can figure out what the error state is, we can actually use it as a correction to the nominal state to bring us closer to the true state. So, in the error state EKF, instead of doing Kalman filtering on the full state which might have lots of complicated non-linear behaviors, we're going to use the EKF to estimate the error state instead, and then use the estimate of the error state as a correction to the nominal state. What this means mathematically is that we're going to rearrange our linearized motion model so that we now have an equation that can tell us how the difference between the true state at time, k, and our predicted state at time, k, is related to the same difference at time, k minus one. These differences are exactly the error states we just talked about; Delta x sub k and Delta x sub k minus one, and the equations relating them are called the error state kinematics. We can also re-express our linearized measurement model in terms of the error
-state directly. We can use this error state formulation of the EKF in a very similar way to the vanilla EKF. We start off by updating the nominal state using the non-linear motion model and our current best estimate of the state. We could do this a bunch of times before ever getting a measurement for the correction step. So, the current best estimate might be x check or x hat. We also need to keep track of the state covariance, which grows as we integrate more and more process noise from the motion model. Note that again, the previous covariance estimate could be P check or P hat depending on whether we used a measurement to
-do a correction step. We can repeat the loop updating the nominal state and the error state covariance for as long as we like until we receive the measurement and want to do a correction. When this happens, we can compute the Kalman gain as usual, and then compute the best estimate of the error state using the Kalman gain, the measurement, and our nonlinear measurement model. Now, here's where things are little different. Once we have an estimate for the mean of the error state, we want to use this to update the nominal state and correct the error. We can do that by just adding our estimate of the error state to the nominal state to get the correct state estimate for the full state. Finally, we can update the state covariance using the usual equations. That's it. This process goes on forever, or at least until the vehicle runs out of gas. So, why would we actually want to use the error state EKF in practice? Well, there are two good reasons to use it. One reason is that it can often work better than the vanilla EKF because the small error state is more amenable to linear filtering than the large nominal state, which we can integrate non-linearly. The other reason is that the error state formulation makes it much easier to work with constrained quantities like rotations, which will come in handy a bit later in the course. The reason for this is that we don't necessarily have to use plane vector addition to break down the state. In fact, we could use any generalized
-composition operation we like as long as it gives us a consistent way of incorporating small perturbations
-into the nominal state. If this all sounds a bit abstract right now, don't worry. Later in the course, we'll use the error state EKF to help us deal with rotations in 3D space, which are a very common type of constraint quantity. Let's recap. The error state formulation of the EKF separates the vehicle state into a large nominal state and a small error state. The nominal state keeps track of what the motion model predicts the states should be, while the error state captures the modelling errors and process noise that accumulate over time. In the error state EKF, we estimate this small error state and use it as a correction to the nominal state. This is the main difference between the error state EKF and the vanilla EKF, which estimates the full state. Keep in mind that both formulations still rely on local linearization. The error state EKF has a couple of advantages over the vanilla EKF. The first is that it simply performs better because the evolution of the error state tends to be closer to linear. The other is that the error state formulation makes it easier to handle special quantities like 3D rotations as we'll see later in the course. In the next video, we'll discuss some of the shortcomings of the EKF, and how local linearization can break down creating a potentially
-dangerous situation for a self-driving car.
+- Describe how the EKF uses first-order linearization to turn a nonlinear problem into a linear one
+- Understand the role of Jacobian matrices in the EKF and how to compute them
+- Apply the EKF to a simple nonlinear tracking problem. 
 
 ---
 
-## Lesson  5
+### 1. Recap | The Linear Kalman Filter
+
+The filter works by first predicting the mean and co-variance of the updated state estimate at some time step k based on the previous state and any inputs we give to the system, such as the position of the accelerator pedal. 
+
+![1556781489449](assets/1556781489449.png)
+
+The filter then uses a measurement model to predict what measurements should arrive based on the state estimate and compares these predictions with the measurements that actually arrive from our sensors. **The Kalman gain tells us how to weight all of these pieces of information**, so that we can optimally combine them into a corrected estimate, that is, a new state and an updated co-variance. This is sometimes called a predictor-corrector architecture. 
+
+---
+
+### 2. Nonlinear Kalman Filtering
+
+As we saw in the last video, the Kalman filter is actually the best of all possible estimators for linear systems. Unfortunately, there is a catch. Linear systems don't exist in reality. Even a very simple system like a resistor with a voltage applied isn't truly linear, at least not all the time. 
+
+![1556781594930](assets/1556781594930.png)
+
+For a certain range of voltages, the current is a linear function of the voltage and follows Ohm's Law. But as the voltage gets higher, the resistor heats up which alters the resistance in a nonlinear way. 
+
+![1556781708030](assets/1556781708030.png)
+
+Since the systems that we encounter in practice are nonlinear, this raises an important question. Can we still use the Kalman filter for nonlinear systems? If so, how? 
+
+---
+
+### 3. EKF | Linearizing a Nonlinear System
+
+The key concept in the Extended Kalman Filter is the idea of linearizing a nonlinear system. 
+
+![1556781783497](assets/1556781783497.png)
+
+For this reason, the EKF is sometimes referred to as the Linearized Kalman filter. Linearizing a system just means picking some operating point a and finding a linear approximation to the nonlinear function in the neighborhood of a. In two dimensions, this means finding the tangent line to the function f of x when x equals a. 
+
+![1556781864900](assets/1556781864900.png)
+
+Mathematically, we do this by taking the Taylor series expansion of the function. Thinking back to your calculus courses, you may remember that the Taylor series expansion is a way of representing a function as an infinite possibly, some whose terms are calculated from the function's derivatives at a single point. For linearization, we're only interested in the first order terms of the Taylor series expansion highlighted in red. Let's return to our general nonlinear motion and measurement models and try to linearize them. 
+
+What should we choose as the operating point for our Taylor's expansion? Ideally, we would like to linearize the models about the true value of the state but we can't do that because we already knew the true value of the state, we wouldn't need to estimate it. So instead, let's pick the next best thing, the most recent estimate of the state. 
+
+![1556782082249](assets/1556782082249.png)
+
+For our emotion model, we'll linearize about the posterior estimate of the previous state and for the measurement model, we'll linearize about our prediction of the current state based on the motion model.
+
+![1556782122750](assets/1556782122750.png)
+
+ So, now we have a linear system in state space and the matrices $\mathrm{F}_{k-1}, \mathrm{L}_{k-1}, \mathrm{H}_{k,} \text { and } \mathrm{M}_{k}$ are called Jacobian matrices of the system. Computing these matrices correctly is the most important and difficult step in the Extended Kalman filter algorithm, and it's also the most common place to make mistakes. But what are these Jacobian matrix exactly? 
+
+---
+
+### 4. EKF | Computing Jacobian Matrices
+
+In vector calculus, a Jacobian or Jacobian matrix is the matrix of all first-order partial derivatives of a vector valued function. 
+$$
+\frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{ccc}{\frac{\partial \mathbf{f}}{\partial x_{1}}} & {\cdots} & {\frac{\partial \mathbf{f}}{\partial x_{n}}}\end{array}\right]=\left[ \begin{array}{ccc}{\frac{\partial f_{1}}{\partial x_{1}}} & {\cdots} & {\frac{\partial f_{1}}{\partial x_{n}}} \\ {\vdots} & {\ddots} & {\vdots} \\ {\frac{\partial f_{m}}{\partial x_{1}}} & {\cdots} & {\frac{\partial f_{m}}{\partial x_{n}}}\end{array}\right]
+$$
+Each column of the Jacobian contains the derivatives of the function outputs with respect to a given input. For example, if your function takes a three-dimensional vector and spits out a two-dimensional vector, the Jacobian would be a two by three matrix. Intuitively, the Jacobian matrix tells you how fast each output of your function is changing along each input dimension, just like how the derivative of a scalar function tells you how fast the output is changing as you vary the input. The Jacobian is really just a generalization of the first derivative to multiple dimensions. Here's a simple example of the Jacobian of a two-dimensional function with two inputs. 
+$$
+\mathbf{f}(\mathbf{x})=\left[ \begin{array}{c}{f_{1}} \\ {f_{2}}\end{array}\right]=\left[ \begin{array}{c}{x_{1}+x_{2}} \\ {x_{1}^{2}}\end{array}\right] \quad \rightarrow \quad \frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{cc}{\frac{\partial f_{1}}{d x_{1}}} & {\frac{\partial f_{1}}{\partial x_{2}}} \\ {\frac{\partial f_{2}}{d x_{1}}} & {\frac{\partial f_{2}}{\partial x_{2}}}\end{array}\right]=\left[ \begin{array}{cc}{1} & {1} \\ {2 x_{1}} & {0}\end{array}\right]
+$$
+The Jacobian matrix captures the first derivatives of each of the two output variables with respect to each of the two input variables. The best way to get comfortable with driving Jacobian is just practice. Try deriving the Jacobian of this vector valued function. 
+
+---
+
+### 5. EKF | Putting It All Together
+
+Now, we know how to compute the Jacobian matrices needed for the EKF, and all that's left is to plug them into our standard Kalman filter equations. 
+
+![1556782688001](assets/1556782688001.png)
+
+There are a couple of differences to notice in the EKF equations compared to the Kalman filter equations we saw in module two. First, in the prediction and correction steps, we're still using the nonlinear models to propagate the mean of the state estimate and to compute the measurement residual or innovation. That's because we linearized our motion model about the previous state estimate, and we linearized the measurement model about the predicted state. By definition, the linearized model exactly coincides with the nonlinear model at the operating points. The second difference is the appearance of the L and M Jacobians related to the process and measurement noise. In many cases, both of these matrices will be identity since noise is often assumed to be additive but this is not always the case. So far, this has all been very abstract. 
+
+So, let's walk through a concrete example of actually using the EKF. 
+
+![1556782810269](assets/1556782810269.png)
+
+We'll use the same example from module two but with a twist. We're going to track the position and velocity of a car moving along a rail. But now, instead of receiving periodic GPS measurements that tell us our position, we're going to use an on-board sensor like a camera to measure the altitude of distant landmarks relative to the horizon. We'll keep the same linear motion model as in the original example, and assume we know both the height of the landmark and its position in a global reference frame. Because our sensor is measuring an angle, our measurement model has a nonlinear dependence on the position of the car. We're going to need to linearize the measurement model and use it in our Extended Kalman Filter. 
+
+![1556782891716](assets/1556782891716.png)
+
+The Jacobians for this problem look like this. Notice that the F matrix in this problem is exactly the same as the F matrix in the original problem. That's because our motion model is already linear in the state. Also notice that the noise Jacobians, L and M, are both identity since both the emotion and the measurement model have additive noise. 
+
+![1556782987930](assets/1556782987930.png)
+
+Try using the data given here to estimate the position of the vehicle at time one using the EKF. 
+
+Here is the result of the prediction step for the mean and co-variance of the state. 
+
+![1556783027696](assets/1556783027696.png)
+
+Notice that the result is identical to the linear Kalman filter case because the motion model actually is linear. For the correction step, this is what you should get. Keep in mind that you should use the nonlinear measurement model to compute the measurement residual, not the linearized model. Also note that in this case, even though the corrected mean at the state estimate is different from the predicted mean, the corrected co-variance didn't change that much from the predicted co-variance. 
+
+![1556783083861](assets/1556783083861.png)
+
+This is because the Azimuth angle changes slowly at this distance and doesn't provide much information about the vehicle state compared to a GPS measurement. 
+
+---
+
+### 6. Summary
+
+So, to recap
+
+- The EKF uses linearization to adapt the Kalman filter to nonlinear systems
+- Linearization works by computing a local linear approximation to a nonlinear function about a chosen operating point
+- Linearization relies on computing Jacobian matrices, which contain all the firstorder partial derivatives of a function
+
+In the next video, we'll discuss an alternative formulation of the EKF called the error state Extended Kalman Filter. This would be a useful tool later in the course when we talk about estimating the vehicle orientation in 3D space.
+
+---
+
+## Lesson 4 - An Improved EKF : The Error State Extended Kalman Filter
+
+In the last video, we introduced the Extended Kalman Filter, which uses local linearization as a way to allow us to apply the Kalman filter equations to non-linear systems. In this video, we're going to look at a variant of the EKF called the Error-State Extended Kalman Filter, or ES-EKF, which has a couple of nice properties that will come in handy later in the course. By the end of this video, you'll be able to 
+
+- **Describe the error state formulation of the Extended Kalman Filter**
+- **Describe the advantages of the error state EKF over the vanilla EKF**
+
+---
+
+### 1. What's in a State
+
+The idea behind the error state EKF is really very simple. We're going to start thinking about our vehicle state, x, as being composed of two parts; a large part called the nominal state, x hat, and a small part called the error state, Delta x. 
+
+![1556783451808](assets/1556783451808.png)
+
+We can think of a simple example of tracking the position of a car over time. The green line shows the true position of the car, which is the quantity we're trying to estimate. The red line is the nominal state, or our best guess what the true state could be based on what we know about the car's motion model and acceleration and breaking inputs. 
+
+![1556783576978](assets/1556783576978.png)
+
+Of course, our motion model is never perfect, and there is always some random process noise. These errors build up over time as we integrate the motion model. We can think of the error state as the place where all of these modelling errors and process noise accumulate over time, so that the error state is just the difference between the nominal state and the true state at any given time. If we can figure out what the error state is, we can actually use it as a correction to the nominal state to bring us closer to the true state. 
+
+---
+
+### 2. The Error-State Extended Kalman Filter
+
+So, in the error state EKF, instead of doing Kalman filtering on the full state which might have lots of complicated non-linear behaviors, we're going to use the EKF to estimate the error state instead, and then use the estimate of the error state as a correction to the nominal state. 
+
+![1556783744349](assets/1556783744349.png)
+
+What this means mathematically is that we're going to rearrange our linearized motion model so that we now have an equation that can tell us how the difference between the true state at time, k, and our predicted state at time, k, is related to the same difference at time, k minus one. These differences are exactly the error states we just talked about; Delta x sub k and Delta x sub k minus one, and the equations relating them are called the error state kinematics. We can also re-express our linearized measurement model in terms of the error state directly. We can use this error state formulation of the EKF in a very similar way to the vanilla EKF. We start off by updating the nominal state using the non-linear motion model and our current best estimate of the state. 
+
+![1556784000692](assets/1556784000692.png)
+
+We could do this a bunch of times before ever getting a measurement for the correction step. So, the current best estimate might be x check or x hat. We also need to keep track of the state covariance, which grows as we integrate more and more process noise from the motion model. Note that again, the previous covariance estimate could be P check or P hat depending on whether we used a measurement to
+do a correction step. 
+
+![1556784049446](assets/1556784049446.png)
+
+We can repeat the loop updating the nominal state and the error state covariance for as long as we like until we receive the measurement and want to do a correction. 
+
+![1556784145281](assets/1556784145281.png)
+
+When this happens, we can compute the Kalman gain as usual, and then compute the best estimate of the error state using the Kalman gain, the measurement, and our nonlinear measurement model. 
+
+![1556784200570](assets/1556784200570.png)
+
+Now, here's where things are little different. Once we have an estimate for the mean of the error state, we want to use this to update the nominal state and correct the error. We can do that by just adding our estimate of the error state to the nominal state to get the correct state estimate for the full state. 
+
+![1556784242175](assets/1556784242175.png)
+
+Finally, we can update the state covariance using the usual equations. 
+
+![1556784264103](assets/1556784264103.png)
+
+That's it. This process goes on forever, or at least until the vehicle runs out of gas. 
+
+---
+
+### 3. Why Use the ES-EKF?
+
+So, why would we actually want to use the error state EKF in practice? Well, there are two good reasons to use it. 
+
+![1556784380734](assets/1556784380734.png)
+
+One reason is that it can often work better than the vanilla EKF because the small error state is more amenable to linear filtering than the large nominal state, which we can integrate non-linearly.  The other reason is that the error state formulation makes it much easier to work with constrained quantities like rotations, which will come in handy a bit later in the course. The reason for this is that we don't necessarily have to use plane vector addition to break down the state. In fact, we could use any generalized composition operation we like as long as it gives us a consistent way of incorporating small perturbations into the nominal state.If this all sounds a bit abstract right now, don't worry. Later in the course, we'll use the error state EKF to help us deal with rotations in 3D space, which are a very common type of constraint quantity. 
+
+---
+
+### 4. Summary | The Error-State EKF (ES-EKF)
+
+> - **The error-state formulation separates the state into a “large” nominal state and a “small” error state.**
+>
+> - **The ES-EKF uses local linearization to estimate the error state and uses it to correct the nominal state.**
+>
+> - **The ES-EKF can perform better than the vanilla EKF, and provides a natural way to handle constrained quantities like rotations in 3D.**
+
+The error state formulation of the EKF separates the vehicle state into a large nominal state and a small error state. The nominal state keeps track of what the motion model predicts the states should be, while the error state captures the modelling errors and process noise that accumulate over time. In the error state EKF, we estimate this small error state and use it as a correction to the nominal state. This is the main difference between the error state EKF and the vanilla EKF, which estimates the full state. Keep in mind that both formulations still rely on local linearization. The error state EKF has a couple of advantages over the vanilla EKF. 
+
+The first is that it simply performs better because the evolution of the error state tends to be closer to linear. The other is that the error state formulation makes it easier to handle special quantities like 3D rotations as we'll see later in the course. 
+
+In the next video, we'll discuss some of the shortcomings of the EKF, and how local linearization can break down creating a potentially dangerous situation for a self-driving car.
+
+---
+
+## Lesson 5 - Limitations of the EKF
 
 In the last two videos, we learned about the extended Kalman filter or EKF and how we can use it to adapt the linear Kalman filter to non-linear systems. While the EKF works well for many practical problems, there are some important limitations to keep in mind when deciding if the EKF is the right algorithm for you. In this video, we'll discuss some of these limitations. Recall that the EKF works by linearizing our systems non-linear motion and observation models to update both the mean and covariance of our state estimate. A linearized model is just a local linear approximation of the true non-linear model. We call the difference between the approximation and the true model, the linearization error. In general, the linearization error for any function depends on two things. The first thing is how non-linear the original function is to begin with. If our nonlinear function very slowly or is quite flat much of the time, linear approximation is going to be a pretty good fit. On the other hand, if the function varies quickly, linear approximation is not going to do a great job of capturing the true shape of the function over most of its domain. The second thing linearization error depends on is how far away from the operating point you are. The further away you move from the operating point, the more likely the linear approximation is to diverge from the true function. These properties of linearization error have important implications for the EKF. So, let's look at an example of how linearization error affects the mean and covariance of two random variables transformed by a common pair of non-linear functions. Specifically, let's look at the non-linear transformation from polar coordinates r and Theta to Cartesian coordinates, x and y. This kind of transformation is commonly used to work with laser scanners or LIDARs, to report range and bearing measurements, just as the scanners on many self-driving cars do. Let's take a number of samples from a uniform distribution over an interval of polar coordinates and consider what happens when we transform the samples into Cartesian coordinates. To illustrate what this looks like, we've plotted the random samples from the uniform distribution as blue dots you see on the left. When we transform each of these sample points into the corresponding Cartesian coordinates, we see that the transform distribution takes on a banana shape, shown on the right. Clearly, the shape of the banana distribution is not captured completely by using a mean and a covariance only. But let's see what happens to the mean and covariance of the original PDF. In the left-hand plot, the true mean of the uniform distribution is shown as the green dot in the middle, and the true covariance is represented by the green ellipse. After transforming the uniform distribution into Cartesian coordinates, the mean of the output distribution ends up here, and its covariance looks like this. Now, consider what happens if we linearize the polar to Cartesian transformation about the mean of the original distribution and then transform all the sample points again. The linearized transformation gives us an output distribution that looks like another uniform distribution and bears almost no resemblance to the banana-shaped distribution we saw before. If we look at the mean of this distribution, represented by a red dot, it lands somewhere up here, and the linearized covariance looks quite different as well. Let's compare the linearized and non-linear output distributions. You can see that the mean of the linearized distribution is in a very different place from the true mean, and the linearized covariance seriously underestimates the spread of the true output distribution along the y dimension. So, in this case, we can see that linearization
 error can cause our belief about the output distribution to completely miss the mark, and this can cause
@@ -253,7 +432,7 @@ being modeled are highly non-linear or the linearization error is large, the fil
 
 ---
 
-## Lesson 6
+## Lesson 6 - An Alternative to the EKF : The Unscented Kalman Filter
 
 In the previous video, we saw how linearization error can cause the EKF to produce state estimates that are very different from the true value of the state and covariances that don't accurately capture the uncertainty in the state. This can be a big problem when we're relying on the EKF in safety critical applications like self-driving cars. In this lesson, you'll learn about the unscented common filter, which is an alternative approach to non-linear common filtering that relies on something called the unscented transform to pass probability distributions through nonlinear functions. As we'll see, the unscented transform gives us much higher accuracy than analytical EKF style linearization for a similar amount of computation, and without needing to compute any Jacobians. So by the end of this video you'll be
 able to use the unscented transform to pass a probability distribution through a nonlinear function, describe how the Unscented Kalman Filter or UKF uses the unscented transform in the prediction and correction steps, and explain the advantages of the UKF over the EKF as well as apply the UKF to a simple
