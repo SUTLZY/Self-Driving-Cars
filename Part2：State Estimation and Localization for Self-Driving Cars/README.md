@@ -66,3 +66,15 @@ LIDAR (light detection and ranging) sensing is an enabling technology for self-d
 - Apply standard transfomations (translation, rotation, and scaling) to LIDAR point cloud data
 - Summarize how the problem of motion distortion can affect LIDAR scans acquired from a moving vehicle
 - Utilize the iterative closest point (ICP) algorithm to align point clouds from consecutive LIDAR scans
+
+---
+
+## Module 5: Putting It together - An Autonomous Vehicle State Estimator
+
+This module combines materials from Modules 1-4 together, with the goal of developing a full vehicle state estimator. Learners will build, using data from the CARLA simulator, an error-state extended Kalman filter-based estimator that incorporates GPS, IMU, and LIDAR measurements to determine the vehicle position and orientation on the road at a high update rate. There will be an opportunity to observe what happens to the quality of the state estimate when one or more of the sensors either 'drop out' or are disabled.
+
+### 学习目标
+
+- Apply filtering-based state estimation to determine the pose of a vehicle on the roadway
+- Use LIDAR scan registration (to an existing map) to improve state estimates
+- Test the effects of the loss of one or more sensors on the vehicle pose estimate

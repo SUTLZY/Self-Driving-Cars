@@ -1,4 +1,4 @@
-# Module 2 - State Estimation - Linear and Nonlinear Kalman Filters
+Module 2 - State Estimation - Linear and Nonlinear Kalman Filters
 
 Any engineer working on autonomous vehicles must understand the Kalman filter, first described in a paper by Rudolf Kalman in 1960. The filter has been recognized as one of the top 10 algorithms of the 20th century, is implemented in software that runs on your smartphone and on modern jet aircraft, and was crucial to enabling the Apollo spacecraft to reach the moon. This module derives the Kalman filter equations from a least squares perspective, for linear systems. 
 
@@ -16,6 +16,8 @@ The module also examines why the Kalman filter is the best linear unbiased estim
 ---
 
 ## Lesson 1: The (Linear) Kalman Filter
+
+> 线性卡尔曼滤波器，可参考[博客](<https://zhuanlan.zhihu.com/p/59622824>)
 
 ### 1. Overview
 
@@ -47,7 +49,7 @@ The engineers at NASA's Ames Research Center, adopted Kalman's linear theory and
 
 ### 3. The Kalman Filter | Prediction and Correction
 
-> 虽然递推最小二乘法更新了静态参数的估计，但卡尔曼滤波器能够更新和估计一个进化状态
+> 卡尔曼滤波器与我们前面讨论过的线性递归最小二乘滤波器非常相似。 但是递归最小二乘更新**静态参数**的估计，而卡尔曼滤波器能够更新和估计不断变化的状态。 卡尔曼滤波器的目标是对该状态进行概率估计并使用两个步骤实时更新它：**预测和纠正**。
 
 The Kalman filter is very similar to the linear recursive least squares filter we discussed earlier. While recursive least squares updates the estimate of a static parameter, but Kalman filter is able to update and estimate of an evolving state. **The goal of the Kalman filter is to take a probabilistic estimate of this state and update it in real time using two steps; prediction and correction.** To make these ideas more concrete, let's consider a problem of estimating the 1D position of the vehicle. 
 
@@ -125,7 +127,11 @@ This uncertainty reduction occurs because our measurement model is fairly accura
 
 ### 7. Summary
 
-To summarize, the Kalman filter is similar to recursively squares, but also adds a motion model that defines how our state evolves over time. The Kalman filter works in two stages: First, predicting the next state using the motion model, and second, correcting this prediction using a measurement. But how can we be sure that the Kalman filter is giving us an accurate state estimate? In the next video, we'll discuss a few appealing theoretical properties of the Kalman filter that have made it such a staple in the engineering field.
+> 进一步了解可参考[博客](https://www.cnblogs.com/leexiaoming/p/6852483.html)
+
+To summarize, the Kalman filter is similar to recursively squares, but also adds a motion model that defines how our state evolves over time. The Kalman filter works in two stages: 
+
+First, predicting the next state using the motion model, and second, correcting this prediction using a measurement. But how can we be sure that the Kalman filter is giving us an accurate state estimate? In the next video, we'll discuss a few appealing theoretical properties of the Kalman filter that have made it such a staple in the engineering field.
 
 ---
 
@@ -133,15 +139,15 @@ To summarize, the Kalman filter is similar to recursively squares, but also adds
 
 Now, we've introduced the Kalman Filter, let's discuss little bit about what makes it such an appealing estimation method. By the end of this lesson, you'll be able to define a few terms that are important in state estimation. 
 
-- Define bias
-- Define consistency
-- Explain why the Kalman filter is the Best Linear Unbiased Estimator(BLUE)
+- **Define bias**
+- **Define consistency**
+- **Explain why the Kalman filter is the Best Linear Unbiased Estimator(BLUE)**
 
 ---
 
 ### 1. Bias in State Estimation
 
-Let's dive in. First, let's discuss bias. Let's consider our Kalman Filter from the previous lesson and use it to estimate the position of our autonomous car. If we have some way of knowing the true position of the vehicle, for example, an oracle tells us, we can then use this to record a position error of our filter at each time step k. Since we're dealing with random noise, doing this once is not enough. We'll need to repeat this same process over and over and record our position error at each time step. 
+Let's dive in. First, let's discuss bias. Let's consider our Kalman Filter from the previous lesson and use it to estimate the position of our autonomous car. If we have some way of knowing the true position of the vehicle, for example, an oracle tells us, we can then use this to record a position error of our filter at each time step k. Since we're dealing with random noise, doing this once is not enough. We'll need to repeat this same process over and over and record our position error at each time step(由于我们处理的是随机噪声，这样做一次是不够的。 我们需要反复重复这个过程，并在每个时间步记录我们的位置错误) 
 
 ![1556028440311](assets/1556028440311.png)
 
@@ -174,7 +180,7 @@ While this is a great result for linear systems, remember that this doesn't guar
 
 ### 2. Consistency in State Estimation
 
-Kalman Filters are also what is called consistent. By consistency we mean that for all time steps k, the filter co-variants P sub k matches the expected value of the square of our error. 
+Kalman Filters are also what is called consistent. By consistency we mean that for all time steps k, the filter co-variants $P_k$ matches the expected value of the square of our error. 
 
 ![1556029158538](assets/1556029158538.png)
 
@@ -222,9 +228,9 @@ So far in this module, you've learned how to use the linear Kalman filter for st
 
 The EKF is designed to work with nonlinear systems and it's often considered one of the workhorses of state estimation because it's used in all sorts of applications including self-driving cars. By the end of the video, you'll be able to 
 
-- Describe how the EKF uses first-order linearization to turn a nonlinear problem into a linear one
-- Understand the role of Jacobian matrices in the EKF and how to compute them
-- Apply the EKF to a simple nonlinear tracking problem. 
+- **Describe how the EKF uses first-order linearization to turn a nonlinear problem into a linear one**
+- **Understand the role of Jacobian matrices in the EKF and how to compute them**
+- **Apply the EKF to a simple nonlinear tracking problem.** 
 
 ---
 
@@ -232,7 +238,7 @@ The EKF is designed to work with nonlinear systems and it's often considered one
 
 The filter works by first predicting the mean and co-variance of the updated state estimate at some time step k based on the previous state and any inputs we give to the system, such as the position of the accelerator pedal. 
 
-![1556781489449](assets/1556781489449.png)
+![1556892918655](assets/1556892918655.png)
 
 The filter then uses a measurement model to predict what measurements should arrive based on the state estimate and compares these predictions with the measurements that actually arrive from our sensors. **The Kalman gain tells us how to weight all of these pieces of information**, so that we can optimally combine them into a corrected estimate, that is, a new state and an updated co-variance. This is sometimes called a predictor-corrector architecture. 
 
@@ -242,41 +248,43 @@ The filter then uses a measurement model to predict what measurements should arr
 
 As we saw in the last video, the Kalman filter is actually the best of all possible estimators for linear systems. Unfortunately, there is a catch. Linear systems don't exist in reality. Even a very simple system like a resistor with a voltage applied isn't truly linear, at least not all the time. 
 
-![1556781594930](assets/1556781594930.png)
+![1556893118317](assets/1556893118317.png)
 
-For a certain range of voltages, the current is a linear function of the voltage and follows Ohm's Law. But as the voltage gets higher, the resistor heats up which alters the resistance in a nonlinear way. 
-
-![1556781708030](assets/1556781708030.png)
-
-Since the systems that we encounter in practice are nonlinear, this raises an important question. Can we still use the Kalman filter for nonlinear systems? If so, how? 
+For a certain range of voltages, the current is a linear function of the voltage and follows Ohm's Law. But as the voltage gets higher, the resistor heats up which alters the resistance in a nonlinear way. Since the systems that we encounter in practice are nonlinear, this raises an important question. Can we still use the Kalman filter for nonlinear systems? If so, how? 
 
 ---
 
 ### 3. EKF | Linearizing a Nonlinear System
 
-The key concept in the Extended Kalman Filter is the idea of linearizing a nonlinear system. 
+> 进行一阶泰勒公式展开
 
-![1556781783497](assets/1556781783497.png)
+The key concept in the Extended Kalman Filter is **the idea of linearizing a nonlinear system.** 
+
+![1556893212773](assets/1556893212773.png)
 
 For this reason, the EKF is sometimes referred to as the Linearized Kalman filter. Linearizing a system just means picking some operating point a and finding a linear approximation to the nonlinear function in the neighborhood of a. In two dimensions, this means finding the tangent line to the function f of x when x equals a. 
 
-![1556781864900](assets/1556781864900.png)
+![1556893231424](assets/1556893231424.png)
 
-Mathematically, we do this by taking the Taylor series expansion of the function. Thinking back to your calculus courses, you may remember that the Taylor series expansion is a way of representing a function as an infinite possibly, some whose terms are calculated from the function's derivatives at a single point. For linearization, we're only interested in the first order terms of the Taylor series expansion highlighted in red. Let's return to our general nonlinear motion and measurement models and try to linearize them. 
+Mathematically, we do this by taking the Taylor series expansion of the function. Thinking back to your calculus courses, you may remember that the Taylor series expansion is a way of representing a function as an infinite possibly, some whose terms are calculated from the function's derivatives at a single point. **For linearization, we're only interested in the first order terms of the Taylor series expansion highlighted in red.** Let's return to our general nonlinear motion and measurement models and try to linearize them. 
+
+> 对于EKF，我们选择上一个最优状态估计（即近似平均值）进行线性化。
 
 What should we choose as the operating point for our Taylor's expansion? Ideally, we would like to linearize the models about the true value of the state but we can't do that because we already knew the true value of the state, we wouldn't need to estimate it. So instead, let's pick the next best thing, the most recent estimate of the state. 
 
-![1556782082249](assets/1556782082249.png)
+![1556893536893](assets/1556893536893.png)
 
 For our emotion model, we'll linearize about the posterior estimate of the previous state and for the measurement model, we'll linearize about our prediction of the current state based on the motion model.
 
-![1556782122750](assets/1556782122750.png)
+![1556893554197](assets/1556893554197.png)
 
- So, now we have a linear system in state space and the matrices $\mathrm{F}_{k-1}, \mathrm{L}_{k-1}, \mathrm{H}_{k,} \text { and } \mathrm{M}_{k}$ are called Jacobian matrices of the system. Computing these matrices correctly is the most important and difficult step in the Extended Kalman filter algorithm, and it's also the most common place to make mistakes. But what are these Jacobian matrix exactly? 
+So, now we have a linear system in state space and the matrices $\mathrm{F}_{k-1}, \mathrm{L}_{k-1}, \mathrm{H}_{k,} \text { and } \mathrm{M}_{k}$ are called Jacobian matrices of the system. Computing these matrices correctly is the most important and difficult step in the Extended Kalman filter algorithm, and it's also the most common place to make mistakes. But what are these Jacobian matrix exactly? 
 
 ---
 
 ### 4. EKF | Computing Jacobian Matrices
+
+> 假设有n维输入，m维输出，则雅克比矩阵维度是m*n。
 
 In vector calculus, a Jacobian or Jacobian matrix is the matrix of all first-order partial derivatives of a vector valued function. 
 $$

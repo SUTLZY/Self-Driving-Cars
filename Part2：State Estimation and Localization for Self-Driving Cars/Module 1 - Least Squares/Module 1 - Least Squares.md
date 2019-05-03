@@ -1,8 +1,8 @@
 
 
-## Module 1: Least Squares
+# Module 1: Least Squares
 
-> The method of least squares, developed by Carl Friedrich Gauss in 1795, is a well known technique for estimating parameter values from data. This module provides a review of least squares, for the cases of unweighted and weighted observations. There is a deep connection between least squares and maximum likelihood estimators (when the observations are considered to be Gaussian random variables) and this connection is established and explained. Finally, the module develops a technique to transform the traditional 'batch' least squares estimator to a recursive form, suitable for online, real-time estimation applications.
+The method of least squares, developed by Carl Friedrich Gauss in 1795, is a well known technique for estimating parameter values from data. This module provides a review of least squares, for the cases of unweighted and weighted observations. There is a deep connection between least squares and maximum likelihood estimators (when the observations are considered to be Gaussian random variables) and this connection is established and explained. Finally, the module develops a technique to transform the traditional 'batch' least squares estimator to a recursive form, suitable for online, real-time estimation applications.
 
 ### 学习目标
 
@@ -10,11 +10,11 @@
 - Explain how least squares is employed in parameter estimation problems
 - Apply the unweighted and weighted least squares methods to parameter estimation
 - Apply a recursive version of least squares to update parameter estimates as new measurements arrive
-- Explain how Jacobian matrices are used
+- Explain how **Jacobian matrices**(雅尔比矩阵) are used
 
 ---
 
-### Lesson 1 (Part 1): Squared Error Criterion and the Method of Least Squares
+## Lesson 1 (Part 1): Squared Error Criterion and the Method of Least Squares
 
 > 平方误差准则和最小二乘法
 
@@ -28,12 +28,12 @@ Related to state estimation is the idea of **parameter estimation**. Unlike a st
 
 ---
 
-#### 1. Overview
+### 1. Overview
 
-> - The history of the method of least squares
-> - Ordinary and weighted least squares
-> - Recursive least squares
-> - Maximum likelihood and the method of least squares
+> - **The history of the method of least squares**
+> - **Ordinary and weighted least squares**
+> - **Recursive least squares**
+> - **Maximum likelihood and the method of least squares**
 
 In the first module or week one of the course, we will cover a common technique in state estimation, the method of least squares. By the end of this week, you'll know a little bit about the history of least squares and you'll learn about the method of ordinary least squares and its cousin, the method of weighted least squares. Then, we'll cover the method of recursive least squares and finally, discuss the link between least squares and the maximum likelihood estimation technique. 
 
@@ -41,7 +41,7 @@ In the first lesson of this module, we'll introduce the method of least squares 
 
 ---
 
-#### 2. History
+### 2. History
 
 The method of least squares dates to the late 18th century well before anyone had considered the concept of automobiles. On January 1st, 1801, an Italian priest and astronomer Giuseppe Piazzi discovered a new celestial object in the night sky. The asteroid or planetoid now called Ceres. You can see it here next to the moon and to the earth. 
 
@@ -59,7 +59,7 @@ Gauss summarized the approach as follows:
 
 ---
 
-#### 3. Example
+### 3. Example
 
 > 以电阻值测量为例，说明测量误差的存在。应用最小二乘法，进行阻值的估计
 
@@ -81,7 +81,7 @@ But remember, we don't yet know what x is. To find x, we square these errors to 
 
 ![1555592701365](assets/1555592701365.png)
 
-With these errors defined, the method of least squares says that the resistance value we are looking for, that is the best estimate of x is one which minimizes the squared error criterion, also sometimes called the squared error cost function or loss function. 
+With these errors defined, the method of least squares says that the resistance value we are looking for, that is **the best estimate of x is one which minimizes the squared error criterion, also sometimes called the squared error cost function or loss function.** 
 $$
 \hat{x}_{\mathrm{LS}}=\operatorname{argmin}_{x}\left(e_{1}^{2}+e_{2}^{2}+e_{3}^{2}+e_{4}^{2}\right)=\mathscr{L}_{\mathrm{LS}}(x)
 $$
@@ -89,9 +89,11 @@ To minimize the squared error criterion, we'll rewrite our errors in matrix nota
 $$
 \mathbf{e}=\left[ \begin{array}{l}{e_{1}} \\ {e_{2}} \\ {e_{3}} \\ {e_{4}}\end{array}\right]=\mathbf{y}-\mathbf{H} x=\left[ \begin{array}{l}{y_{1}} \\ {y_{2}} \\ {y_{3}} \\ {y_{4}}\end{array}\right]-\left[ \begin{array}{l}{1} \\ {1} \\ {1} \\ {1}\end{array}\right] x
 $$
+> **H :** 雅尔比矩阵
+
 This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We'll define an **error vector identified** as $\mathbf{e}$, that is a function of our observations stacked into a vector y and a matrix $\mathbf{H}$ called the Jacobian. 
 
-Finally, our true resistance x. **$\mathbf{H}$ has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate.** In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We'll see later that it can be a vector comprising multiple unknowns.
+Finally, our true resistance $x$. **$\mathbf{H}$ has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate.** In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We'll see later that it can be a vector comprising multiple unknowns.
 
 With these definitions in mind, we can convert our squared error criterion to vector notation as follows. 
 $$
@@ -100,7 +102,7 @@ $$
 
 ---
 
-#### 4. Minimizing the Squared Error Criterion
+### 4. Minimizing the Squared Error Criterion
 
 Expanding out the brackets, we arrive at this somewhat intimidating expression. 
 $$
@@ -114,10 +116,12 @@ Re-arranging, we arrive at what are called the normal equations, which can be wr
 $$
 \hat{x}_{\mathrm{LS}}=\left(\mathbf{H}^{T} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{y}
 $$
-We can solve these to find x-hat, the resistance which minimizes our squared error criterion. This expression has a unique solution if and only if H transpose H is not singular. In other words, if the matrix has an inverse. If we have m measurements and n unknown parameters, H transpose H will be n by n. 
+We can solve these to find x-hat, the resistance which minimizes our squared error criterion. This expression has a unique solution if and only if $\mathbf{H}^{T} \mathbf{H}$ is not singular. In other words, if the matrix has an inverse. If we have m measurements and n unknown parameters, H transpose H will be n by n. 
 $$
 \mathbf{H} \in \mathbb{R}^{m \times n} \quad \mathbf{H}^{T} \mathbf{H} \in \mathbb{R}^{n \times n}
 $$
+> 矩阵的可逆问题
+
 The matrix will be invertible if and only if m is greater than or equal to n. So, we need at least as many measurements as unknowns in order to derive the least squares solution. This will usually not be a problem. In fact, we'll often face the challenge of dealing with too many measurements. But nevertheless, you should keep this limitation in mind when working with the formula. 
 
 Coming back to our particular resistance problem, let's fill out our variables. 
@@ -125,6 +129,8 @@ Coming back to our particular resistance problem, let's fill out our variables.
 ![1555594363143](assets/1555594363143.png)
 
 Once we have these quantities, it's just a matter of plug and chug. The expression is quite straightforward to code up as you'll see in your module assignment. 
+
+> 此处表达式简化为四次测量的算术平均值
 
 Note here that the expression simplifies to the arithmetic mean of our four measurements. 
 
@@ -134,19 +140,19 @@ Perhaps this is something you thought of doing all along. Now, we have another j
 
 ---
 
-#### 5. Method of Least Squares | Assumptions
+### 5. Method of Least Squares | Assumptions
 
 First, we've assumed that our measurement model is linear. This is a very important assumption that is often broken in complex systems. We'll discuss non-linear measurement models in later lessons. Second, we've assumed that all of our measurements have an equal weight in our error equation. To put this another way, we've assumed that we care about each of our measurements equally.
 
 ---
 
-#### 6. Summary
+### 6. Summary
 
 To summarize, in this video, you've learned that the method of least squares was pioneered by Carl Friedrich Gauss who used it to accurately predict the orbit of a new planet like object called Ceres. You saw how we can minimize the least squares criterion to solve for parameter values of interest. We noted that the method of ordinary least squares assumes a linear measurement model and can't handle measurements of unequal importance. In the next video, we'll extend the method of least squares to the method of weighted least squares, which can account for measurements of varying importance.
 
 ---
 
-### Lesson 1 (Part 2): Squared Error Criterion and the Method of Least Squares
+## Lesson 1 (Part 2): Squared Error Criterion and the Method of Least Squares
 
 > - **Derive the weighted least squares criterion given varying measurement noise variance**
 > - **Compare weighted least squares to ordinary least squares**
@@ -155,7 +161,9 @@ In the last video, we saw how we could use the method of least squares to solve 
 
 ---
 
-#### 1. Method of *Weighted* Least Squares
+### 1. Method of *Weighted* Least Squares
+
+> 加权最小二乘估计
 
 One reason we may want to trust certain measurements more than others is that they may come from a better sensor. For example, a number of our resistance measurements could have come from a much more expensive multi-meter than the others. Further, from now on, we'll also drop the assumption that we're only estimating one parameter and derive the more general normal equations. 
 
@@ -169,7 +177,7 @@ $$
 \\
 y = Hx + v
 $$
-One way to interpret the ordinary method of least squares is to say that we are implicitly assuming that each noise term v_i is an independent random variable across measurements and has an equal variance or standard deviation if you prefer, IID as we mentioned in the previous video. 
+One way to interpret the ordinary method of least squares is to say that we are implicitly assuming that each noise term $v_i$ is an independent random variable across measurements and has an equal variance or standard deviation if you prefer, IID as we mentioned in the previous video. 
 $$
 \mathbb{E}\left[v_{i}^{2}\right]=\sigma^{2} \quad(i=1, \ldots, m)\quad \quad    \mathbf{R}=\mathbb{E}\left[\mathbf{v} \mathbf{v}^{T}\right]=\left[ \begin{array}{cc}{\sigma^{2}} & {0} \\ {0} & {\sigma^{2}}\end{array}\right]
 $$
@@ -186,7 +194,7 @@ By expanding this expression, we can see why we call this weighted least squares
 
 ---
 
-#### 2. Re-deriving Regular Least Squares
+### 2. Re-deriving Regular Least Squares
 
 Before we see how we can minimize this new weighted criterion, let's look at what happens if we set all of the noise standard deviations to the same value sigma. 
 $$
@@ -199,7 +207,7 @@ $$
 
 ---
 
-#### 3. Minimizing the *Weighted* Least Squares Criterion
+### 3. Minimizing the *Weighted* Least Squares Criterion
 
 Returning to our weighted least squares criterion, we approach it's minimization the same way as before, we take a derivative. 
 $$
@@ -217,7 +225,7 @@ This leads to another set of normal equations this time called the weighted norm
 
 ---
 
-#### 4. Method of Weighted Least Squares
+### 4. Method of Weighted Least Squares
 
 Let's take a look at an example of how this method of weighted least squares works. We'll take the same data we collected before, but now assume that the last two measurements were actually taken with a multimeter that had a much smaller noise variance. 
 
@@ -233,7 +241,7 @@ Defining our variables and then evaluating our weighted least squares solution, 
 
 ---
 
-#### 5. Ordinary versus  | Weighted Least Squares
+### 5. Ordinary versus  | Weighted Least Squares
 
 By using weighted least squares, we can vary the importance of each measurement to the final estimate. 
 
@@ -243,6 +251,8 @@ It's important to be comfortable working with different measurement variances an
 
 ---
 
+### 6. Summary 
+
 > - Measurements can come from sensors that have different noisy characteristics
 > - Weighted least squares lets us weight each measurement according to noise variance
 
@@ -250,7 +260,7 @@ In this video, we discussed how certain measurements may come from sensors with 
 
 ---
 
-### Lesson 2: Recursive Least Squares
+## Lesson 2: Recursive Least Squares
 
 > 递归最小二乘法
 
@@ -268,7 +278,7 @@ Let's begin. We've already explored the problem of computing a value for some un
 
 ![1555746001529](assets/1555746001529.png)
 
-'Batch Solution':
+**'Batch Solution':**
 $$
 \hat{x}_{\mathrm{WLS}}=\left(\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{y}
 $$
@@ -302,7 +312,7 @@ Here k is called an estimator gain matrix. The term in brackets is called the in
 
 Now, how do we compute k? Well, for that, we'll need to use a recursive least squares criterion and some matrix calculus as before. This time the math is significantly more involved, so, only work through a few steps and let the more curious learners refer to the textbook for more information. Our least squares criterion and in this case will be the expected value of r squared errors for our estimate at time k. 
 $$
-\begin{aligned} \mathscr{L}_{\mathrm{RLS}}&=\mathbb{E}\left[\left(x_{k}-\hat{x_{k}}\right)^{2}\right] \\ &=\sigma_{k}^{2} \end{aligned}
+\begin{aligned} \mathscr{L}_{\mathrm{RLS}}&=\mathbb{E}\left[\left(x_{k}-\hat{x}_{k}\right)^{2}\right] \\ &=\sigma_{k}^{2} \end{aligned}
 $$
 For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance $\sigma_{k}^{2}$. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. 
 $$
@@ -344,20 +354,18 @@ Every time we get a new measurement our parameter uncertainty shrinks. Why is re
 
 ### 5. Summary
 
-> - RLS produces a ‘running estimate’ of parameter(s) for a stream
->   of measurements
-> - RLS is a linear recursive estimator that minimizes the
->   (co)variance of the parameter(s) at the current time
+> - RLS produces a ‘**running estimate**’ of parameter(s) for a stream of measurements
+>   - RLS is a linear recursive estimator that minimizes the (co)variance of the parameter(s) at the current time
 
 To summarize, the recursive least squares algorithm lets us produce a running estimate of a parameter without having to have the entire batch of measurements at hand and recursive least squares is a recursive linear estimator that minimizes the variance of the parameters at the current time. In the next and final video of this module, we'll discuss why minimizing squared errors is a reasonable thing to do by connecting the method of least squares with another technique from statistics, maximum likelihood estimation.
 
 ---
 
-### Lesson 3: Least Squares and the Method of Maximum Likelihood
+## Lesson 3: Least Squares and the Method of Maximum Likelihood
 
 Welcome to the final lesson of module one. We'll finish off the module by discussing an important connection, that will help to provide further intuition for the method of least squares. Specifically, by the end of this lesson, you'll be able to 
 
-- State the connection between the method of least squares and maximum likelihood estimation with Gaussian random variables. 
+- **State the connection between the method of least squares and maximum likelihood estimation with Gaussian random variables.** 
 
 ---
 
@@ -378,6 +386,8 @@ The first is simple. Squared errors allow us to solve for the optimal parameters
 ---
 
 ### 2. The Method of Maximum Likelihood
+
+> 最大似然估计，可参考[博客](<https://blog.csdn.net/ethan_guo/article/details/80568254>)
 
 To understand this fundamental connection, let's first discuss maximum likelihood. We can ask which x makes our measurement most likely.Or,in other word,which x maximizes the conditional probability of y :
 $$
@@ -405,7 +415,7 @@ Then:
 
 ![1555751065969](assets/1555751065969.png)
 
-The unknown parameter, X, becomes the mean of this density and the variance is simply our noise variance. 
+The unknown parameter ,X, becomes the mean of this density and the variance is simply our noise variance. 
 
 ---
 
@@ -463,7 +473,9 @@ the maximum likelihood estimate, given additive Gaussian noise, is equivalent to
 
 ### 5. The Central Limit Theorem
 
-So, why is this result so important? Our self-driving car will have to deal with many, many sources of error. Some of which are very difficult to model. However, the central limit theorem, tells us that when combining all of these errors together, they can reasonably be modeled by a single Gaussian error distribution. 
+> 中心极限定理
+
+So, why is this result so important? Our self-driving car will have to deal with many, many sources of error. Some of which are very difficult to model. However, **the central limit theorem, tells us that when combining all of these errors together, they can reasonably be modeled by a single Gaussian error distribution.** 
 
 > Central Limit Theorem: When independent random variables are added, their normalized sum tends towards a normal distribution.
 
@@ -478,7 +490,9 @@ So Why we use method of least squares?
 
 ### 6. Least Squares | Some Caveats
 
-Easy. To finish off, let's discuss one important caveat for this method. When we use the method of least squares, measurement outliers can have a significant effect on our final estimate. To understand why, consider that under a Gaussian distribution, a sample that is two standard deviations away from the mean, has less than a five percent probability of occurring. As a result, if there are some outliers in our measurement data, the method of maximum likelihood, and equivalently, the method of least squares, will put significant importance on these measurements. 
+> 注意异常值对最大似然算法或最小二乘的影响
+
+Easy. To finish off, let's discuss one important caveat for this method. When we use the method of least squares, measurement outliers can have a significant effect on our final estimate. measurement outliers can have a significant effect on our final estimate. As a result, if there are some outliers in our measurement data, the method of maximum likelihood, and equivalently, the method of least squares, will put significant importance on these measurements. 
 
 ![1555762562343](assets/1555762562343.png)
 
