@@ -1,4 +1,4 @@
-Module 2 - State Estimation - Linear and Nonlinear Kalman Filters
+# Module 2 - State Estimation - Linear and Nonlinear Kalman Filters
 
 Any engineer working on autonomous vehicles must understand the Kalman filter, first described in a paper by Rudolf Kalman in 1960. The filter has been recognized as one of the top 10 algorithms of the 20th century, is implemented in software that runs on your smartphone and on modern jet aircraft, and was crucial to enabling the Apollo spacecraft to reach the moon. This module derives the Kalman filter equations from a least squares perspective, for linear systems. 
 
@@ -377,8 +377,7 @@ What this means mathematically is that we're going to rearrange our linearized m
 
 ![1556784000692](assets/1556784000692.png)
 
-We could do this a bunch of times before ever getting a measurement for the correction step. So, the current best estimate might be x check or x hat. We also need to keep track of the state covariance, which grows as we integrate more and more process noise from the motion model. Note that again, the previous covariance estimate could be P check or P hat depending on whether we used a measurement to
-do a correction step. 
+We could do this a bunch of times before ever getting a measurement for the correction step. So, the current best estimate might be x check or x hat. We also need to keep track of the state covariance, which grows as we integrate more and more process noise from the motion model. Note that again, the previous covariance estimate could be P check or P hat depending on whether we used a measurement to do a correction step. 
 
 ![1556784049446](assets/1556784049446.png)
 
