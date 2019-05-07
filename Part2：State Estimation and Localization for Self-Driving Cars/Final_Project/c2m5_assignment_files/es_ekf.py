@@ -132,7 +132,10 @@ p_cov[0] = np.eye(9)    # covariance of estimate(估计的协方差)
 gnss_i = 0
 lidar_i = 0
 
-p_cov_check = p_cov
+p_check = p_est[0]
+v_check = v_est[0]
+q_check = q_est[0]
+p_cov_check = p_cov[0]
 
 #### 4. Measurement Update #####################################################################
 
@@ -142,6 +145,7 @@ p_cov_check = p_cov
 ################################################################################################
 def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     # 3.1 Compute Kalman Gain
+    print(p_cov_check)
     Kk = p_cov_check@h_jac.T@np.linalg.inv(h_jac@p_cov_check@h_jac.T + sensor_var)
 
     # 3.2 Compute error state
@@ -157,7 +161,7 @@ def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     q_check = Quaternion(axis_angle=delta_phi).quat_mult(q_check,out = 'np')
 
     # 3.4 Compute corrected covariance
-    p_cov_check = (1 - Kk@h_jac)@p_cov_check
+    p_cov_check = (np.eye(9) - Kk@h_jac)@p_cov_check
 
     return p_check, v_check, q_check, p_cov_check
 
@@ -180,10 +184,10 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     f = imu_f.data[k - 1]
     w = imu_w.data[k - 1]
 
-    p_check = p_est[k - 1] + delta_t * v_est[k - 1] + 0.5 * delta_t**2 * (C_ns @ f - g)
-    v_check = v_est[k - 1] + delta_t * (C_ns @ f - g)
-    q_check = Quaternion(axis_angle=(w * delta_t)).quat_mult(q_est[k - 1])
-    q_check = Quaternion(*q_check).normalize().to_numpy()
+    p_check = p_check + delta_t * v_est[k - 1] + 0.5 * delta_t**2 * (C_ns @ f - g)
+    v_check = p_check + delta_t * (C_ns @ f - g)
+    dTheta = delta_t * imu_w.data[k-1]
+    q_check = Quaternion(axis_angle=dTheta).quat_mult(q_check,out = 'np')
 
     F_k = np.eye(9)
     F_k[0:3,3:6] = delta_t * np.eye(3)
@@ -197,13 +201,13 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     p_cov_check = F_k@p_cov_check@F_k.T + L_k@Q_km@L_k.T
 
     # 3. Check availability of GNSS and LIDAR measurements
-    y_k = gnss.data[gnss_i]
-    p_est[k],v_est[k],q_est[k],p_cov[k] = measurement_update(var_gnss,p_cov_check,y_k,p_check,v_check,q_check)
-    y_k = lidar.data[lidar_i] 
-    p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_lidar, p_cov[k], y_k, p_est[k], v_est[k], q_est[k])
+    # y_k = gnss.data[gnss_i]
+    # p_est[k],v_est[k],q_est[k],p_cov[k] = measurement_update(var_gnss,p_cov_check,y_k,p_check,v_check,q_check)
+    # y_k = lidar.data[lidar_i] 
+    # p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_lidar, p_cov[k], y_k, p_est[k], v_est[k], q_est[k])
     
-    gnss_i = gnss_i + 1
-    lidar_i = lidar_i + 1
+    # gnss_i = gnss_i + 1
+    # lidar_i = lidar_i + 1
 
 #### 6. Results and Analysis ###################################################################
 
