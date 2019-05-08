@@ -18,7 +18,7 @@ sys.path.append('./data')
 # This is where you will load the data from the pickle files. For parts 1 and 2, you will use
 # p1_data.pkl. For part 3, you will use p3_data.pkl.
 ################################################################################################
-with open('data/p1_data.pkl', 'rb') as file:
+with open('data/p3_data.pkl', 'rb') as file:
     data = pickle.load(file)
 
 ################################################################################################
@@ -137,6 +137,8 @@ v_check = v_est[0]
 q_check = q_est[0]
 p_cov_check = p_cov[0]
 
+i = 0
+
 #### 4. Measurement Update #####################################################################
 
 ################################################################################################
@@ -145,7 +147,6 @@ p_cov_check = p_cov[0]
 ################################################################################################
 def measurement_update(sensor_var, p_cov_check, y_k, p_check, v_check, q_check):
     # 3.1 Compute Kalman Gain
-    print(p_cov_check)
     Kk = p_cov_check@h_jac.T@np.linalg.inv(h_jac@p_cov_check@h_jac.T + sensor_var)
 
     # 3.2 Compute error state
@@ -184,14 +185,13 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     f = imu_f.data[k - 1]
     w = imu_w.data[k - 1]
 
-    p_check = p_check + delta_t * v_est[k - 1] + 0.5 * delta_t**2 * (C_ns @ f - g)
-    v_check = p_check + delta_t * (C_ns @ f - g)
-    dTheta = delta_t * imu_w.data[k-1]
-    q_check = Quaternion(axis_angle=dTheta).quat_mult(q_check,out = 'np')
+    p_check = p_est[k - 1] + delta_t * v_est[k - 1] + 0.5 * delta_t**2 * (C_ns@f - g)
+    v_check = v_est[k - 1] + delta_t * (C_ns@f - g)
+    q_check = Quaternion(axis_angle=w * delta_t).quat_mult(q_est[k - 1])
 
     F_k = np.eye(9)
     F_k[0:3,3:6] = delta_t * np.eye(3)
-    F_k[3:6,6:9] = -delta_t * skew_symmetric(np.dot(C_ns,imu_f.data[k-1]).reshape(3,1))
+    F_k[3:6,6:9] = skew_symmetric(np.dot(C_ns,imu_f.data[k-1]).reshape(3,1))
 
     L_k = np.zeros((9,6))
     L_k[3:6,0:3] = np.eye(3)
@@ -201,13 +201,45 @@ for k in range(1, imu_f.data.shape[0]):  # start at 1 b/c we have initial predic
     p_cov_check = F_k@p_cov_check@F_k.T + L_k@Q_km@L_k.T
 
     # 3. Check availability of GNSS and LIDAR measurements
-    # y_k = gnss.data[gnss_i]
-    # p_est[k],v_est[k],q_est[k],p_cov[k] = measurement_update(var_gnss,p_cov_check,y_k,p_check,v_check,q_check)
-    # y_k = lidar.data[lidar_i] 
-    # p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_lidar, p_cov[k], y_k, p_est[k], v_est[k], q_est[k])
+    if gnss_i < 49:
+        if imu_f.t[k - 1] == gnss.t[gnss_i]:
+            isGNSSAvailable = True
+        else:
+            isGNSSAvailable = False
+        if imu_f.t[k - 1] == lidar.t[lidar_i]:
+            isLIDARAvilable = True
+        else:
+            isLIDARAvilable = False  
+            
+        p_est[k] = p_check
+        v_est[k] = v_check
+        q_est[k] = q_check
+        p_cov[k] = p_cov_check
+
+        if isGNSSAvailable and ~isLIDARAvilable:
+            y_k = gnss.data[gnss_i]
+            p_est[k],v_est[k],q_est[k],p_cov[k] = measurement_update(var_gnss,p_cov_check,y_k,p_check,v_check,q_check)
+            gnss_i = gnss_i + 1
+        elif ~isGNSSAvailable and isLIDARAvilable:
+            y_k = lidar.data[lidar_i]
+            p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_lidar,p_cov_check, y_k, p_check, v_check, q_check)
+            lidar_i = lidar_i + 1
+        elif isGNSSAvailable and isLIDARAvilable:
+            y_k = gnss.data[gnss_i]
+            p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_gnss, p_cov_check, y_k, p_check, v_check, q_check) 
+            gnss_i = gnss_i + 1
+
+            y_k = lidar.data[lidar_i] 
+            p_est[k], v_est[k], q_est[k], p_cov[k] = measurement_update(var_lidar,  p_cov_check, y_k, p_check, v_check, q_check)
+            lidar_i = lidar_i + 1
+    else:
+        p_est[k] = p_check
+        v_est[k] = v_check
+        q_est[k] = q_check
+        p_cov[k] = p_cov_check
     
-    # gnss_i = gnss_i + 1
-    # lidar_i = lidar_i + 1
+    print("p_est = ",p_est[k])
+
 
 #### 6. Results and Analysis ###################################################################
 
@@ -271,15 +303,15 @@ plt.show()
 ################################################################################################
 
 # Pt. 1 submission
-p1_indices = [9000, 9400, 9800, 10200, 10600]
-p1_str = ''
-for val in p1_indices:
-    for i in range(3):
-        p1_str += '%.3f ' % (p_est[val, i])
-with open('pt1_submission.txt', 'w') as file:
-    file.write(p1_str)
+# p1_indices = [9000, 9400, 9800, 10200, 10600]
+# p1_str = ''
+# for val in p1_indices:
+#     for i in range(3):
+#         p1_str += '%.3f ' % (p_est[val, i])
+# with open('pt1_submission.txt', 'w') as file:
+#     file.write(p1_str)
 
-# Pt. 2 submission
+# # Pt. 2 submission
 # p2_indices = [9000, 9400, 9800, 10200, 10600]
 # p2_str = ''
 # for val in p2_indices:
@@ -289,10 +321,10 @@ with open('pt1_submission.txt', 'w') as file:
 #     file.write(p2_str)
 
 # Pt. 3 submission
-# p3_indices = [6800, 7600, 8400, 9200, 10000]
-# p3_str = ''
-# for val in p3_indices:
-#     for i in range(3):
-#         p3_str += '%.3f ' % (p_est[val, i])
-# with open('pt3_submission.txt', 'w') as file:
-#     file.write(p3_str)
+p3_indices = [6800, 7600, 8400, 9200, 10000]
+p3_str = ''
+for val in p3_indices:
+    for i in range(3):
+        p3_str += '%.3f ' % (p_est[val, i])
+with open('pt3_submission.txt', 'w') as file:
+    file.write(p3_str)
