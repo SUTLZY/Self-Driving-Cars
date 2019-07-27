@@ -19,4 +19,11 @@
 * [Part3：Visual Perception for Self-Driving Cars](Part3 - Visual Perception for Self-Driving Cars/README.md)
 
 - [Part4：Motion Planning for Self-Driving Cars](Part4 - Motion Planning for Self-Driving Cars/README.md)
+  - [Module 1 - The Planning Problem](Part4 - Motion Planning for Self-Driving Cars/Module 1 - The Planning Problem/Module 1 - The Planning Problem.md)
+  - [Module 2 - Mapping for Planning](Part4 - Motion Planning for Self-Driving Cars/Module 2 - Mapping for Planning/Module 2 - Mapping for Planning.md)
+  - [Module 3 - Mission Planning in Driving Environments](Part4 - Motion Planning for Self-Driving Cars/Module 3 - Mission Planning in Driving Environments/Module 3 - Mission Planning in Driving Environments.md)
+  - [Module 4 - Dynamic Object Interactions](Part4 - Motion Planning for Self-Driving Cars/Module 4 - Dynamic Object Interactions/Module 4 - Dynamic Object Interactions.md)
+  - [Module 5 - Principles of Behaviour Planning](Part4 - Motion Planning for Self-Driving Cars/Module 5 - Principles of Behaviour Planning/Module 5 - Principles of Behaviour Planning.md)
+  - [Module 6 - Reactive Planning in Static Environments](Part4 - Motion Planning for Self-Driving Cars/Module 6 - Reactive Planning in Static Environments/Module 6 - Reactive Planning in Static Environments.md)
+  - [Module 7 - Putting it all together - Smooth Local Planning](Part4 - Motion Planning for Self-Driving Cars/Module 7 - Putting it all together - Smooth Local Planning/Module 7 - Putting it all together - Smooth Local Planning.md)
 
