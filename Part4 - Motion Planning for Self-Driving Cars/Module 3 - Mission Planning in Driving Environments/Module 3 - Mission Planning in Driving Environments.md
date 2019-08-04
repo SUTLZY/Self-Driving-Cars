@@ -182,7 +182,7 @@ Now that we've worked through a full example, let's review what we discussed in 
 ### Learning Objectives
 
 > - Understand what admissible heuristics are in the context of graph search
-> - Understand how to use the Duclidean heuristic to improve our mission planning speed in practice
+> - Understand how to use the Euclidean heuristic to improve our mission planning speed in practice
 > - Implement the A* search algorithm, leveraging the Euclidean heuristic
 > - Understand how to apply A* search to variants on the mission planning problem involving time instead of distance
 
@@ -216,7 +216,9 @@ This is an important requirement for A* search, and heuristics that satisfy this
 
 ---
 
-### 3. A* Algorithm
+### 3. A* Algorithm、
+
+> [参考链接](https://www.geeksforgeeks.org/a-search-algorithm/)
 
 Let's use this new heuristic to better inform our graph search. Here, we have the pseudocode for the A* algorithm. It's largely the same as Dijkstra's algorithm, but it has a few key differences, which we've highlighted in blue. Let's look more closely at the specific changes. 
 
@@ -242,8 +244,8 @@ Let's apply the A* algorithm to our example graph. Here we have our road network
 Note that the figure is not to scale and the vertices are nicely spaced to make the figure more legible instead of being depicted in Euclidean space. However, you can see that the edge length between any two adjacent vertices are at least as long as their Euclidean distance. As always, the first vertex we add to the min heap is the origin s. There is zero accumulated cost and the Euclidean distance between s and t, which is a lower bound on our shortest path distance is 4.472. 
 
 <div align="center">
-<img src="assets/1564666391908.png" height="180px" alt="图片说明" >
-<img src="assets/1564666435946.png" height="180px" alt="图片说明" >
+<img src="assets/1564666391908.png" height="170px" alt="图片说明" >
+<img src="assets/1564666435946.png" height="170px" alt="图片说明" >
 </div>
 
 So we add vertex s with cost 4.472. Next, we process the first node s and add the adjacent vertices a, b, and c to the min heap. Remember that we need to add the accumulated cost to the heuristic cost to the goal when adding each vertex to the min heap. Thus for vertex a, we have a cost of 5 plus 3 is 8. For vertex b, we have a cost of 7 plus 2 is nine, and for vertex c we have a cost of 2 plus the square root of 9 plus 4 is 5.6. The order of the vertices in the min heap is now cab. We also add s as the predecessor to the vertices a, b, and c and then add s to the closed set. The next vertex to process is c, which only connects to vertex e. The cost of e works out to 11.4. So we now have a vertex order abe. We then assign e's predecessor to be c and add c to the closed set. Next, we pop a off of the min heap and we see that it has outgoing edges to vertex b and d. The cost to b eight, which is lower than the original estimated cost for b. So we update its cost in a min heap and change its predecessor from s to a. 
