@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -515,9 +517,9 @@
 </blockquote>
 <p>The controller can be seen as a mathematical algorithm that generates actuator signals so that the error signal is minimized and the plant state variables approach the desired state variables. <strong>The plant model be it linear or nonlinear can be represented in several ways.</strong></p>
 <p>Two of the most common ways are <strong>state-space form</strong> which tracks the evolution of an internal state to connect the input to the output and <strong>transfer function</strong> form which models the input to output relation directly. Note that for transfer functions, the system must be linear and time-invariant. <strong>A transfer function G is a relation between inputs U and outputs Y of the system defined in the Laplace domain as a function of S a complex variable.</strong></p>
-<p>$$Y(s) = G(s)U(s) \ s = \sigma + j\omega&#x200B;$$</p>
+<p><script type="math/tex; ">Y(s) = G(s)U(s) \\ s = \sigma + j\omega​</script></p>
 <p>We use the Laplace transform to go from the time domain to the S domain <strong>because it allows for easier analysis of an input-output relation and is useful in understanding control performance</strong>.</p>
-<p>$$Y(s) = G(s)U(s) = \frac{N(s)}{D{s}}U(s)$$</p>
+<p><script type="math/tex; ">Y(s) = G(s)U(s) = \frac{N(s)}{D{s}}U(s)</script></p>
 <p>When working with the transfer functions, the numerator and denominator roots provide powerful insight into the response of a system to input functions. <strong>The zeros of a system are the roots of the numerator and the poles of the system are the roots of its denominator</strong>.</p>
 <h3 id="4-controller-or-compensator">4. Controller or Compensator</h3>
 <blockquote>
@@ -531,9 +533,9 @@
 <p><strong>Nonlinear methods</strong> such as feedback linearization<strong>,</strong> back stepping and sliding mode control are beyond the scope of this course but can certainly be applied to self-driving vehicle control problem. <strong>Optimization-based methods</strong> are heavily used in autonomous driving and so we&#x2019;ll look at model predictive control as an example of this group of controllers later on in the course.</p>
 <h3 id="5-pid-controller">5. PID Controller</h3>
 <p>PID control is mathematically formulated by adding three terms dependent on the error function. A proportional term directly proportional to the error E, an integral term proportional to the integral of the error, and a derivative term proportional to the derivative of the error.</p>
-<p>$$u(t) = K_Pe(t)+K_I\int_0^1 e(t)dt + K_D\dot{e}(t)&#x200B;$$</p>
+<p><script type="math/tex; ">u(t) = K_Pe(t)+K_I\int_0^1 e(t)dt + K_D\dot{e}(t)​</script></p>
 <p>The constants Kp, Ki, and Kd are called the proportional integral and derivative gains and govern the response so the PID controller which is denoted U of t as it is the input to the plant model.</p>
-<p>$$U(s) = G_c(s)E(s) = (K_P + \frac{K_I}{s}+K_Ds)E(s) = (\frac{K_Ds^2 + K_Ps + K_I}{s})E(s)$$</p>
+<p><script type="math/tex; ">U(s) = G_c(s)E(s) = (K_P + \frac{K_I}{s}+K_Ds)E(s) = (\frac{K_Ds^2 + K_Ps + K_I}{s})E(s)</script></p>
 <p>Taking the Laplace transform of the PID control yields the transfer function Gc of S. Multiplying by S in the Laplace domain is equivalent to taking a derivative in the time domain and dividing by S is equivalent to taking the integral. By adding these three terms of the PID controller together, we get a single transfer function for PID control. Note that not all gains need to be used for all systems. If one or more of the PID gains are set to zero, the controller can be referred to as P, Pd or Pi.</p>
 <h3 id="6-proportional-integral-derivative-controller">6. Proportional-Integral Derivative Controller</h3>
 <p>The PID transfer function contains a single pole at the origin which comes from the integral term. It also contains a second-order numerator with two zeros that can be placed anywhere in the complex plane by selecting appropriate values for the gains.</p>
@@ -562,9 +564,9 @@
 <p>The dashed horizontal line represents the reference or desired output and the controllers goal is to keep the actual output close to this reference. In the first example, the step responses for pure proportional control of the spring-mass damper system. In the P controller response, we see a fast rise time, significant overshoot and prolonged oscillation leading to a long settling time.</p>
 <p>Adding derivative control improves the step response in terms of overshoot and settling time but slows down the rise time. Adding the integral term instead maintains a short rise time and is able to reduce oscillations and overshoot leading to a fast settling time as well. The simple Pi control is an excellent design for the spring-mass damper system. Including all three PID terms in the controller, leads to even more flexibility in designing the step response. By carefully tuning the controller gains, we can use the benefits of all three to eliminate overshoot and still maintain very short rise and settling times.</p>
 <p>PID controller is given by,</p>
-<p>$$G_{PID}(s) = (K_P + K_Ds + \frac{K_I}{s})$$</p>
+<p><script type="math/tex; ">G_{PID}(s) = (K_P + K_Ds + \frac{K_I}{s})</script></p>
 <p>The closed loop system becomes,</p>
-<p>$$G_{CL}(s) = \frac{K_Ds^2 + K_Ps + K_I}{s^3 + (10 + K_D)s^2 + (20 + K_P)s + K_I}$$</p>
+<p><script type="math/tex; ">G_{CL}(s) = \frac{K_Ds^2 + K_Ps + K_I}{s^3 + (10 + K_D)s^2 + (20 + K_P)s + K_I}</script></p>
 <p><img src="../../.gitbook/assets/f193083e-79be-48f9-977a-1b80e18bd8a9untitled.png" alt=""></p>
 <p>As can be seen in the plot, the system approaches the reference at much more quickly without any overshoot with PID control.</p>
 <h3 id="11-summary">11. Summary</h3>
@@ -730,7 +732,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 5：Vehicle Longitudinal Control","level":"1.2.6","depth":2,"next":{"title":"Module 6：Vehicle Lateral Control","level":"1.2.7","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","ref":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","articles":[]},"previous":{"title":"Module4：Vehicle Dynamic Modeling","level":"1.2.5","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module4-Vehicle Dynamic Modeling/module4-vehicle-dynamic-modeling.md","ref":"Part1 - Introduction to Self-Driving Cars/Module4-Vehicle Dynamic Modeling/module4-vehicle-dynamic-modeling.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","mtime":"2019-08-01T13:39:45.311Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 5：Vehicle Longitudinal Control","level":"1.2.6","depth":2,"next":{"title":"Module 6：Vehicle Lateral Control","level":"1.2.7","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","ref":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","articles":[]},"previous":{"title":"Module4：Vehicle Dynamic Modeling","level":"1.2.5","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module4-Vehicle Dynamic Modeling/module4-vehicle-dynamic-modeling.md","ref":"Part1 - Introduction to Self-Driving Cars/Module4-Vehicle Dynamic Modeling/module4-vehicle-dynamic-modeling.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","mtime":"2019-08-01T13:39:45.311Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -738,6 +740,14 @@
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

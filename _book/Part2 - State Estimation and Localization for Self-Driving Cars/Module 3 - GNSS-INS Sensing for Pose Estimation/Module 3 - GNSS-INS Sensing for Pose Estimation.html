@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -629,10 +631,10 @@
 <p><img src="assets/1556610004876.png" alt="1556610004876"></p>
 <hr>
 <h3 id="3-trilateration">3. Trilateration</h3>
-<p>The process of recovering position from several distances to known landmarks is called trilateration. For each satellite,we measure the pseudorange as follows :</p>
-<p>$$
-\rho^{(i)}=c\left(t<em>{r}-t</em>{s}\right)=\sqrt{\left(\mathbf{p}^{(i)}-\mathbf{r}\right)^{T}\left(\mathbf{p}^{(i)}-\mathbf{r}\right)}+c \Delta t<em>{r}+c \Delta t</em>{a}^{(i)}+\eta^{(i)}</p>
-<p>$$
+<p>The process of recovering position from several distances to known landmarks is called trilateration. For each satellite,we measure the pseudorange as follows :
+<script type="math/tex; mode=display">
+\rho^{(i)}=c\left(t_{r}-t_{s}\right)=\sqrt{\left(\mathbf{p}^{(i)}-\mathbf{r}\right)^{T}\left(\mathbf{p}^{(i)}-\mathbf{r}\right)}+c \Delta t_{r}+c \Delta t_{a}^{(i)}+\eta^{(i)}
+</script>
 Note that this is different from triangulation where we compute positions based off of angle measurements. A GPS receiver measures the pseudorange to each satellite using the following measurement model: The model accounts for receiver clock error, atmospheric propagation delays, and measurement noise. </p>
 <p><img src="assets/1556610131084.png" alt="1556610131084"></p>
 <p>The term pseudorange refers to the fact that the range information is corrupted by the error sources above. Each pseudorange measurement defines a circle in 2D or a sphere in 3D. If we have exactly four satellites, we can solve for the receiver position and the receiver clock error explicitly. </p>
@@ -696,7 +698,7 @@ Note that this is different from triangulation where we compute positions based 
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"next":{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","articles":[]},"previous":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","mtime":"2019-08-01T13:39:50.416Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"next":{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","articles":[]},"previous":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","mtime":"2019-08-01T13:39:50.416Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -704,6 +706,14 @@ Note that this is different from triangulation where we compute positions based 
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

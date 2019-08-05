@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -532,18 +534,18 @@
 <hr>
 <h3 id="5-the-kalman-filter--recursive-least-squares--process-model">5. The Kalman Filter | Recursive Least Squares + Process Model</h3>
 <p>Once we have our system in hand, we can use an approach very similar to that we discussed in the recursive least squares video. The Kalman filter is a recursive least squares estimator that also includes a motion model.</p>
-<p>Except this time, we&apos;ll do it in two steps. First, we use the process model to predict how our states, remember, that we&apos;re now typically talking about evolving states and non-state parameters evolved since the last time step, and will propagate our uncertainty. </p>
-<p>$$
-\begin{aligned} \check{\mathbf{x}}<em>{k} &amp;=\mathbf{F}</em>{k-1} \mathbf{x}<em>{k-1}+\mathbf{G}</em>{k-1} \mathbf{u}<em>{k-1} \ \check{\mathbf{P}}</em>{k} &amp;=\mathbf{F}<em>{k-1} \hat{\mathbf{P}}</em>{k-1} \mathbf{F}<em>{k-1}^{T}+\mathbf{Q}</em>{k-1} \end{aligned}</p>
-<p>$$
-Second, we&apos;ll use our measurement to correct that prediction based on our measurement residual or innovation and our optimal gain. </p>
-<p>$$
-\mathbf{K}<em>{k}=\check{\mathbf{P}}</em>{k} \mathbf{H}<em>{k}^{T}\left(\mathbf{H}</em>{k} \check{\mathbf{P}}<em>{k} \mathbf{H}</em>{k}^{T}+\mathbf{R}_{k}\right)^{-1}</p>
-<p>$$
-Finally, we&apos;ll use the gain to also propagate the state covariance from our prediction to our corrected estimate. </p>
-<p>$$
-\begin{aligned} \hat{\mathbf{x}}<em>{k} &amp;=\check{\mathbf{x}}</em>{k}+\mathbf{K}<em>{k}\left(\mathbf{y}</em>{k}-\mathbf{H}<em>{k} \check{\mathbf{x}}</em>{k}\right) \ \hat{\mathbf{P}}<em>{k} &amp;=\left(\mathbf{1}-\mathbf{K}</em>{k} \mathbf{H}<em>{k}\right) \mathbf{P}</em>{k} \end{aligned}</p>
-<p>$$
+<p>Except this time, we&apos;ll do it in two steps. First, we use the process model to predict how our states, remember, that we&apos;re now typically talking about evolving states and non-state parameters evolved since the last time step, and will propagate our uncertainty. 
+<script type="math/tex; mode=display">
+\begin{aligned} \check{\mathbf{x}}_{k} &=\mathbf{F}_{k-1} \mathbf{x}_{k-1}+\mathbf{G}_{k-1} \mathbf{u}_{k-1} \\ \check{\mathbf{P}}_{k} &=\mathbf{F}_{k-1} \hat{\mathbf{P}}_{k-1} \mathbf{F}_{k-1}^{T}+\mathbf{Q}_{k-1} \end{aligned}
+</script>
+Second, we&apos;ll use our measurement to correct that prediction based on our measurement residual or innovation and our optimal gain. 
+<script type="math/tex; mode=display">
+\mathbf{K}_{k}=\check{\mathbf{P}}_{k} \mathbf{H}_{k}^{T}\left(\mathbf{H}_{k} \check{\mathbf{P}}_{k} \mathbf{H}_{k}^{T}+\mathbf{R}_{k}\right)^{-1}
+</script>
+Finally, we&apos;ll use the gain to also propagate the state covariance from our prediction to our corrected estimate. 
+<script type="math/tex; mode=display">
+\begin{aligned} \hat{\mathbf{x}}_{k} &=\check{\mathbf{x}}_{k}+\mathbf{K}_{k}\left(\mathbf{y}_{k}-\mathbf{H}_{k} \check{\mathbf{x}}_{k}\right) \\ \hat{\mathbf{P}}_{k} &=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \mathbf{P}_{k} \end{aligned}
+</script>
 In our notation, the hat indicates a corrected prediction at a particular time step. Whereas a check indicates a prediction before the measurement is incorporated. </p>
 <p><img src="assets/1555944542344.png" alt="1555944542344"></p>
 <p>If you&apos;ve worked with the Kalman filter before, you may also have seen this written with plus and minus signs for the corrected and predicted quantities, respectively. </p>
@@ -581,19 +583,19 @@ In our notation, the hat indicates a corrected prediction at a particular time s
 <p>Once we&apos;ve collected these errors, if they average to zero at a particular time step k, then we say the Kalman Filter estimate is unbiased at this time step. </p>
 <p><img src="assets/1556028641962.png" alt="1556028641962"></p>
 <p>Graphically, this is what the situation may look like. Say the particular time step, we know that the true position is the following. We build a histogram of the positions that our filter reports over multiple trials, and then compute the difference between the average of these estimates and the true position. If this difference does not approach zero, then our estimate is biased. However, if this difference does approach zero as we repeat this experiment many more times, and if this happens for all time intervals, then we say that our filter is unbiased. </p>
-<p>This filter is an unbiased if for all k</p>
-<p>$$
-E\left[\hat{e}<em>{k}\right]=E\left[\hat{p}</em>{k}-p<em>{k}\right]=E\left[\hat{p}</em>{k}\right]-p_{k}=0</p>
-<p>$$
+<p>This filter is an unbiased if for all k
+<script type="math/tex; mode=display">
+E\left[\hat{e}_{k}\right]=E\left[\hat{p}_{k}-p_{k}\right]=E\left[\hat{p}_{k}\right]-p_{k}=0
+</script>
 Although we could potentially verify this lack of bias empirically, what we&apos;d really like are some theoretical guarantees. Let&apos;s consider the error dynamics of our filter. </p>
 <ul>
 <li>Predicted state error&#xFF1A;$\check{\mathbf{e}}<em>{k}=\check{\mathbf{x}}</em>{k}-\mathbf{x}_{k}$</li>
 <li>Corrected estimate error : $\hat{\mathbf{e}}<em>{k}=\hat{\mathbf{x}}</em>{k}-\mathbf{x}_{k}$</li>
 </ul>
-<p>Defining our predicted and corrected state errors, we can then use the common filter equations to write the following relations. </p>
-<p>$$
-\begin{aligned} \check{\mathbf{e}}<em>{k} &amp;=\mathbf{F}</em>{k-1} \check{\mathbf{e}}<em>{k-1}-\mathbf{w}</em>{k} \ \hat{\mathbf{e}}<em>{k} &amp;=\left(\mathbf{1}-\mathbf{K}</em>{k} \mathbf{H}<em>{k}\right) \check{\mathbf{e}}</em>{k}+\mathbf{K}<em>{k} \mathbf{v}</em>{k} \end{aligned}</p>
-<p>$$
+<p>Defining our predicted and corrected state errors, we can then use the common filter equations to write the following relations. 
+<script type="math/tex; mode=display">
+\begin{aligned} \check{\mathbf{e}}_{k} &=\mathbf{F}_{k-1} \check{\mathbf{e}}_{k-1}-\mathbf{w}_{k} \\ \hat{\mathbf{e}}_{k} &=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \check{\mathbf{e}}_{k}+\mathbf{K}_{k} \mathbf{v}_{k} \end{aligned}
+</script>
 For the Kalman Filter, we can show the expectation value of these errors is equal to zero exactly. For this to be true, we need to ensure that our initial state estimate is unbiased and that our noise is white, uncorrelated, and zero mean. </p>
 <p><img src="assets/1556029088893.png" alt="1556029088893"></p>
 <p>While this is a great result for linear systems, remember that this doesn&apos;t guarantee that our estimates will be error free for a given trial, only that the expected value of the error is zero. </p>
@@ -602,20 +604,20 @@ For the Kalman Filter, we can show the expectation value of these errors is equa
 <p>Kalman Filters are also what is called consistent. By consistency we mean that for all time steps k, the filter co-variants $P_k$ matches the expected value of the square of our error. </p>
 <p><img src="assets/1556029158538.png" alt="1556029158538"></p>
 <p>For scalar parameters, this means that the empirical variance of our estimate should match the variance reported by the filter. </p>
-<p>The filter is consistent if for all k,</p>
-<p>$$
-E\left[\hat{e}<em>{k}^{2}\right]=E\left[\left(\hat{p}</em>{k}-p<em>{k}\right)^{2}\right]=\hat{P}</em>{k}</p>
-<p>$$
+<p>The filter is consistent if for all k,
+<script type="math/tex; mode=display">
+E\left[\hat{e}_{k}^{2}\right]=E\left[\left(\hat{p}_{k}-p_{k}\right)^{2}\right]=\hat{P}_{k}
+</script>
 Practically, this means that our filter is neither overconfident, nor underconfident in the estimate it has produced. A filter that is overconfident, and hence inconsistent, will report a covariance that is optimistic. That is, the filter will essentially place too much emphasis on its own estimate and will be less sensitive to future measurement updates, which may provide critical information. </p>
-<p>One can also show (with more algebra!) that for all k,</p>
-<p>$$
-E\left[\mathbf{&#xE8;}<em>{k} \check{\mathbf{e}}</em>{k}^{T}\right]=\check{\mathbf{P}}<em>{k} \quad E\left[\hat{\mathbf{e}}</em>{k} \hat{\mathbf{e}}<em>{k}^{T}\right]=\hat{\mathbf{P}}</em>{k}</p>
-<p>$$
+<p>One can also show (with more algebra!) that for all k,
+<script type="math/tex; mode=display">
+E\left[\mathbf{è}_{k} \check{\mathbf{e}}_{k}^{T}\right]=\check{\mathbf{P}}_{k} \quad E\left[\hat{\mathbf{e}}_{k} \hat{\mathbf{e}}_{k}^{T}\right]=\hat{\mathbf{P}}_{k}
+</script>
 Consistent predictions !</p>
-<p>Provided,</p>
-<p>$$
-E\left[\hat{\mathbf{e}}<em>{0} \hat{\mathbf{e}}</em>{0}^{T}\right]=\check{\mathbf{P}}_{0} \quad E[\mathbf{v}]=\mathbf{0} \quad E[\mathbf{w}]=\mathbf{0}</p>
-<p>$$
+<p>Provided,
+<script type="math/tex; mode=display">
+E\left[\hat{\mathbf{e}}_{0} \hat{\mathbf{e}}_{0}^{T}\right]=\check{\mathbf{P}}_{0} \quad E[\mathbf{v}]=\mathbf{0} \quad E[\mathbf{w}]=\mathbf{0}
+</script>
 It&apos;s easy to see how an overconfident filter might have a negative or dangerous effect on the performance of self-driving car. Showing the consistency property formally is outside of the scope of the course. You can take my word that it is indeed true for a common filter. So long as our initial estimate is consistent, and we have white zero mean noise, then all estimates will be consistent. </p>
 <hr>
 <h3 id="3-the-kalman-filter-is-the-blue--best-linear-unbiased-estimator">3. The Kalman Filter is the BLUE | Best Linear Unbiased Estimator</h3>
@@ -667,14 +669,14 @@ It&apos;s easy to see how an overconfident filter might have a negative or dange
 <blockquote>
 <p>&#x5047;&#x8BBE;&#x6709;n&#x7EF4;&#x8F93;&#x5165;&#xFF0C;m&#x7EF4;&#x8F93;&#x51FA;&#xFF0C;&#x5219;&#x96C5;&#x514B;&#x6BD4;&#x77E9;&#x9635;&#x7EF4;&#x5EA6;&#x662F;m*n&#x3002;</p>
 </blockquote>
-<p>In vector calculus, a Jacobian or Jacobian matrix is the matrix of all first-order partial derivatives of a vector valued function. </p>
-<p>$$
-\frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{ccc}{\frac{\partial \mathbf{f}}{\partial x<em>{1}}} &amp; {\cdots} &amp; {\frac{\partial \mathbf{f}}{\partial x</em>{n}}}\end{array}\right]=\left[ \begin{array}{ccc}{\frac{\partial f<em>{1}}{\partial x</em>{1}}} &amp; {\cdots} &amp; {\frac{\partial f<em>{1}}{\partial x</em>{n}}} \ {\vdots} &amp; {\ddots} &amp; {\vdots} \ {\frac{\partial f<em>{m}}{\partial x</em>{1}}} &amp; {\cdots} &amp; {\frac{\partial f<em>{m}}{\partial x</em>{n}}}\end{array}\right]</p>
-<p>$$
-Each column of the Jacobian contains the derivatives of the function outputs with respect to a given input. For example, if your function takes a three-dimensional vector and spits out a two-dimensional vector, the Jacobian would be a two by three matrix. Intuitively, the Jacobian matrix tells you how fast each output of your function is changing along each input dimension, just like how the derivative of a scalar function tells you how fast the output is changing as you vary the input. The Jacobian is really just a generalization of the first derivative to multiple dimensions. Here&apos;s a simple example of the Jacobian of a two-dimensional function with two inputs. </p>
-<p>$$
-\mathbf{f}(\mathbf{x})=\left[ \begin{array}{c}{f<em>{1}} \ {f</em>{2}}\end{array}\right]=\left[ \begin{array}{c}{x<em>{1}+x</em>{2}} \ {x<em>{1}^{2}}\end{array}\right] \quad \rightarrow \quad \frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{cc}{\frac{\partial f</em>{1}}{d x<em>{1}}} &amp; {\frac{\partial f</em>{1}}{\partial x<em>{2}}} \ {\frac{\partial f</em>{2}}{d x<em>{1}}} &amp; {\frac{\partial f</em>{2}}{\partial x<em>{2}}}\end{array}\right]=\left[ \begin{array}{cc}{1} &amp; {1} \ {2 x</em>{1}} &amp; {0}\end{array}\right]</p>
-<p>$$
+<p>In vector calculus, a Jacobian or Jacobian matrix is the matrix of all first-order partial derivatives of a vector valued function. 
+<script type="math/tex; mode=display">
+\frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{ccc}{\frac{\partial \mathbf{f}}{\partial x_{1}}} & {\cdots} & {\frac{\partial \mathbf{f}}{\partial x_{n}}}\end{array}\right]=\left[ \begin{array}{ccc}{\frac{\partial f_{1}}{\partial x_{1}}} & {\cdots} & {\frac{\partial f_{1}}{\partial x_{n}}} \\ {\vdots} & {\ddots} & {\vdots} \\ {\frac{\partial f_{m}}{\partial x_{1}}} & {\cdots} & {\frac{\partial f_{m}}{\partial x_{n}}}\end{array}\right]
+</script>
+Each column of the Jacobian contains the derivatives of the function outputs with respect to a given input. For example, if your function takes a three-dimensional vector and spits out a two-dimensional vector, the Jacobian would be a two by three matrix. Intuitively, the Jacobian matrix tells you how fast each output of your function is changing along each input dimension, just like how the derivative of a scalar function tells you how fast the output is changing as you vary the input. The Jacobian is really just a generalization of the first derivative to multiple dimensions. Here&apos;s a simple example of the Jacobian of a two-dimensional function with two inputs. 
+<script type="math/tex; mode=display">
+\mathbf{f}(\mathbf{x})=\left[ \begin{array}{c}{f_{1}} \\ {f_{2}}\end{array}\right]=\left[ \begin{array}{c}{x_{1}+x_{2}} \\ {x_{1}^{2}}\end{array}\right] \quad \rightarrow \quad \frac{\partial \mathbf{f}}{\partial \mathbf{x}}=\left[ \begin{array}{cc}{\frac{\partial f_{1}}{d x_{1}}} & {\frac{\partial f_{1}}{\partial x_{2}}} \\ {\frac{\partial f_{2}}{d x_{1}}} & {\frac{\partial f_{2}}{\partial x_{2}}}\end{array}\right]=\left[ \begin{array}{cc}{1} & {1} \\ {2 x_{1}} & {0}\end{array}\right]
+</script>
 The Jacobian matrix captures the first derivatives of each of the two output variables with respect to each of the two input variables. The best way to get comfortable with driving Jacobian is just practice. Try deriving the Jacobian of this vector valued function. </p>
 <hr>
 <h3 id="5-ekf--putting-it-all-together">5. EKF | Putting It All Together</h3>
@@ -759,10 +761,10 @@ The Jacobian matrix captures the first derivatives of each of the two output var
 <hr>
 <h3 id="1-limitations-of-the-ekf--linearization-error">1. Limitations of the EKF | Linearization error</h3>
 <p>Recall that the EKF works by linearizing our systems non-linear motion and observation models to update both the mean and covariance of our state estimate.</p>
-<p><img src="assets/1556787143712.png" alt="1556787143712"></p>
-<p>$$
-f(x) \approx f(a)+\left.\frac{\partial f(x)}{\partial x}\right|_{x=a}(x-a)</p>
-<p>$$
+<p><img src="assets/1556787143712.png" alt="1556787143712">
+<script type="math/tex; mode=display">
+f(x) \approx f(a)+\left.\frac{\partial f(x)}{\partial x}\right|_{x=a}(x-a)
+</script>
 A linearized model is just a local linear approximation of the true non-linear model. We call the difference between the approximation and the true model, the linearization error. In general, the linearization error for any function depends on two things. </p>
 <p>The first thing is how non-linear the original function is to begin with. If our nonlinear function very slowly or is quite flat much of the time, linear approximation is going to be a pretty good fit. On the other hand, if the function varies quickly, linear approximation is not going to do a great job of capturing the true shape of the function over most of its domain. </p>
 <p>The second thing linearization error depends on is how far away from the operating point you are. The further away you move from the operating point, the more likely the linear approximation is to diverge from the true function. These properties of linearization error have important implications for the EKF. So, let&apos;s look at an example of how linearization error affects the mean and covariance of two random variables transformed by a common pair of non-linear functions. Specifically, let&apos;s look at the non-linear transformation from polar coordinates r and Theta to Cartesian coordinates, x and y. This kind of transformation is commonly used to work with laser scanners or LIDARs, to report range and bearing measurements, just as the scanners on many self-driving cars do. </p>
@@ -841,10 +843,10 @@ compute a Cholesky decomposition but you can use the chole function in MATLAB or
 <p>Once we&apos;ve decomposed the covariance matrix, we can choose our first sigma point to be the mean of the distribution and the remainder to be the mean plus or minus some factor times each column of the matrix L that we got from the cholesky decomposition. The value of N here again is a number of dimensions of the probability distribution. The parameter capa is a tuning parameter that you&apos;re free to set yourself. For Gaussian distributions, which is what we&apos;ll be working with, setting N plus capa equal to 3 is a good choice. </p>
 <hr>
 <h3 id="3-the-unscented-transform--transforming-and-recombining">3. The Unscented Transform | Transforming and Recombining</h3>
-<p>Okay, so now we have our set of sigma points. The next step is straightforward. Just pass each of the sigma points through our nonlinear function h(x) to get a new set of transformed sigma points. </p>
-<p>$$
-\mathbf{y}<em>{i}=\mathbf{h}\left(\mathbf{x}</em>{i}\right) \quad i=0, \ldots, 2 N</p>
-<p>$$
+<p>Okay, so now we have our set of sigma points. The next step is straightforward. Just pass each of the sigma points through our nonlinear function h(x) to get a new set of transformed sigma points. 
+<script type="math/tex; mode=display">
+\mathbf{y}_{i}=\mathbf{h}\left(\mathbf{x}_{i}\right) \quad i=0, \ldots, 2 N
+</script>
 Now all that&apos;s left is to recombine the transformed sigma points to find our output mean and output covariance. </p>
 <p><img src="assets/1556800067449.png" alt="1556800067449"></p>
 <p>We do this using the standard formulas for the sample means and covariance that you would have seen in your introductory statistics courses. The trick is that each of the points gets a specific weight in the mean and covariance calculations, and that weight depends on the parameter kappa and the dimension of the input distribution N. And that&apos;s really all there is to it. </p>
@@ -940,7 +942,7 @@ Now all that&apos;s left is to recombine the transformed sigma points to find ou
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"next":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},"previous":{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","mtime":"2019-08-01T13:39:47.527Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"next":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},"previous":{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","mtime":"2019-08-01T13:39:47.527Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -948,6 +950,14 @@ Now all that&apos;s left is to recombine the transformed sigma points to find ou
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

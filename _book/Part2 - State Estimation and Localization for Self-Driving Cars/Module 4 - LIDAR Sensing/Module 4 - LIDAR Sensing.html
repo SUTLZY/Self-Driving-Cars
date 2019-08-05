@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -595,22 +597,22 @@
 <p>This equation tells you how the height of the plane z changes as you move around in the x and y directions. And it depends on three parameters, a, b, and c, which tells you the slope of the plane in each direction and where the zed axis intersects the plane. So in our case, we have a bunch of measurements of x, y and zed from our LIDAR point cloud, and we want to find values for the parameters a, b, and c that give us the plane of best fit through these points. To do this, we&apos;re going to reach back to Module One for our tool of choice, least-squares estimation. We&apos;ll start by defining a measurement error e for each point in the point cloud. And e is just going to be the difference between the predicted value of our dependent variable zed-hat and the actual observed value of zed. We get zed-hat simply by plugging our current guess for the parameters a-hat, b-hat, and c-hat, and the actual values of x and y in. </p>
 <p>In this case, the error, e, that we are considering, is for a bumpy road surface, for example. That is, a surface which is not exactly planar. For the moment, we&apos;re ignoring the actual errors in the LIDAR measurements themselves, which also have an effect. We can stack all of these error terms into matrix form so we have a big matrix of coefficients called a. </p>
 <p><img src="assets/1557453886734.png" alt="1557453886734"></p>
-<p>Multiplied by our parameter vector x, minus our stack measurements b. You can work out the matrix multiplication yourself to see that we get back the same measurement error equations we started out with. Now, all we have to do is minimize the square of this error and we&apos;ll have our solution. </p>
-<p>$$
-\hat{\mathbf{x}} =\arg \min <em>{\mathbf{x}} \mathscr{L}</em>{\mathrm{LS}}(\mathbf{x})\</p>
-<p>$$
-This works exactly the same way as the resistor problem we worked through in module one. We can start by multiplying out the square to get a matrix polynomial in the parameter vector x. </p>
-<p>$$
-\begin{aligned} \mathscr{L}_{\mathrm{LS}}(\mathbf{x}) &amp;=\mathbf{e}^{T} \mathbf{e} \ &amp;=(\mathbf{A} \mathbf{x}-\mathbf{b})^{T}(\mathbf{A} \mathbf{x}-\mathbf{b}) \ &amp;=\mathbf{x}^{T} \mathbf{A}^{T} \mathbf{A} \mathbf{x}-\mathbf{x}^{T} \mathbf{A}^{T} \mathbf{b}-\mathbf{b}^{T} \mathbf{A} \mathbf{x}+\mathbf{b}^{T} \mathbf{b} \end{aligned}</p>
-<p>$$
-From there, we take the partial derivative of the squared error function with respect to the parameter vector x and set it to 0 to find the minimum. This gives us the linear system we&apos;ll need to solve to obtain the final least squares estimate. We can solve this linear system using an efficient numerical solver like Python NumPy&apos;s solve function. Or just use the pseudo inverse to get our final answer for the plane parameters. </p>
-<p>$$
-\left.\frac{\partial \mathscr{L}<em>{\mathrm{LS}}(\mathbf{x})}{\partial \mathbf{x}}\right|</em>{\mathbf{x}=\hat{\mathbf{x}}}=2 \mathbf{A}^{T} \mathbf{A} \hat{\mathbf{x}}-2 \mathbf{A}^{T} \mathbf{b}=\mathbf{0} \quad \longrightarrow \quad \mathbf{A}^{T} \mathbf{A} \hat{\mathbf{x}}=\mathbf{A}^{T} \mathbf{b}</p>
-<p>$$
-One important thing to notice here is that we did not account for sensor noise in our x, y, zed measurements. All we&apos;ve done is to find the plane of best fit through a set of points. </p>
-<p>$$
-\hat{\mathbf{x}}=\left(\mathbf{A}^{T} \mathbf{A}\right)^{-1} \mathbf{A}^{T} \mathbf{b}</p>
-<p>$$
+<p>Multiplied by our parameter vector x, minus our stack measurements b. You can work out the matrix multiplication yourself to see that we get back the same measurement error equations we started out with. Now, all we have to do is minimize the square of this error and we&apos;ll have our solution. 
+<script type="math/tex; ">
+\hat{\mathbf{x}} =\arg \min _{\mathbf{x}} \mathscr{L}_{\mathrm{LS}}(\mathbf{x})\\
+</script>
+This works exactly the same way as the resistor problem we worked through in module one. We can start by multiplying out the square to get a matrix polynomial in the parameter vector x. 
+<script type="math/tex; ">
+\begin{aligned} \mathscr{L}_{\mathrm{LS}}(\mathbf{x}) &=\mathbf{e}^{T} \mathbf{e} \\ &=(\mathbf{A} \mathbf{x}-\mathbf{b})^{T}(\mathbf{A} \mathbf{x}-\mathbf{b}) \\ &=\mathbf{x}^{T} \mathbf{A}^{T} \mathbf{A} \mathbf{x}-\mathbf{x}^{T} \mathbf{A}^{T} \mathbf{b}-\mathbf{b}^{T} \mathbf{A} \mathbf{x}+\mathbf{b}^{T} \mathbf{b} \end{aligned}
+</script>
+From there, we take the partial derivative of the squared error function with respect to the parameter vector x and set it to 0 to find the minimum. This gives us the linear system we&apos;ll need to solve to obtain the final least squares estimate. We can solve this linear system using an efficient numerical solver like Python NumPy&apos;s solve function. Or just use the pseudo inverse to get our final answer for the plane parameters. 
+<script type="math/tex; ">
+\left.\frac{\partial \mathscr{L}_{\mathrm{LS}}(\mathbf{x})}{\partial \mathbf{x}}\right|_{\mathbf{x}=\hat{\mathbf{x}}}=2 \mathbf{A}^{T} \mathbf{A} \hat{\mathbf{x}}-2 \mathbf{A}^{T} \mathbf{b}=\mathbf{0} \quad \longrightarrow \quad \mathbf{A}^{T} \mathbf{A} \hat{\mathbf{x}}=\mathbf{A}^{T} \mathbf{b}
+</script>
+One important thing to notice here is that we did not account for sensor noise in our x, y, zed measurements. All we&apos;ve done is to find the plane of best fit through a set of points. 
+<script type="math/tex; ">
+\hat{\mathbf{x}}=\left(\mathbf{A}^{T} \mathbf{A}\right)^{-1} \mathbf{A}^{T} \mathbf{b}
+</script>
 It&apos;s certainly possible to set this problem up in a more sophisticated way that does account for sensor noise. You could use a batch approach similar to what we just discussed, or you could even think about including the road parameters in the column filter to estimate them on the fly as the sensor data comes in. The best solution for your self-driving application will depend on how much you trust your LIDAR data and how much thought you want to give to uncertainty in the road surface. </p>
 <p>Now, although all of the operations we&apos;ve described here can be easily implemented with NumPy or any other linear algebra library, there is a fantastic open source tool called the Point Cloud Library, or PCL, that provides all sorts of useful functions for working with point clouds. </p>
 <p><img src="assets/1557454149638.png" alt="1557454149638"></p>
@@ -759,7 +761,7 @@ the most important problems in computer vision and pattern recognition. By the e
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"next":{"title":"Module 5 - Putting It together - An Autonomous Vehicle State Estimator","level":"1.3.5","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","articles":[]},"previous":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","mtime":"2019-08-01T13:39:51.740Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"next":{"title":"Module 5 - Putting It together - An Autonomous Vehicle State Estimator","level":"1.3.5","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","articles":[]},"previous":{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","mtime":"2019-08-01T13:39:51.740Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -767,6 +769,14 @@ the most important problems in computer vision and pattern recognition. By the e
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

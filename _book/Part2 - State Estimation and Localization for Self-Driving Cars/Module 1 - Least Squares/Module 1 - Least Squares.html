@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -531,41 +533,41 @@
 <p><img src="assets/1555593675488.png" alt="1555593675488"></p>
 <p>But remember, we don&apos;t yet know what x is. To find x, we square these errors to arrive at an equation that is a function of our measurements and the unknown resistance that we&apos;re looking for. </p>
 <p><img src="assets/1555592701365.png" alt="1555592701365"></p>
-<p>With these errors defined, the method of least squares says that the resistance value we are looking for, that is <strong>the best estimate of x is one which minimizes the squared error criterion, also sometimes called the squared error cost function or loss function.</strong> </p>
-<p>$$
-\hat{x}<em>{\mathrm{LS}}=\operatorname{argmin}</em>{x}\left(e<em>{1}^{2}+e</em>{2}^{2}+e<em>{3}^{2}+e</em>{4}^{2}\right)=\mathscr{L}_{\mathrm{LS}}(x)</p>
-<p>$$
-To minimize the squared error criterion, we&apos;ll rewrite our errors in matrix notation. </p>
-<p>$$
-\mathbf{e}=\left[ \begin{array}{l}{e<em>{1}} \ {e</em>{2}} \ {e<em>{3}} \ {e</em>{4}}\end{array}\right]=\mathbf{y}-\mathbf{H} x=\left[ \begin{array}{l}{y<em>{1}} \ {y</em>{2}} \ {y<em>{3}} \ {y</em>{4}}\end{array}\right]-\left[ \begin{array}{l}{1} \ {1} \ {1} \ {1}\end{array}\right] x</p>
-<p>$$</p>
+<p>With these errors defined, the method of least squares says that the resistance value we are looking for, that is <strong>the best estimate of x is one which minimizes the squared error criterion, also sometimes called the squared error cost function or loss function.</strong> 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{LS}}=\operatorname{argmin}_{x}\left(e_{1}^{2}+e_{2}^{2}+e_{3}^{2}+e_{4}^{2}\right)=\mathscr{L}_{\mathrm{LS}}(x)
+</script>
+To minimize the squared error criterion, we&apos;ll rewrite our errors in matrix notation. 
+<script type="math/tex; mode=display">
+\mathbf{e}=\left[ \begin{array}{l}{e_{1}} \\ {e_{2}} \\ {e_{3}} \\ {e_{4}}\end{array}\right]=\mathbf{y}-\mathbf{H} x=\left[ \begin{array}{l}{y_{1}} \\ {y_{2}} \\ {y_{3}} \\ {y_{4}}\end{array}\right]-\left[ \begin{array}{l}{1} \\ {1} \\ {1} \\ {1}\end{array}\right] x
+</script></p>
 <blockquote>
 <p><strong>H :</strong> &#x96C5;&#x5C14;&#x6BD4;&#x77E9;&#x9635;</p>
 </blockquote>
 <p>This will be especially helpful when we have to deal with hundreds or even thousands of measurements. We&apos;ll define an <strong>error vector identified</strong> as $\mathbf{e}$, that is a function of our observations stacked into a vector y and a matrix $\mathbf{H}$ called the Jacobian. </p>
 <p>Finally, our true resistance $x$. <strong>$\mathbf{H}$ has the dimensions m by n, where m is the number of measurements and n is the number of unknowns or parameters that we wish to estimate.</strong> In general, this will be a rectangular matrix which we can write down quite easily in this linear case. It will require some more mathematical effort to compute when we discuss non-linear estimation in an upcoming lesson. Note here that x is a single scaler. We&apos;ll see later that it can be a vector comprising multiple unknowns.</p>
-<p>With these definitions in mind, we can convert our squared error criterion to vector notation as follows. </p>
-<p>$$
-\begin{aligned} \mathscr{L}<em>{\mathrm{LS}}(x)=e</em>{1}^{2}+e<em>{2}^{2}+e</em>{3}^{2}+e_{4}^{2} &amp;=\mathbf{e}^{T} \mathbf{e} \ &amp;=(\mathbf{y}-\mathbf{H} x)^{T}(\mathbf{y}-\mathbf{H} x) \ &amp;=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{H}^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x \end{aligned}</p>
-<p>$$</p>
+<p>With these definitions in mind, we can convert our squared error criterion to vector notation as follows. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{LS}}(x)=e_{1}^{2}+e_{2}^{2}+e_{3}^{2}+e_{4}^{2} &=\mathbf{e}^{T} \mathbf{e} \\ &=(\mathbf{y}-\mathbf{H} x)^{T}(\mathbf{y}-\mathbf{H} x) \\ &=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{H}^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x \end{aligned}
+</script></p>
 <hr>
 <h3 id="4-minimizing-the-squared-error-criterion">4. Minimizing the Squared Error Criterion</h3>
-<p>Expanding out the brackets, we arrive at this somewhat intimidating expression. </p>
-<p>$$
-\mathscr{L}(x)=\mathbf{e}^{T} \mathbf{e}=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{H}^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x</p>
-<p>$$
-So, what now? Well, remember that we need to minimize the squared error with respect to our true resistance x. From calculus, we know that we can do this by taking a derivative of the error function with respect to the unknown x and setting the derivative to zero. Let&apos;s do exactly that. We&apos;ll have to use some standard matrix expressions. </p>
-<p>$$
-\begin{array}{r}{\left.\frac{\partial \mathscr{L}}{\partial x}\right|_{x=\hat{x}}=-\mathbf{y}^{T} \mathbf{H}-\mathbf{y}^{T} \mathbf{H}+2 \hat{x}^{T} \mathbf{H}^{T} \mathbf{H}=0} \ {-2 \mathbf{y}^{T} \mathbf{H}+2 \hat{x}^{T} \mathbf{H}^{T} \mathbf{H}=0}\end{array}</p>
-<p>$$
-Re-arranging, we arrive at what are called the normal equations, which can be written as a single matrix formula. </p>
-<p>$$
-\hat{x}_{\mathrm{LS}}=\left(\mathbf{H}^{T} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{y}</p>
-<p>$$
-We can solve these to find x-hat, the resistance which minimizes our squared error criterion. This expression has a unique solution if and only if $\mathbf{H}^{T} \mathbf{H}$ is not singular. In other words, if the matrix has an inverse. If we have m measurements and n unknown parameters, H transpose H will be n by n. </p>
-<p>$$
-\mathbf{H} \in \mathbb{R}^{m \times n} \quad \mathbf{H}^{T} \mathbf{H} \in \mathbb{R}^{n \times n}</p>
-<p>$$</p>
+<p>Expanding out the brackets, we arrive at this somewhat intimidating expression. 
+<script type="math/tex; mode=display">
+\mathscr{L}(x)=\mathbf{e}^{T} \mathbf{e}=\mathbf{y}^{T} \mathbf{y}-x^{T} \mathbf{H}^{T} \mathbf{y}-\mathbf{y}^{T} \mathbf{H} x+x^{T} \mathbf{H}^{T} \mathbf{H} x
+</script>
+So, what now? Well, remember that we need to minimize the squared error with respect to our true resistance x. From calculus, we know that we can do this by taking a derivative of the error function with respect to the unknown x and setting the derivative to zero. Let&apos;s do exactly that. We&apos;ll have to use some standard matrix expressions. 
+<script type="math/tex; mode=display">
+\begin{array}{r}{\left.\frac{\partial \mathscr{L}}{\partial x}\right|_{x=\hat{x}}=-\mathbf{y}^{T} \mathbf{H}-\mathbf{y}^{T} \mathbf{H}+2 \hat{x}^{T} \mathbf{H}^{T} \mathbf{H}=0} \\ {-2 \mathbf{y}^{T} \mathbf{H}+2 \hat{x}^{T} \mathbf{H}^{T} \mathbf{H}=0}\end{array}
+</script>
+Re-arranging, we arrive at what are called the normal equations, which can be written as a single matrix formula. 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{LS}}=\left(\mathbf{H}^{T} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{y}
+</script>
+We can solve these to find x-hat, the resistance which minimizes our squared error criterion. This expression has a unique solution if and only if $\mathbf{H}^{T} \mathbf{H}$ is not singular. In other words, if the matrix has an inverse. If we have m measurements and n unknown parameters, H transpose H will be n by n. 
+<script type="math/tex; mode=display">
+\mathbf{H} \in \mathbb{R}^{m \times n} \quad \mathbf{H}^{T} \mathbf{H} \in \mathbb{R}^{n \times n}
+</script></p>
 <blockquote>
 <p>&#x77E9;&#x9635;&#x7684;&#x53EF;&#x9006;&#x95EE;&#x9898;</p>
 </blockquote>
@@ -602,50 +604,50 @@ We can solve these to find x-hat, the resistance which minimizes our squared err
 <p>One reason we may want to trust certain measurements more than others is that they may come from a better sensor. For example, a number of our resistance measurements could have come from a much more expensive multi-meter than the others. Further, from now on, we&apos;ll also drop the assumption that we&apos;re only estimating one parameter and derive the more general normal equations. </p>
 <p><img src="assets/1555595877734.png" alt="1555595877734"></p>
 <p>This will allow us to formulate a way to estimate multiple parameters at one time. For example, if we wanted to estimate several resistance values at once. </p>
-<p>Let&apos;s begin by using the following general notation. We&apos;ll have a set of m measurements that are related to a set of n unknown parameters through a linear model.Recall that H is rj cobian matrix whose form and entries will depend on the particular problem at hand. </p>
-<p>$$
-\left[ \begin{array}{c}{y<em>{1}} \ {\vdots} \ {y</em>{m}}\end{array}\right]=\mathbf{H} \left[ \begin{array}{c}{x<em>{1}} \ {\vdots} \ {x</em>{n}}\end{array}\right]+\left[ \begin{array}{c}{v<em>{1}} \ {\vdots} \ {v</em>{m}}\end{array}\right]\ 
-\
-y = Hx + v</p>
-<p>$$
-One way to interpret the ordinary method of least squares is to say that we are implicitly assuming that each noise term $v_i$ is an independent random variable across measurements and has an equal variance or standard deviation if you prefer, IID as we mentioned in the previous video. </p>
-<p>$$
-\mathbb{E}\left[v_{i}^{2}\right]=\sigma^{2} \quad(i=1, \ldots, m)\quad \quad    \mathbf{R}=\mathbb{E}\left[\mathbf{v} \mathbf{v}^{T}\right]=\left[ \begin{array}{cc}{\sigma^{2}} &amp; {0} \ {0} &amp; {\sigma^{2}}\end{array}\right]</p>
-<p>$$
-If we instead assume that each noise term has a different variance, we can define our noise covariance as follows.</p>
-<p>$$
-\mathbb{E}\left[v_{i}^{2}\right]=\sigma_i^{2} \quad(i=1, \ldots, m)\quad \quad    \mathbf{R}=\mathbb{E}\left[\mathbf{v} \mathbf{v}^{T}\right]=\left[ \begin{array}{cc}{\sigma_1^{2}} &amp; {0} \ {0} &amp; {\sigma_m^{2}}\end{array}\right]</p>
-<p>$$
-With this definition, we can define a weighted least squares criterion. </p>
-<p>$$
-\begin{aligned} \mathscr{L}<em>{\mathrm{WLS}}(\mathbf{x}) &amp;=\mathbf{e}^{T} \mathbf{R}^{-1} \mathbf{e} \ &amp;=\frac{e</em>{1}^{2}}{\sigma<em>{1}^{2}}+\frac{e</em>{2}^{2}}{\sigma<em>{2}^{2}}+\ldots+\frac{e</em>{m}^{2}}{\sigma<em>{m}^{2}} \end{aligned} \quad \quad where \quad \quad
-\left[ \begin{array}{c}{e</em>{1}} \ {\vdots} \ {e<em>{m}}\end{array}\right]=\mathbf{e}=\left[ \begin{array}{c}{y</em>{1}} \ {\vdots} \ {y<em>{m}}\end{array}\right]-\mathbf{H} \left[ \begin{array}{c}{x</em>{1}} \ {\vdots} \ {x_{n}}\end{array}\right]</p>
-<p>$$
+<p>Let&apos;s begin by using the following general notation. We&apos;ll have a set of m measurements that are related to a set of n unknown parameters through a linear model.Recall that H is rj cobian matrix whose form and entries will depend on the particular problem at hand. 
+<script type="math/tex; mode=display">
+\left[ \begin{array}{c}{y_{1}} \\ {\vdots} \\ {y_{m}}\end{array}\right]=\mathbf{H} \left[ \begin{array}{c}{x_{1}} \\ {\vdots} \\ {x_{n}}\end{array}\right]+\left[ \begin{array}{c}{v_{1}} \\ {\vdots} \\ {v_{m}}\end{array}\right]\\ 
+\\
+y = Hx + v
+</script>
+One way to interpret the ordinary method of least squares is to say that we are implicitly assuming that each noise term $v_i$ is an independent random variable across measurements and has an equal variance or standard deviation if you prefer, IID as we mentioned in the previous video. 
+<script type="math/tex; mode=display">
+\mathbb{E}\left[v_{i}^{2}\right]=\sigma^{2} \quad(i=1, \ldots, m)\quad \quad    \mathbf{R}=\mathbb{E}\left[\mathbf{v} \mathbf{v}^{T}\right]=\left[ \begin{array}{cc}{\sigma^{2}} & {0} \\ {0} & {\sigma^{2}}\end{array}\right]
+</script>
+If we instead assume that each noise term has a different variance, we can define our noise covariance as follows.
+<script type="math/tex; mode=display">
+\mathbb{E}\left[v_{i}^{2}\right]=\sigma_i^{2} \quad(i=1, \ldots, m)\quad \quad    \mathbf{R}=\mathbb{E}\left[\mathbf{v} \mathbf{v}^{T}\right]=\left[ \begin{array}{cc}{\sigma_1^{2}} & {0} \\ {0} & {\sigma_m^{2}}\end{array}\right]
+</script>
+With this definition, we can define a weighted least squares criterion. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x}) &=\mathbf{e}^{T} \mathbf{R}^{-1} \mathbf{e} \\ &=\frac{e_{1}^{2}}{\sigma_{1}^{2}}+\frac{e_{2}^{2}}{\sigma_{2}^{2}}+\ldots+\frac{e_{m}^{2}}{\sigma_{m}^{2}} \end{aligned} \quad \quad where \quad \quad
+\left[ \begin{array}{c}{e_{1}} \\ {\vdots} \\ {e_{m}}\end{array}\right]=\mathbf{e}=\left[ \begin{array}{c}{y_{1}} \\ {\vdots} \\ {y_{m}}\end{array}\right]-\mathbf{H} \left[ \begin{array}{c}{x_{1}} \\ {\vdots} \\ {x_{n}}\end{array}\right]
+</script>
 By expanding this expression, we can see why we call this weighted least squares. Each squared error term is now weighted by the inverse of the variance associated with the corresponding measurement. <strong>In other words, the lower the variance of the noise, the more strongly it&apos;s associated error term will be weighted in the loss function.</strong> We care more about errors which come from low noise measurements since those should tell us a lot about the true values of our unknown parameters. </p>
 <hr>
 <h3 id="2-re-deriving-regular-least-squares">2. Re-deriving Regular Least Squares</h3>
-<p>Before we see how we can minimize this new weighted criterion, let&apos;s look at what happens if we set all of the noise standard deviations to the same value sigma. </p>
-<p>$$
-\begin{aligned} \mathscr{L}<em>{\mathrm{WLS}}(\mathbf{x}) &amp;=\frac{e</em>{1}^{2}}{\sigma^{2}}+\frac{e<em>{2}^{2}}{\sigma^{2}}+\ldots+\frac{e</em>{m}^{2}}{\sigma^{2}} \ &amp;=\frac{1}{\sigma^{2}}\left(e<em>{1}^{2}+\ldots+e</em>{m}^{2}\right) \end{aligned}</p>
-<p>$$
-In this case, we can factor out the variance in the denominator. Since the sigma squared term is constant it will not affect the minimization. This means that in the case of equal variances, the same parameters that minimize our weighted least squares criterion will also minimize our ordinary least squares criterion as we should expect. </p>
-<p>$$
-\sigma<em>{1}^{2}=\sigma</em>{2}^{2}=\ldots \sigma<em>{m}^{2}=\sigma^{2} \rightarrow \quad \hat{\mathbf{x}}</em>{\mathrm{WLS}}=\hat{\mathbf{x}}<em>{\mathrm{LS}}=\operatorname{argmin}</em>{\mathbf{x}} \mathscr{L}<em>{\mathrm{LS}}(\mathbf{x})=\arg \min </em>{\mathbf{x}} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x})</p>
-<p>$$</p>
+<p>Before we see how we can minimize this new weighted criterion, let&apos;s look at what happens if we set all of the noise standard deviations to the same value sigma. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x}) &=\frac{e_{1}^{2}}{\sigma^{2}}+\frac{e_{2}^{2}}{\sigma^{2}}+\ldots+\frac{e_{m}^{2}}{\sigma^{2}} \\ &=\frac{1}{\sigma^{2}}\left(e_{1}^{2}+\ldots+e_{m}^{2}\right) \end{aligned}
+</script>
+In this case, we can factor out the variance in the denominator. Since the sigma squared term is constant it will not affect the minimization. This means that in the case of equal variances, the same parameters that minimize our weighted least squares criterion will also minimize our ordinary least squares criterion as we should expect. 
+<script type="math/tex; mode=display">
+\sigma_{1}^{2}=\sigma_{2}^{2}=\ldots \sigma_{m}^{2}=\sigma^{2} \rightarrow \quad \hat{\mathbf{x}}_{\mathrm{WLS}}=\hat{\mathbf{x}}_{\mathrm{LS}}=\operatorname{argmin}_{\mathbf{x}} \mathscr{L}_{\mathrm{LS}}(\mathbf{x})=\arg \min _{\mathbf{x}} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x})
+</script></p>
 <hr>
 <h3 id="3-minimizing-the-weighted-least-squares-criterion">3. Minimizing the <em>Weighted</em> Least Squares Criterion</h3>
-<p>Returning to our weighted least squares criterion, we approach it&apos;s minimization the same way as before, we take a derivative. </p>
-<p>$$
-\begin{aligned} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x}) &amp;=\mathbf{e}^{T} \mathbf{R}^{-1} \mathbf{e} \ &amp;=(\mathbf{y}-\mathbf{H} \mathbf{x})^{T} \mathbf{R}^{-1}(\mathbf{y}-\mathbf{H} \mathbf{x}) \end{aligned}</p>
-<p>$$
-In the general case where we have n unknown parameters in our bold vector x, this derivative will actually be a gradient. </p>
-<p>$$
-\hat{\mathbf{x}}=\operatorname{argmin}<em>{\mathbf{x}} \mathscr{L}(\mathbf{x}) \quad \longrightarrow \quad\left.\frac{\partial \mathscr{L}}{\partial \mathbf{x}}\right|</em>{\mathbf{x}=\hat{\mathbf{x}}}=\mathbf{0}=-\mathbf{y}^{T} \mathbf{R}^{-1} \mathbf{H}+\hat{\mathbf{x}}^{T} \mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H}</p>
-<p>$$
-Setting the gradient of the zero vector, we then solve for our best or optimal parameter vector x hat. </p>
-<p>$$
-\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H} \hat{\mathbf{x}}_{\mathrm{WLS}}=\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{y}</p>
-<p>$$
+<p>Returning to our weighted least squares criterion, we approach it&apos;s minimization the same way as before, we take a derivative. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{WLS}}(\mathbf{x}) &=\mathbf{e}^{T} \mathbf{R}^{-1} \mathbf{e} \\ &=(\mathbf{y}-\mathbf{H} \mathbf{x})^{T} \mathbf{R}^{-1}(\mathbf{y}-\mathbf{H} \mathbf{x}) \end{aligned}
+</script>
+In the general case where we have n unknown parameters in our bold vector x, this derivative will actually be a gradient. 
+<script type="math/tex; mode=display">
+\hat{\mathbf{x}}=\operatorname{argmin}_{\mathbf{x}} \mathscr{L}(\mathbf{x}) \quad \longrightarrow \quad\left.\frac{\partial \mathscr{L}}{\partial \mathbf{x}}\right|_{\mathbf{x}=\hat{\mathbf{x}}}=\mathbf{0}=-\mathbf{y}^{T} \mathbf{R}^{-1} \mathbf{H}+\hat{\mathbf{x}}^{T} \mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H}
+</script>
+Setting the gradient of the zero vector, we then solve for our best or optimal parameter vector x hat. 
+<script type="math/tex; mode=display">
+\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H} \hat{\mathbf{x}}_{\mathrm{WLS}}=\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{y}
+</script>
 This leads to another set of normal equations this time called the weighted normal equations. </p>
 <hr>
 <h3 id="4-method-of-weighted-least-squares">4. Method of Weighted Least Squares</h3>
@@ -685,10 +687,10 @@ This leads to another set of normal equations this time called the weighted norm
 <h3 id="1-batch-least-squares">1. Batch Least Squares</h3>
 <p>Let&apos;s begin. We&apos;ve already explored the problem of computing a value for some unknown but constant parameter from a set of measurements. </p>
 <p><img src="assets/1555746001529.png" alt="1555746001529"></p>
-<p><strong>&apos;Batch Solution&apos;:</strong></p>
-<p>$$
-\hat{x}_{\mathrm{WLS}}=\left(\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{y}</p>
-<p>$$
+<p><strong>&apos;Batch Solution&apos;:</strong>
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{WLS}}=\left(\mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{H}\right)^{-1} \mathbf{H}^{T} \mathbf{R}^{-1} \mathbf{y}
+</script>
 One of our assumptions was that we had all of the data at hand. That is, we assumed that we collected a batch of measurements and we wanted to use those measurements to compute our estimated quantities of interest. This is sometimes a completely reasonable assumption. What can we do if instead we have a stream of data? Do we need to recompute the least squares solution every time we receive a new measurement? </p>
 <p>For example, let&apos;s say we have a multimeter that can measure resistance 10 times per second. </p>
 <p><img src="assets/1555746371023.png" alt="1555746371023"></p>
@@ -698,48 +700,48 @@ One of our assumptions was that we had all of the data at hand. That is, we assu
 <p>To do this we use a recursive algorithm, incrementally updating our estimate as we go along. Let us assume that we have our best optimal estimate at time k minus 1. </p>
 <p><img src="assets/1555746418889.png" alt="1555746418889"></p>
 <p>At time k we receive a new measurement that will assume follows linear measurement model with additive Gaussian noise. Our goal is to compute an updated optimal estimate at time k, given our measurement and the previous estimate. </p>
-<p>A linear recursive estimate is given by the following expression. </p>
-<p>$$
-\hat{\mathbf{x}}<em>{k}=\hat{\mathbf{x}}</em>{k-1}+\mathbf{K}<em>{k}\left(\mathbf{y}</em>{k}-\mathbf{H}<em>{k} \hat{\mathbf{x}}</em>{k-1}\right)</p>
-<p>$$
+<p>A linear recursive estimate is given by the following expression. 
+<script type="math/tex; mode=display">
+\hat{\mathbf{x}}_{k}=\hat{\mathbf{x}}_{k-1}+\mathbf{K}_{k}\left(\mathbf{y}_{k}-\mathbf{H}_{k} \hat{\mathbf{x}}_{k-1}\right)
+</script>
 Here k is called an estimator gain matrix. The term in brackets is called the innovation. <strong>It quantifies how well our current measurement matches our previous best estimate.</strong> Even without knowing the expression for k. We can already see how this recursive structure works. Our new estimate is simply the sum of the old estimate and corrective term based on the difference between what we expected the measurement to be and what we actually measured. In fact, if the innovation were equal to zero, we would not change our old estimate at all. </p>
 <hr>
 <h3 id="3-recursive-least-squares">3. Recursive Least Squares</h3>
-<p>Now, how do we compute k? Well, for that, we&apos;ll need to use a recursive least squares criterion and some matrix calculus as before. This time the math is significantly more involved, so, only work through a few steps and let the more curious learners refer to the textbook for more information. Our least squares criterion and in this case will be the expected value of r squared errors for our estimate at time k. </p>
-<p>$$
-\begin{aligned} \mathscr{L}<em>{\mathrm{RLS}}&amp;=\mathbb{E}\left[\left(x</em>{k}-\hat{x}<em>{k}\right)^{2}\right] \ &amp;=\sigma</em>{k}^{2} \end{aligned}</p>
-<p>$$
-For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance $\sigma_{k}^{2}$. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. </p>
-<p>$$
-\begin{aligned} \mathscr{L}<em>{\mathrm{RLS}} &amp;=\mathbb{E}\left[x</em>{1 k}-\hat{x}<em>{1 k}\right)^{2}+\ldots+\left(x</em>{n k}-\hat{x}<em>{n k}\right)^{2} ] \ &amp;=\operatorname{Trace}\left(\mathbf{P}</em>{k}\right) \end{aligned}</p>
-<p>$$
+<p>Now, how do we compute k? Well, for that, we&apos;ll need to use a recursive least squares criterion and some matrix calculus as before. This time the math is significantly more involved, so, only work through a few steps and let the more curious learners refer to the textbook for more information. Our least squares criterion and in this case will be the expected value of r squared errors for our estimate at time k. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{RLS}}&=\mathbb{E}\left[\left(x_{k}-\hat{x}_{k}\right)^{2}\right] \\ &=\sigma_{k}^{2} \end{aligned}
+</script>
+For a single scalar parameter like resistance, this amounts to minimizing the estimator state variance $\sigma_{k}^{2}$. For multiple unknown parameters, this is equivalent to minimizing the trace of our state covariance matrix at time t. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathscr{L}_{\mathrm{RLS}} &=\mathbb{E}\left[x_{1 k}-\hat{x}_{1 k}\right)^{2}+\ldots+\left(x_{n k}-\hat{x}_{n k}\right)^{2} ] \\ &=\operatorname{Trace}\left(\mathbf{P}_{k}\right) \end{aligned}
+</script>
 This is exactly like our former least squares criterion except now we have to talk about expectations. Instead of minimizing the error directly, we minimize its expected value which is actually the estimator variance. The lower the variance, the more we are certain of our estimate. </p>
-<p>It turns out that we can formulate a recursive definition for this state covariance matrix P_k. </p>
-<p>$$
-\mathbf{P}<em>{k}=\left(\mathbf{1}-\mathbf{K}</em>{k} \mathbf{H}<em>{k}\right) \mathbf{P}</em>{k-1}\left(\mathbf{1}-\mathbf{K}<em>{k} \mathbf{H}</em>{k}\right)^{T}+\mathbf{K}<em>{k} \mathbf{R}</em>{k} \mathbf{K}_{k}^{T}</p>
-<p>$$
-By using matrix calculus and taking derivatives, we can show that this criterion is minimized when k has the following value. The full derivation is a bit beyond the scope of our course but can be found in any standard estimation text. </p>
-<p>$$
-\mathbf{K}<em>{k}=\mathbf{P}</em>{k-1} \mathbf{H}<em>{k}^{T}\left(\mathbf{H}</em>{k} \mathbf{P}<em>{k-1} \mathbf{H}</em>{k}^{T}+\mathbf{R}_{k}\right)^{-1}</p>
-<p>$$
-Finally, by using this formulation, we can also rewrite our recursive definition for P_k into something much simpler. Take a second to think about this equation. The larger our gain matrix k, the smaller our new estimator covariance will be. Our covariance &apos;shrinks&apos; with each measurement.</p>
-<p>$$
-\begin{aligned} \mathbf{P}<em>{k} &amp;=\mathbf{P}</em>{k-1}-\mathbf{K}<em>{k} \mathbf{H}</em>{k} \mathbf{P}<em>{k-1} \ &amp;=\left(\mathbf{1}-\mathbf{K}</em>{k} \mathbf{H}<em>{k}\right) \mathbf{P}</em>{k-1} \end{aligned}</p>
-<p>$$
+<p>It turns out that we can formulate a recursive definition for this state covariance matrix P_k. 
+<script type="math/tex; mode=display">
+\mathbf{P}_{k}=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \mathbf{P}_{k-1}\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right)^{T}+\mathbf{K}_{k} \mathbf{R}_{k} \mathbf{K}_{k}^{T}
+</script>
+By using matrix calculus and taking derivatives, we can show that this criterion is minimized when k has the following value. The full derivation is a bit beyond the scope of our course but can be found in any standard estimation text. 
+<script type="math/tex; mode=display">
+\mathbf{K}_{k}=\mathbf{P}_{k-1} \mathbf{H}_{k}^{T}\left(\mathbf{H}_{k} \mathbf{P}_{k-1} \mathbf{H}_{k}^{T}+\mathbf{R}_{k}\right)^{-1}
+</script>
+Finally, by using this formulation, we can also rewrite our recursive definition for P_k into something much simpler. Take a second to think about this equation. The larger our gain matrix k, the smaller our new estimator covariance will be. Our covariance &apos;shrinks&apos; with each measurement.
+<script type="math/tex; mode=display">
+\begin{aligned} \mathbf{P}_{k} &=\mathbf{P}_{k-1}-\mathbf{K}_{k} \mathbf{H}_{k} \mathbf{P}_{k-1} \\ &=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \mathbf{P}_{k-1} \end{aligned}
+</script>
 Intuitively, you can think of this gain matrix as balancing the information we get from our prior estimate and the information we receive from our new measurement. </p>
 <h3 id="4-recursive-least-squares--algorithm">4. Recursive Least Squares | Algorithm</h3>
-<p>Putting everything together, our least squares algorithm looks like this. We initialize the algorithm with estimate of our unknown parameters and a corresponding covariance matrix. </p>
-<p>$$
-\begin{aligned} \hat{\mathbf{x}}<em>{0} &amp;=\mathbb{E}[\mathbf{x}] \ \mathbf{P}</em>{0} &amp;=\mathbb{E}\left[\left(\mathbf{x}-\hat{\mathbf{x}}<em>{0}\right)\left(\mathbf{x}-\hat{\mathbf{x}}</em>{0}\right)^{T}\right] \end{aligned}</p>
-<p>$$
-This initial guess could come from the first measurement we take and the covariance could come from technical specifications. Next, we set up our measurement model and pick values for our measurement covariance. </p>
-<p>$$
-\mathbf{y}<em>{k}=\mathbf{H}</em>{k} \mathbf{x}+\mathbf{v}_{k}</p>
-<p>$$
-Finally, every time a measurement is recorded, we compute the measurement gain and then use it to update our estimate of the parameters and our estimator covariance or uncertainty. </p>
-<p>$$
-\begin{aligned} \mathbf{K}<em>{k} &amp;=\mathbf{P}</em>{k-1} \mathbf{H}<em>{k}^{T}\left(\mathbf{H}</em>{k} \mathbf{P}<em>{k-1} \mathbf{H}</em>{k}^{T}+\mathbf{R}<em>{k}\right)^{-1} \ \hat{\mathbf{x}}</em>{k} &amp;=\hat{\mathbf{x}}<em>{k-1}+\mathbf{K}</em>{k}\left(\mathbf{y}<em>{k}-\mathbf{H}</em>{k} \hat{\mathbf{x}}<em>{k-1}\right) \ \mathbf{P}</em>{k} &amp;=\left(\mathbf{1}-\mathbf{K}<em>{k} \mathbf{H}</em>{k}\right) \mathbf{P}_{k-1} \end{aligned}</p>
-<p>$$
+<p>Putting everything together, our least squares algorithm looks like this. We initialize the algorithm with estimate of our unknown parameters and a corresponding covariance matrix. 
+<script type="math/tex; mode=display">
+\begin{aligned} \hat{\mathbf{x}}_{0} &=\mathbb{E}[\mathbf{x}] \\ \mathbf{P}_{0} &=\mathbb{E}\left[\left(\mathbf{x}-\hat{\mathbf{x}}_{0}\right)\left(\mathbf{x}-\hat{\mathbf{x}}_{0}\right)^{T}\right] \end{aligned}
+</script>
+This initial guess could come from the first measurement we take and the covariance could come from technical specifications. Next, we set up our measurement model and pick values for our measurement covariance. 
+<script type="math/tex; mode=display">
+\mathbf{y}_{k}=\mathbf{H}_{k} \mathbf{x}+\mathbf{v}_{k}
+</script>
+Finally, every time a measurement is recorded, we compute the measurement gain and then use it to update our estimate of the parameters and our estimator covariance or uncertainty. 
+<script type="math/tex; mode=display">
+\begin{aligned} \mathbf{K}_{k} &=\mathbf{P}_{k-1} \mathbf{H}_{k}^{T}\left(\mathbf{H}_{k} \mathbf{P}_{k-1} \mathbf{H}_{k}^{T}+\mathbf{R}_{k}\right)^{-1} \\ \hat{\mathbf{x}}_{k} &=\hat{\mathbf{x}}_{k-1}+\mathbf{K}_{k}\left(\mathbf{y}_{k}-\mathbf{H}_{k} \hat{\mathbf{x}}_{k-1}\right) \\ \mathbf{P}_{k} &=\left(\mathbf{1}-\mathbf{K}_{k} \mathbf{H}_{k}\right) \mathbf{P}_{k-1} \end{aligned}
+</script>
 Every time we get a new measurement our parameter uncertainty shrinks. Why is recursive least squares an important algorithm? As we&apos;ve seen, it enables us to minimize computational effort in our estimation process which is always a good thing. More importantly, recursive least squares forms the update step of the linear Kalman filter. We&apos;ll discuss this in more detail in the next module. In your upcoming graded assessment, you&apos;ll get some hands on experience using recursive least squares to determine a voltage value from a series of measurements. </p>
 <hr>
 <h3 id="5-summary">5. Summary</h3>
@@ -760,14 +762,14 @@ Every time we get a new measurement our parameter uncertainty shrinks. Why is re
 </ul>
 <hr>
 <h3 id="1-revisiting-the-least-squares-criterion">1. Revisiting the Least Squares Criterion</h3>
-<p>Let&apos;s begin by recalling the least squares criterion from the very first video in this module. </p>
-<p>$$
-\mathscr{L}<em>{\mathrm{LS}}(x)=\left(y</em>{1}-x\right)^{2}+\left(y<em>{2}-x\right)^{2}+\ldots+\left(y</em>{m}-x\right)^{2}</p>
-<p>$$
-We found the best estimates of some unknown, but constant parameters by determining the values that minimize the sum of squared errors based on our measurements. We&apos;ve said that the optimal estimate , $\hat{x}$ ,is the one that minimizes this &apos;loss&apos;:</p>
-<p>$$
-\hat{x}<em>{\mathrm{LS}}=\operatorname{argmin}</em>{x} \mathscr{L}<em>{\mathrm{LS}}(x)=\operatorname{argmin}</em>{x}\left(e<em>{1}^{2}+e</em>{2}^{2}+\ldots+e_{m}^{2}\right)</p>
-<p>$$
+<p>Let&apos;s begin by recalling the least squares criterion from the very first video in this module. 
+<script type="math/tex; mode=display">
+\mathscr{L}_{\mathrm{LS}}(x)=\left(y_{1}-x\right)^{2}+\left(y_{2}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}
+</script>
+We found the best estimates of some unknown, but constant parameters by determining the values that minimize the sum of squared errors based on our measurements. We&apos;ve said that the optimal estimate , $\hat{x}$ ,is the one that minimizes this &apos;loss&apos;:
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{LS}}=\operatorname{argmin}_{x} \mathscr{L}_{\mathrm{LS}}(x)=\operatorname{argmin}_{x}\left(e_{1}^{2}+e_{2}^{2}+\ldots+e_{m}^{2}\right)
+</script>
 But we can ask, why squared errors? Why not cubed errors, or square root errors, or something else? This is actually a particularly deep question and there is a whole field of robust statistics dedicated to it. You can indeed use different error functions, but we&apos;ll go over two reasons why squared errors are attractive and relevant. </p>
 <p>The first is simple. Squared errors allow us to solve for the optimal parameters with relatively straightforward algebra. If the measurement model is linear, minimizing the squared error criterion amounts to solving a linear system of equations. The second reason has to do with probability and a deep connection between least squares and maximum likelihood estimators under the assumption of Gaussian noise. As you may have guessed, this connection was first derived in a particular form by Gauss. So, it&apos;s no surprise that it involves Gaussian random variables or equivalently Gaussian noise. </p>
 <hr>
@@ -775,71 +777,71 @@ But we can ask, why squared errors? Why not cubed errors, or square root errors,
 <blockquote>
 <p>&#x6700;&#x5927;&#x4F3C;&#x7136;&#x4F30;&#x8BA1;&#xFF0C;&#x53EF;&#x53C2;&#x8003;<a href="https://blog.csdn.net/ethan_guo/article/details/80568254" target="_blank">&#x535A;&#x5BA2;</a></p>
 </blockquote>
-<p>To understand this fundamental connection, let&apos;s first discuss maximum likelihood. We can ask which x makes our measurement most likely.Or,in other word,which x maximizes the conditional probability of y :</p>
-<p>$$
-\hat{x}=\operatorname{argmax}_{x} p(y | x)</p>
-<p>$$
+<p>To understand this fundamental connection, let&apos;s first discuss maximum likelihood. We can ask which x makes our measurement most likely.Or,in other word,which x maximizes the conditional probability of y :
+<script type="math/tex; mode=display">
+\hat{x}=\operatorname{argmax}_{x} p(y | x)
+</script>
 Instead of writing down a loss, we can approach the problem of optimal parameter estimation by asking, which parameters make our recorded measurements the most likely? To keep things simple, we&apos;ll stick to a single scalar parameter to build our intuition. For example, let&apos;s look again at measuring resistance. </p>
 <p><img src="assets/1555750325734.png" alt="1555750325734"></p>
 <p>Given what we know about probability, if we have four possible values for this unknown resistance parameter, capital X, small x sub A through small x sub D, and each gives rise to the following conditional probability on our measurement Y, which value would maximize the conditional likelihood given the measurement Y sub mes? That&apos;s right. X sub A. The highest probability density at the measured location is given by the green curve, which means that X sub A is our most likely parameter value given this measurement. </p>
 <hr>
 <h3 id="3-measurement-model">3. Measurement Model</h3>
-<p>Now, if we take our simple measurement model, </p>
-<p>$$
-y = x + v</p>
-<p>$$
-We can convert this into a conditional probability on our measurement , by assuming some probability density for v. For example, if</p>
-<p>$$
-v \sim \mathscr{N}\left(0, \sigma^{2}\right)</p>
-<p>$$
+<p>Now, if we take our simple measurement model, 
+<script type="math/tex; mode=display">
+y = x + v
+</script>
+We can convert this into a conditional probability on our measurement , by assuming some probability density for v. For example, if
+<script type="math/tex; mode=display">
+v \sim \mathscr{N}\left(0, \sigma^{2}\right)
+</script>
 Then:</p>
 <p><img src="assets/1555751065969.png" alt="1555751065969"></p>
 <p>The unknown parameter ,X, becomes the mean of this density and the variance is simply our noise variance. </p>
 <hr>
 <h3 id="4-least-squares-and-maximum-likelihood">4. Least Squares and Maximum Likelihood</h3>
-<p>Recall that the probability density of a Gaussian random variable is given by the following equation. </p>
-<p>$$
-\mathscr{N}\left(z ; \mu, \sigma^{2}\right)=\frac{1}{\sigma \sqrt{2 \pi}} e^{\frac{-(z-\mu)^{2}}{2 \sigma^{2}}}</p>
-<p>$$
-This means that we can express our measurement likelihood for a single measurement as follows.Our conditional measurement likelihood is </p>
-<p>$$
-\begin{aligned} p(y | x) &amp;=\mathscr{N}\left(y ; x, \sigma^{2}\right) \ &amp;=\frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{\frac{-(y-x)^{2}}{2 \sigma^{2}}} \end{aligned}</p>
-<p>$$
-If we have multiple independent measurements, each with the same noise variance, we can simply take the product of multiple Gaussians, which results in another Gaussian.</p>
-<p>$$
-\begin{aligned} p(\mathbf{y} | x) &amp; \propto \mathscr{N}\left(y<em>{1} ; x, \sigma^{2}\right) \mathscr{N}\left(y</em>{2} ; x, \sigma^{2}\right) \times \ldots \times \mathscr{N}\left(y<em>{m} ; x, \sigma^{2}\right) \ &amp;=\frac{1}{\sqrt{(2 \pi)^{m} \sigma^{2 m}}} \exp \left(\frac{-\sum</em>{i=1}^{m}\left(y_{i}-x\right)^{2}}{2 \sigma^{2}}\right) \end{aligned}</p>
-<p>$$
-We can try to maximize this likelihood with respect to the mean parameter X half. The maximal likelihood estimate (MLE) is given by </p>
-<p>$$
-\hat{x}<em>{\mathrm{MLE}}=\operatorname{argmax}</em>{x} p(\mathbf{y} | x)</p>
-<p>$$
-To do this, we&apos;ll use a technique that&apos;s often used in optimization. Instead of maximizing the likelihood directly, we&apos;ll take it&apos;s logarithm and maximize that. The logarithm is monotonically increasing.</p>
-<p>$$
-\begin{aligned} \hat{x}<em>{\mathrm{MLE}} &amp;=\operatorname{argmax}</em>{x} p(\mathbf{y} | x) \ &amp;=\arg \max _{x} \log p(\mathbf{y} | x) \end{aligned}</p>
-<p>$$
-Since the likelihood will always be a positive number and because the logarithm is a monotonically increasing function, this will not affect the final result, which is very convenient. Once we apply the logarithm to this likelihood, we see that something pops out that looks a lot like the sum of squared errors. </p>
-<p>$$
-\log p(\mathbf{y} | x)=-\frac{1}{2 \sigma^{2}}\left(\left(y<em>{1}-x\right)^{2}+\ldots+\left(y</em>{m}-x\right)^{2}\right)+C</p>
-<p>$$
+<p>Recall that the probability density of a Gaussian random variable is given by the following equation. 
+<script type="math/tex; mode=display">
+\mathscr{N}\left(z ; \mu, \sigma^{2}\right)=\frac{1}{\sigma \sqrt{2 \pi}} e^{\frac{-(z-\mu)^{2}}{2 \sigma^{2}}}
+</script>
+This means that we can express our measurement likelihood for a single measurement as follows.Our conditional measurement likelihood is 
+<script type="math/tex; mode=display">
+\begin{aligned} p(y | x) &=\mathscr{N}\left(y ; x, \sigma^{2}\right) \\ &=\frac{1}{\sqrt{2 \pi \sigma^{2}}} e^{\frac{-(y-x)^{2}}{2 \sigma^{2}}} \end{aligned}
+</script>
+If we have multiple independent measurements, each with the same noise variance, we can simply take the product of multiple Gaussians, which results in another Gaussian.
+<script type="math/tex; mode=display">
+\begin{aligned} p(\mathbf{y} | x) & \propto \mathscr{N}\left(y_{1} ; x, \sigma^{2}\right) \mathscr{N}\left(y_{2} ; x, \sigma^{2}\right) \times \ldots \times \mathscr{N}\left(y_{m} ; x, \sigma^{2}\right) \\ &=\frac{1}{\sqrt{(2 \pi)^{m} \sigma^{2 m}}} \exp \left(\frac{-\sum_{i=1}^{m}\left(y_{i}-x\right)^{2}}{2 \sigma^{2}}\right) \end{aligned}
+</script>
+We can try to maximize this likelihood with respect to the mean parameter X half. The maximal likelihood estimate (MLE) is given by 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{MLE}}=\operatorname{argmax}_{x} p(\mathbf{y} | x)
+</script>
+To do this, we&apos;ll use a technique that&apos;s often used in optimization. Instead of maximizing the likelihood directly, we&apos;ll take it&apos;s logarithm and maximize that. The logarithm is monotonically increasing.
+<script type="math/tex; mode=display">
+\begin{aligned} \hat{x}_{\mathrm{MLE}} &=\operatorname{argmax}_{x} p(\mathbf{y} | x) \\ &=\arg \max _{x} \log p(\mathbf{y} | x) \end{aligned}
+</script>
+Since the likelihood will always be a positive number and because the logarithm is a monotonically increasing function, this will not affect the final result, which is very convenient. Once we apply the logarithm to this likelihood, we see that something pops out that looks a lot like the sum of squared errors. 
+<script type="math/tex; mode=display">
+\log p(\mathbf{y} | x)=-\frac{1}{2 \sigma^{2}}\left(\left(y_{1}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}\right)+C
+</script>
 The constant C in this expression refers to terms that are not a function of X and ones which we can safely ignore. </p>
 <p>The last step is now to realize that the arg max of the function F is the same as the arg min of the negative of that function. </p>
 <p><img src="assets/1555751499359.png" alt="1555751499359"></p>
-<p>Using this fact, we can turn our likelihood maximization into a minimization of the sum of squared errors.The maximal likelihood problem can therefore be written as</p>
-<p>$$
-\begin{aligned} \hat{x}<em>{\mathrm{MLE}} &amp;=\operatorname{argmin}</em>{x}-(\log p(\mathbf{y} | x)) \ &amp;=\operatorname{argmin}<em>{x} \frac{1}{2 \sigma^{2}}\left(\left(y</em>{1}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}\right) \end{aligned}</p>
-<p>$$
-For that, minimizing the sum of squared errors is equivalent to maximizing the likelihood of a set of measurements, assuming that the measurements are corrupted by additive, independent, Gaussian noise that&apos;s of equal variance. </p>
-<p>$$
-\hat{x}<em>{\mathrm{MLE}}=\arg \min </em>{x} \frac{1}{2 \sigma^{2}}\left(\left(y<em>{1}-x\right)^{2}+\ldots+\left(y</em>{m}-x\right)^{2}\right)</p>
-<p>$$
-Furthermore, if we maintain the same assumptions, but change the variance of the Gaussian noise for each measurement, we can arrive at the same criterion as we saw in our weighted least squares video. </p>
-<p>$$
-\hat{x}<em>{\mathrm{MHE}}=\operatorname{argmin}</em>{x} \frac{1}{2}\left(\frac{\left(y<em>{1}-x\right)^{2}}{\sigma</em>{\mathrm{l}}^{2}}+\ldots+\frac{\left(y<em>{m}-x\right)^{2}}{\sigma</em>{m}^{2}}\right)</p>
-<p>$$
-So, in both cases, </p>
-<p>$$
-\hat{x}<em>{\mathrm{MLE}}=\hat{x}</em>{\mathrm{LS}}=\operatorname{argmin}<em>{x} \mathscr{L}</em>{\mathrm{LS}}(x)=\arg \min <em>{x} \mathscr{L}</em>{\mathrm{MLE}}(x)</p>
-<p>$$
+<p>Using this fact, we can turn our likelihood maximization into a minimization of the sum of squared errors.The maximal likelihood problem can therefore be written as
+<script type="math/tex; mode=display">
+\begin{aligned} \hat{x}_{\mathrm{MLE}} &=\operatorname{argmin}_{x}-(\log p(\mathbf{y} | x)) \\ &=\operatorname{argmin}_{x} \frac{1}{2 \sigma^{2}}\left(\left(y_{1}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}\right) \end{aligned}
+</script>
+For that, minimizing the sum of squared errors is equivalent to maximizing the likelihood of a set of measurements, assuming that the measurements are corrupted by additive, independent, Gaussian noise that&apos;s of equal variance. 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{MLE}}=\arg \min _{x} \frac{1}{2 \sigma^{2}}\left(\left(y_{1}-x\right)^{2}+\ldots+\left(y_{m}-x\right)^{2}\right)
+</script>
+Furthermore, if we maintain the same assumptions, but change the variance of the Gaussian noise for each measurement, we can arrive at the same criterion as we saw in our weighted least squares video. 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{MHE}}=\operatorname{argmin}_{x} \frac{1}{2}\left(\frac{\left(y_{1}-x\right)^{2}}{\sigma_{\mathrm{l}}^{2}}+\ldots+\frac{\left(y_{m}-x\right)^{2}}{\sigma_{m}^{2}}\right)
+</script>
+So, in both cases, 
+<script type="math/tex; mode=display">
+\hat{x}_{\mathrm{MLE}}=\hat{x}_{\mathrm{LS}}=\operatorname{argmin}_{x} \mathscr{L}_{\mathrm{LS}}(x)=\arg \min _{x} \mathscr{L}_{\mathrm{MLE}}(x)
+</script>
 the maximum likelihood estimate, given additive Gaussian noise, is equivalent to the least squares or weighted least squares solutions we derived earlier. </p>
 <hr>
 <h3 id="5-the-central-limit-theorem">5. The Central Limit Theorem</h3>
@@ -920,7 +922,7 @@ the maximum likelihood estimate, given additive Gaussian noise, is equivalent to
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"next":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},"previous":{"title":"Part2：State Estimation and Localization for Self-Driving Cars","level":"1.3","depth":1,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/README.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/README.md","articles":[{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","articles":[]},{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","articles":[]},{"title":"Module 5 - Putting It together - An Autonomous Vehicle State Estimator","level":"1.3.5","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","mtime":"2019-08-01T13:39:47.179Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"next":{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},"previous":{"title":"Part2：State Estimation and Localization for Self-Driving Cars","level":"1.3","depth":1,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/README.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/README.md","articles":[{"title":"Module 1：Least Squares","level":"1.3.1","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","articles":[]},{"title":"Module 2 - State Estimation - Linear and Nonlinear Kalman Filters","level":"1.3.2","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters/Module 2 - State Estimation - Linear and Nonlinear Kalman Filters.md","articles":[]},{"title":"Module 3 - GNSSINS Sensing for Pose Estimation","level":"1.3.3","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 3 - GNSS-INS Sensing for Pose Estimation/Module 3 - GNSS-INS Sensing for Pose Estimation.md","articles":[]},{"title":"Module 4 - LIDAR Sensing","level":"1.3.4","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 4 - LIDAR Sensing/Module 4 - LIDAR Sensing.md","articles":[]},{"title":"Module 5 - Putting It together - An Autonomous Vehicle State Estimator","level":"1.3.5","depth":2,"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","ref":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 5 - Putting It together - An Autonomous Vehicle State Estimator/Module 5 - Putting It together - An Autonomous Vehicle State Estimator.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part2 - State Estimation and Localization for Self-Driving Cars/Module 1 - Least Squares/Module 1 - Least Squares.md","mtime":"2019-08-01T13:39:47.179Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -928,6 +930,14 @@ the maximum likelihood estimate, given additive Gaussian noise, is equivalent to
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

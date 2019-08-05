@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -589,7 +591,7 @@
 <p>It&apos;s important to note that the pure pursuit controller with a fixed value of ld leads to a curvature controller that does not take into account the vehicle speed. This means that the selected steering angle would be the same regardless of whether the vehicle is going 10 kilometers per hour or 100 kilometers per hour, leading to very different lateral acceleration&apos;s. A controller tuned for high-speed would be far too sluggish at low speed, and one tuned for low speed would be dangerously aggressive at high speeds.</p>
 <p><img src="../../.gitbook/assets/7d3e0561-2b71-4eac-89e3-377df9b64197untitled.png" alt=""></p>
 <p>To overcome this limitation, we add one more modification to our pure pursuit controller. <strong>We can vary the look-ahead distance ld based on the speed of the vehicle.</strong> We define the look-ahead distance to increase proportional to the vehicle forward speed.</p>
-<p>$$l<em>d = K</em>{dd}v_f$$</p>
+<p><script type="math/tex; ">l_d = K_{dd}v_f</script></p>
 <p>The addition to the controller takes the form ld is equal to K sub PP, the pure pursuit look-ahead gain, times the forward velocity, vf. Substituting this adjustment into the steering angle command equation, we arrive at the complete pure pursuit controller. The controller selects the steering angle that will form an arc to the look-ahead reference point, and adjusts this look-ahead point to be further away the faster the vehicle is traveling. This design results in steering commands and turn rates that are achievable given available tire forces, although it must be tuned to do so. You now are ready to start building geometric lateral controllers for self-driving cars.</p>
 <h3 id="4-summary">4. Summary</h3>
 <p>Let&apos;s summarize. In this lesson, we defined the class of geometric path tracking controllers and derived the pure proceed controller, which is one of two geometric path following controllers that we&apos;ll study in this course. In the next video, we&apos;ll explore the second geometric path tracking controller, the Stanley controller. We&apos;ll see you there.</p>
@@ -623,25 +625,25 @@
 <p><img src="../../.gitbook/assets/24482950-6e6c-4995-867c-bd713ee98740untitled.png" alt=""></p>
 <p>In this diagram, you can see the slight modifications to the relevant terms based on the Stanley assumptions. The cross track error is measured relative to the front axle, and the reference point on the path has no look ahead distance associated with it. Let&apos;s make each of the three components of the Stanley controller more concrete.</p>
 <p>First, to eliminate heading error relative to the path, <strong>the steering angle is set equal to the heading directly.</strong></p>
-<p>$$\delta(t) = \psi(t)$$</p>
+<p><script type="math/tex; ">\delta(t) = \psi(t)</script></p>
 <p>Then to eliminate cross track error, a proportional control is added, whose gain is scaled by the inverse of the forward velocity. The control is then passed through an inverse tan function which maps the proportional control signal to the angular range of minus Pi to Pi.</p>
 <ul>
 <li><strong>Essentially proportional to error</strong></li>
 <li><strong>Inversely proportional to speed</strong></li>
 <li><strong>Limit effect for large errors with inverse tan</strong></li>
 <li><p><strong>Gain k determined experimentally</strong></p>
-<p>$$\delta(t) = tan^{-1}(\frac{ke(t)}{v_f(t)})$$</p>
+<p><script type="math/tex; ">\delta(t) = tan^{-1}(\frac{ke(t)}{v_f(t)})</script></p>
 </li>
 </ul>
 <p>Finally, the steering angle command is kept to fall within the minimum and maximum steering angles, Delta min and Delta max, which are usually symmetric about 0.</p>
-<p>$$\delta(t)\in[\delta<em>{min},\delta</em>{max}]$$</p>
+<p><script type="math/tex; ">\delta(t)\in[\delta_{min},\delta_{max}]</script></p>
 <p>The similarities with the pure pursuit controller are not surprising, as both are seeking to perform the same task with the same kinematic model. <strong>The Stanley controller scales its gains by the forward speed in the same way as pure pursuit control, and also has the same inverse tangent of the proportional control signal.</strong> However, the independent penalization of heading and cross track errors and the elimination of the look-ahead distance make this a different approach from pure pursuit.</p>
 <h3 id="3-combind-steering-law">3. Combind steering law</h3>
 <p>The final control law simply combines these three elements to set the steering angle of the car as follows.</p>
-<p>$$\delta(t) = \psi(t) + tan^{-1}(\frac{ke(t)}{v<em>f(t)}), \delta(t)\in[\delta</em>{min},\delta_{max}]$$</p>
+<p><script type="math/tex; ">\delta(t) = \psi(t) + tan^{-1}(\frac{ke(t)}{v_f(t)}), \delta(t)\in[\delta_{min},\delta_{max}]</script></p>
 <p>Let&apos;s now take a look at what&apos;s steering angle is requested for different error signals. For heading error, the steering command points in the opposite direction to the heading error, causing the vehicle to turn to correct the misalignment with the path. For large heading errors, for example, if the heading error exceeds the maximum steering angle, this part of the controller requests the maximum steering command until alignment falls back within the available balance.</p>
 <p>For large positive cross track error, ke over vf becomes large and the inverse tangent approaches Pi over 2. So we can approximate the Stanley control law as the heading error plus Pi over 2.</p>
-<p>$$tan^{-1}(\frac{ke(t)}{v_f(t)})\approx\frac{\pi}2$$</p>
+<p><script type="math/tex; ">tan^{-1}(\frac{ke(t)}{v_f(t)})\approx\frac{\pi}2</script></p>
 <p>This large value clamps the steering command to the maximum and the vehicle turns towards the path. The effect of this term is to increase the heading error in the opposite direction, and so the steering command will drop to 0 once the heading error reaches minus Pi over 2.</p>
 <p><img src="../../.gitbook/assets/23909170-288a-48fc-84ef-e063e738840euntitled.png" alt=""></p>
 <p><img src="../../.gitbook/assets/bac63c05-f943-4a09-b2bf-e6f7347624aduntitled.png" alt=""></p>
@@ -652,7 +654,7 @@
 <p><img src="../../.gitbook/assets/082ac4cd-45cb-4934-bce3-b727d96e2323untitled.png" alt=""></p>
 <p>Recall that the rate of change of the cross track error for a front axle reference point is equal to minus the forward velocity, times the sine of the heading minus the steering angle. If we substitute in the Stanley control law without limits, we get the final expression in this equation. Using a trigonometric identity for simplifying the sign of the inverse of 10, we can find that the rate of change of the cross track error evolves according to minus the gain k times the cross track error, divided by the square root of 1 plus ke over vf squared.</p>
 <p>For small cross track errors, we can simplify the denominator of this expression by assuming the quadratic term is negligible.</p>
-<p>$$\dot{e}(t)\approx-ke(t)$$</p>
+<p><script type="math/tex; ">\dot{e}(t)\approx-ke(t)</script></p>
 <p>This leads to the realization that the cross track error evolution follows a first-order differential equation, and the solution for this ODE is an exponential. Since k is positive, we see that the error decays exponentially to 0. The most interesting aspect of this investigation is that the decay rate is completely independent of the speed. So faster vehicles will travel farther while converging to the path, but will converge to the path at the same time as slower moving vehicles.</p>
 <h3 id="5-case-study">5. Case Study</h3>
 <p>Let&apos;s now dive into a simulation example of the error dynamics for the Stanley controller to observe its convergence characteristics.</p>
@@ -710,14 +712,14 @@
 <p>The optimizer also receives updated constraints and the cost function to use, which can be fixed in advanced or varied based on changing operating modes. The optimizer then solves its optimization and the process repeats.</p>
 <h3 id="4-linear-mpc-formulation">4. Linear MPC formulation</h3>
 <p>Now, let&apos;s take a look at the linear MPC design in particular. We use the state space formulation which represents a motion model in discrete form. The future states are linearly related to the current states and the actuator signals. Note that, A and B are the coefficient matrices and are assumed to be time-invariant.</p>
-<p>$$x_{t+1} = Ax_t + Bu_t$$</p>
+<p><script type="math/tex; ">x_{t+1} = Ax_t + Bu_t</script></p>
 <p>MPC seeks to find a control policy U of inputs over a finite horizon.</p>
-<p>$$U = {u<em>{t|t},u</em>{t+1|t},u_{t+2|t},&#xB7;&#xB7;&#xB7;}$$</p>
+<p><script type="math/tex; ">U = \{u_{t|t},u_{t+1|t},u_{t+2|t},···\}</script></p>
 <p>If all the states are to be driven to zero, the objective function or cost function when we minimize, can be defined as follows:</p>
-<p>$$J(x(t),U) = \sum<em>{j=t}^{t+T-1}x^{T}</em>{j|t}Qx<em>{j|t}+u^T</em>{j|t}Ru_{j|t}$$</p>
+<p><script type="math/tex; ">J(x(t),U) = \sum_{j=t}^{t+T-1}x^{T}_{j|t}Qx_{j|t}+u^T_{j|t}Ru_{j|t}</script></p>
 <p>with quadratic error on both deviations of the state from zero and on non-zero control inputs. This is similar to the optimization problem of optimal control theory and trades off control performance and input aggressiveness. Note that, the matrices Q and R are called weight matrices and can be selected to achieve a particular type of response.</p>
 <p>If instead we need to track a reference signals such as a desired trajectory, we modify the formulation to include the error delta x relative to the desired state.</p>
-<p>$$\delta x<em>{j|t}=x</em>{j|t,des}-x<em>{j|t} \ J(x(t),U) = \sum</em>{j=t}^{t+T-1}x^{T}<em>{j|t}Qx</em>{j|t}+u^T<em>{j|t}Ru</em>{j|t}$$</p>
+<p><script type="math/tex; ">\delta x_{j|t}=x_{j|t,des}-x_{j|t} \\ J(x(t),U) = \sum_{j=t}^{t+T-1}x^{T}_{j|t}Qx_{j|t}+u^T_{j|t}Ru_{j|t}</script></p>
 <h3 id="5-linear-mpc-solution">5. Linear MPC SOLUTION</h3>
 <p>This is a famous optimization formulation and has a closed form solution, the Linear Quadratic Regulator or LQR. The closed form solution uses full state feedback, meaning that all states are used in the control response. <strong>The LQR solution defines a control gain matrix K</strong>, which can be computed from the A and B matrices of the state-space model and the Q and R matrices of the cost function.</p>
 <p><img src="../../.gitbook/assets/untitled-431fb09f-4dae-4d13-943a-22de518e37aa.png" alt=""></p>
@@ -791,7 +793,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 6：Vehicle Lateral Control","level":"1.2.7","depth":2,"next":{"title":"Module 7：Putting it all together","level":"1.2.8","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module7-Putting it all together/module-7-putting-it-all-together.md","ref":"Part1 - Introduction to Self-Driving Cars/Module7-Putting it all together/module-7-putting-it-all-together.md","articles":[]},"previous":{"title":"Module 5：Vehicle Longitudinal Control","level":"1.2.6","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","ref":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","mtime":"2019-08-01T13:39:45.791Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 6：Vehicle Lateral Control","level":"1.2.7","depth":2,"next":{"title":"Module 7：Putting it all together","level":"1.2.8","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module7-Putting it all together/module-7-putting-it-all-together.md","ref":"Part1 - Introduction to Self-Driving Cars/Module7-Putting it all together/module-7-putting-it-all-together.md","articles":[]},"previous":{"title":"Module 5：Vehicle Longitudinal Control","level":"1.2.6","depth":2,"path":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","ref":"Part1 - Introduction to Self-Driving Cars/Module5-Vehicle Longitudinal Control/module-5-vehicle-longitudinal-control.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part1 - Introduction to Self-Driving Cars/Module6-Vehicle Lateral Control/module-6-vehicle-lateral-control.md","mtime":"2019-08-01T13:39:45.791Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -799,6 +801,14 @@
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>

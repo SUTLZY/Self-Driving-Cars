@@ -82,6 +82,8 @@
 <ul class="summary">
     
     
+    
+    
 
     
 
@@ -622,10 +624,10 @@
 <p>However, Dijkstra&apos;s algorithm required us to search almost all of the edges present in the graph, even though only a few of them were actually useful for constructing the optimal path. Well, this wasn&apos;t a problem for our small example graph. It will cause issues when we scale our problem to more realistic proportions, such as a full road network for a city. To improve our efficiency in practice, we can instead rely on a search heuristic by using the A* algorithm to find our destination rather than Dijkstra&apos;s. </p>
 <hr>
 <h3 id="2-euclidean-heuristic">2. Euclidean Heuristic</h3>
-<p>What is a search heuristic? In this context, a search heuristic is an estimate of the remaining cost to reach the destination vertex from any given vertex in the graph. Of course, any heuristic we use won&apos;t be exact as that would require knowing the answer to our search problem already. Instead, we rely on the structure of the problem instance to develop a reasonable estimate that is fast to compute. In our case, the vertices in the graph correspond to points in space, with the edges corresponding to segments of a road which have a weight corresponding to the length of those road segments. Therefore a useful estimate on the cost or length between any two vertices is the straight line or Euclidean distance between them, as shown here by HOV, for a given vertex v and goal t. </p>
-<p>$$
-h(v)=|t-v|</p>
-<p>$$
+<p>What is a search heuristic? In this context, a search heuristic is an estimate of the remaining cost to reach the destination vertex from any given vertex in the graph. Of course, any heuristic we use won&apos;t be exact as that would require knowing the answer to our search problem already. Instead, we rely on the structure of the problem instance to develop a reasonable estimate that is fast to compute. In our case, the vertices in the graph correspond to points in space, with the edges corresponding to segments of a road which have a weight corresponding to the length of those road segments. Therefore a useful estimate on the cost or length between any two vertices is the straight line or Euclidean distance between them, as shown here by HOV, for a given vertex v and goal t. 
+<script type="math/tex; mode=display">
+h(v)=\|t-v\|
+</script>
 <strong>Example</strong></p>
 <p>Therefore, for any vertex we encounter in our search, our estimate for the remaining cost to the goal vertex will just be the Euclidean distance between that vertex and the goal. Note that this estimate is always an underestimate of the true distance to reach the goal, since the shortest path between any two points is a straight line. </p>
 <p><img src="assets/1564665335761.png" alt="1564665335761"></p>
@@ -724,7 +726,7 @@ h(v)=|t-v|</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Module 3 - Mission Planning in Driving Environments","level":"1.5.3","depth":2,"next":{"title":"Module 4 - Dynamic Object Interactions","level":"1.5.4","depth":2,"path":"Part4 - Motion Planning for Self-Driving Cars/Module 4 - Dynamic Object Interactions/Module 4 - Dynamic Object Interactions.md","ref":"Part4 - Motion Planning for Self-Driving Cars/Module 4 - Dynamic Object Interactions/Module 4 - Dynamic Object Interactions.md","articles":[]},"previous":{"title":"Module 2 - Mapping for Planning","level":"1.5.2","depth":2,"path":"Part4 - Motion Planning for Self-Driving Cars/Module 2 - Mapping for Planning/Module 2 - Mapping for Planning.md","ref":"Part4 - Motion Planning for Self-Driving Cars/Module 2 - Mapping for Planning/Module 2 - Mapping for Planning.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Part4 - Motion Planning for Self-Driving Cars/Module 3 - Mission Planning in Driving Environments/Module 3 - Mission Planning in Driving Environments.md","mtime":"2019-08-02T09:38:01.421Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-02T09:51:08.257Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Module 3 - Mission Planning in Driving Environments","level":"1.5.3","depth":2,"next":{"title":"Module 4 - Dynamic Object Interactions","level":"1.5.4","depth":2,"path":"Part4 - Motion Planning for Self-Driving Cars/Module 4 - Dynamic Object Interactions/Module 4 - Dynamic Object Interactions.md","ref":"Part4 - Motion Planning for Self-Driving Cars/Module 4 - Dynamic Object Interactions/Module 4 - Dynamic Object Interactions.md","articles":[]},"previous":{"title":"Module 2 - Mapping for Planning","level":"1.5.2","depth":2,"path":"Part4 - Motion Planning for Self-Driving Cars/Module 2 - Mapping for Planning/Module 2 - Mapping for Planning.md","ref":"Part4 - Motion Planning for Self-Driving Cars/Module 2 - Mapping for Planning/Module 2 - Mapping for Planning.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mathjax","livereload"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"mathjax":{"forceSVG":false,"version":"2.6-latest"},"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageBreaksBefore":"/","headerTemplate":null,"paperSize":"a4","margin":{"right":62,"left":62,"top":36,"bottom":36},"fontSize":12,"fontFamily":"Arial","footerTemplate":null,"chapterMark":"pagebreak","pageNumbers":false},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"links":{"sidebar":{},"sharing":{"google":null,"facebook":null,"twitter":null,"weibo":null,"all":null}},"gitbook":"*","description":null,"extension":null},"file":{"path":"Part4 - Motion Planning for Self-Driving Cars/Module 3 - Mission Planning in Driving Environments/Module 3 - Mission Planning in Driving Environments.md","mtime":"2019-08-02T09:38:01.421Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-08-05T02:51:43.011Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -732,6 +734,14 @@ h(v)=|t-v|</p>
         
     <script src="../../gitbook/gitbook.js"></script>
     <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="https://cdn.mathjax.org/mathjax/2.6-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-mathjax/plugin.js"></script>
+        
     
         
         <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>
