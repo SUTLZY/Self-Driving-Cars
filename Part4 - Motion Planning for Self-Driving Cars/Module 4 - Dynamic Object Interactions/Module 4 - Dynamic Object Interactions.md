@@ -118,7 +118,7 @@ Let's summarize. In this lesson, we learned about the task of motion prediction 
 > - Determine methods for velocity modulation around regulatory elements
 > - Identify issues and short-falls with the map-aware assumptions
 
-Welcome to the second lesson in our module on Dynamic Object Interaction. In this video, we will be extending the topic of motion prediction of dynamic objects, to include information available from the HD road map. To begin, we will discuss the different assumptions relied on by map-aware where algorithms, for motion prediction, To keep the task simple and efficient. Then we will look at applying a lane following prediction approach, to improve position prediction components. Next, we'll explore map-based prediction when multiple lane options are available. Then we'll explore a velocity prediction around regulatory elements. Finally, we'll discuss some of the issues in short-falls of map-aware predictions that revolve around assumptions made regarding dynamic objects. So let's get started. 
+Welcome to the second lesson in our module on Dynamic Object Interaction. **In this video, we will be extending the topic of motion prediction of dynamic objects, to include information available from the HD road map.** To begin, we will discuss the different assumptions relied on by map-aware where algorithms, for motion prediction, To keep the task simple and efficient. Then we will look at applying a lane following prediction approach, to improve position prediction components. Next, we'll explore map-based prediction when multiple lane options are available. Then we'll explore a velocity prediction around regulatory elements. Finally, we'll discuss some of the issues in short-falls of map-aware predictions that revolve around assumptions made regarding dynamic objects. So let's get started. 
 
 ---
 
@@ -142,19 +142,17 @@ Let's now incorporate each of these map-based assumptions into our motion predic
 
 ![1564909183219](assets/1564909183219.png)
 
-Recall the lane that map definition from module two of this course which provides left, and right lane boundaries for every lane on the road from which there can be a center line to construct it. The center line of a lane lit is defined as a set of points making up a polyline that is equally spaced from both lane boundaries. While minor deviations from the exact center line can be expected, the center line can act as a good motion prediction approximation. This is a major step forward over constant velocity predictions on any roadway with curvature. 
+Recall the lane that map definition from module two of this course which provides left, and right lane boundaries for every lane on the road from which there can be a center line to construct it. **The center line of a lane lit is defined as a set of points making up a polyline that is equally spaced from both lane boundaries.** While minor deviations from the exact center line can be expected, the center line can act as a good motion prediction approximation. This is a major step forward over constant velocity predictions on any roadway with curvature. 
 
 ---
 
-### 3. Improvement of Position Estimation
+### 3. Improvement of Path Estimation
 
-However, by restricting path predictions to the center line of any given lane lit, will result in two major issues. The first is that during normal driving, drivers routinely change lanes. So as mentioned earlier, such maneuver may be predicted based on indicator light perception. Although not all lean changes by human drivers are preceded by an indication. 
-
-![1565009298050](./assets/1565009298050.png)
+However, by restricting path predictions to the center line of any given lane lit, will result in two major issues. **The first is that during normal driving, drivers routinely change lanes.** So as mentioned earlier, such maneuver may be predicted based on indicator light perception. Although not all lean changes by human drivers are preceded by an indication. 
 
 ![1565009335378](./assets/1565009335378.png)
 
-The second problem that arises is that it is regularly the case, that there is more than one center line to choose from. Such as in the case of an intersection. For example, at this simple T junction, it is possible for the vehicle to turn either left or right. 
+**The second problem that arises is that it is regularly the case, that there is more than one center line to choose from.** Such as in the case of an intersection. For example, at this simple T junction, it is possible for the vehicle to turn either left or right. 
 
 ![1565009376174](./assets/1565009376174.png)
 
@@ -175,11 +173,11 @@ Such approaches traditionally provide more ambiguous information to the behavior
 
 ### 4. Improvements to Velocity Prediction
 
-Now that we understand how a road map can be used to improve the positional component of the predicted trajectories, let us now dive into the velocity component. The first improvement in this area is based on the known road geometry or curvature, and the prediction of how other vehicles will react to it. All vehicles no matter their making model, will reduce their velocity as they enter sharp curves or execute turns. We can use an expected maximum lateral acceleration, usually in the range of 0.5 to one meter per second squared, to improve velocity estimation along curves. 
+Now that we understand how a road map can be used to improve the positional component of the predicted trajectories, let us now dive into the velocity component. **The first improvement in this area is based on the known road geometry or curvature, and the prediction of how other vehicles will react to it.** All vehicles no matter their making model, will reduce their velocity as they enter sharp curves or execute turns. We can use an expected maximum lateral acceleration, usually in the range of 0.5 to one meter per second squared, to improve velocity estimation along curves. 
 
 ![1565009822810](./assets/1565009822810.png)
 
-The second and more significant improvement is to incorporate regulatory elements to improve velocity estimation. Given the anticipated path of the vehicle, any roadway elements such as stop signs, yield signs, speed limit changes or traffic lights, can all inform the velocity prediction. In the case of traffic lights the lights state is also required. In each case a stop location can be predicted based on the regulatory element line, as defined in the road map. 
+**The second and more significant improvement is to incorporate regulatory elements to improve velocity estimation.** Given the anticipated path of the vehicle, any roadway elements such as stop signs, yield signs, speed limit changes or traffic lights, can all inform the velocity prediction. In the case of traffic lights the lights state is also required. In each case a stop location can be predicted based on the regulatory element line, as defined in the road map. 
 
 ![1565009852683](./assets/1565009852683.png)
 
@@ -198,7 +196,7 @@ There is also a limit to how much we can rely on assumptions about expected dyna
 
 ### 6. Summary
 
-> - Described a set of assumptions made by map-aware algorithms to improve motion prediction
+> - Described a set of **assumptions** made by map-aware algorithms to improve motion prediction
 > - Defined position-based and velocity-based prediction enhancements
 >   - Identify strategies to generated multiple hypotheses
 > - Identified issues with the map-aware assumptions
@@ -211,7 +209,7 @@ In today's lesson, we have described a set of assumptions for map-aware algorith
 
 ### Learning Objectives
 
-> - Define the concept of time to collision
+> - Define the concept of **time to collision**
 > - Identify two approaches to calculate time to collisions and discuss their strengths and weaknesses
 >   - **Simulation approach**
 >   - **Estimation approach**
@@ -223,13 +221,13 @@ Welcome to the third and final lesson this week. In this video, we will be looki
 
 ### 1. Definition of Time to Collision
 
-The time to collision provides a valuable measure of behavioral safety in a self-driving vehicle, and is heavily used in assessing potential maneuvers, based on the current driving environment. By knowing if collisions are imminent and when they might occur and with which object, a self-driving system can better plan safe maneuvers through the environment, or prepare for emergency evasive actions if needed. To evaluate the time to collision between dynamic objects, we use their predicted paths to identify possible collision points. If a collision point exists, the time to collision is a measure of the amount of time until that collision occurs. 
+The time to collision provides a valuable measure of **behavioral safety** in a self-driving vehicle, and is heavily used in assessing potential maneuvers, based on the current driving environment. By knowing if collisions are imminent and when they might occur and with which object, a self-driving system can better plan safe maneuvers through the environment, or prepare for emergency evasive actions if needed. **To evaluate the time to collision between dynamic objects, we use their predicted paths to identify possible collision points.** If a collision point exists, the time to collision is a measure of the amount of time until that collision occurs. 
 
 ![1565010985969](./assets/1565010985969.png)
 
-Computing the time to collision can therefore be accomplished in two steps. First, we identify and compute the location of a collision point along the predicted paths between the dynamic objects, and second, if such a collision point exists, we then compute the amount of time that it will take for the dynamic objects to arrive at that collision point. The challenge with computing the time to collision, is that it relies very much on an accurate understanding of the space that will be occupied by the objects in the future, to achieve accurate estimates. Clearly, accurate predictions of the objects trajectories are critical to identifying collision points in their time of occurrence. Precise prediction of object trajectories is as we saw in the previous two lessons, a difficult problem. 
+Computing the time to collision can therefore be accomplished in two steps. First, we identify and compute the location of a collision point along the predicted paths between the dynamic objects, and second, if such a collision point exists, we then compute the amount of time that it will take for the dynamic objects to arrive at that collision point. **The challenge with computing the time to collision, is that it relies very much on an accurate understanding of the space that will be occupied by the objects in the future, to achieve accurate estimates.** Clearly, accurate predictions of the objects trajectories are critical to identifying collision points in their time of occurrence. Precise prediction of object trajectories is as we saw in the previous two lessons, a difficult problem. 
 
-Furthermore, we also need accurate geometries for all dynamic objects in the environment. This is required as when the time to collision is computed, the geometries of both the vehicles are considered to calculate the exact collision point. As objects in the environment are only seen from the current and previous viewpoints, it can be challenging to accurately define their geometry while driving. Due to errors in both requirements, the time to collision should always be treated as an approximation, updated regularly, and treated with some safety buffer when making decisions about driving. 
+Furthermore, we also need **accurate geometries for all dynamic objects** in the environment. This is required as when the time to collision is computed, the geometries of both the vehicles are considered to calculate the exact collision point. As objects in the environment are only seen from the current and previous viewpoints, it can be challenging to accurately define their geometry while driving. Due to errors in both requirements, the time to collision should always be treated as an approximation, updated regularly, and treated with some safety buffer when making decisions about driving. 
 
 ---
 
@@ -251,7 +249,7 @@ Estimation-based approaches function by computing the evolution of the geometry 
 
 ![1565011404586](./assets/1565011404586.png)
 
-If this is true, potential collision points are tagged, and an estimation of when each vehicle will arrive at each collision point is used to estimate the time to collision. This method traditionally makes many simplifying assumptions to accelerate the calculations. These assumptions include: identifying collision point locations based on object path intersection points, estimating object space occupancy based on simple geometric primitives like bounding boxes, and estimating the time to reach a collision point based on a constant velocity profile. 
+If this is true, potential collision points are tagged, and an estimation of when each vehicle will arrive at each collision point is used to estimate the time to collision. **This method traditionally makes many simplifying assumptions to accelerate the calculations.** These assumptions include: identifying collision point locations based on object path intersection points, estimating object space occupancy based on simple geometric primitives like bounding boxes, and estimating the time to reach a collision point based on a constant velocity profile. 
 
 ---
 
@@ -269,9 +267,11 @@ Simulation approaches on the other hand do not need to rely on these approximati
 
 Let's look at a simple simulation-based approach to calculating both the collision points, and the time to each collision point in more detail. Estimation-based approaches are outside the scope of this video, but we've included an extensive set of links to estimation-based methods in the supplemental materials. 
 
+>- C. Urmson, C. Baker, J. Dolan, P. Rybski, B. Salesky, W. Whittaker, D. Ferguson, and M. Darms, “[Autonomous Driving in Traffic: Boss and the Urban Challenge](https://www.aaai.org/ojs/index.php/aimagazine/article/view/2238),” AI Magazine, vol. 30, no. 2, p. 17, 2009. This gives an overview of some of the methods used to handle dynamic obstacles in the DARPA Urban Challenge.
+
 ![1565092567020](assets/1565092567020.png)
 
-The algorithm for the simulation-based approach takes as input a list of dynamic objects D, with their predicted paths including the planned path for the ego vehicle. The time between simulation prediction steps DT if sim, and any parameters needed to define the collision checking approach to be used. Be it polygon intersection requiring the object footprints, or circle checking requiring the number of circles, and their spacing relative to the object position. The output that this algorithm will provide is the collision point and the time to collision for every pair of objects that have one. Note that the simulation time steps can be a different size than the predicted path time steps, to improve collision checking approximation accuracy. 
+The algorithm for the simulation-based approach takes as input a list of dynamic objects D, with their predicted paths including the planned path for the ego vehicle. The time between simulation prediction steps $dt$ if sim, and any parameters needed to define the collision checking approach to be used. Be it polygon intersection requiring the object footprints, or circle checking requiring the number of circles, and their spacing relative to the object position. **The output that this algorithm will provide is the collision point and the time to collision for every pair of objects that have one.** Note that the simulation time steps can be a different size than the predicted path time steps, to improve collision checking approximation accuracy. 
 
 ![1565092589154](assets/1565092589154.png)
 
