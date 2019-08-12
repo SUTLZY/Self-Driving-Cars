@@ -5,7 +5,7 @@ A reactive planner takes local information available within a sensor footprint a
 ## Learning Objectives
 
 - Given a kinematic model for a robot, calculate trajectories based on control inputs.
-- Understand how to apply swath-based and circle-based collision checking.
+- Understand how to apply **swath-based** and **circle-based** collision checking.
 - Implement the trajectory rollout algorithm.
 - Understand the tradeoffs and advantages of applying dynamic windowing to the trajectory rollout algorithm.
 
@@ -15,11 +15,11 @@ A reactive planner takes local information available within a sensor footprint a
 
 ### Learning Objectives
 
-> - Understanding the difference between kinematic and dynamic motion models
-> - Recall the bicycle model from Course 1
-> - Generate trajectories given control inputs and a motion model
+> - **Understanding the difference between kinematic and dynamic motion models**
+> - **Recall the bicycle model from Course 1**
+> - **Generate trajectories given control inputs and a motion mode**l
 
-Welcome to the sixth module of our Motion Planning course. In this module, we'll introduce you to some of the concepts required for you to take a kinematic bicycle model and build a reactive motion planner from it. A reactive motion planner is one that takes in local information from the robot's surroundings in order to generate a trajectory that is collision-free and makes progress towards some goal location. We'll stick to static environments in this module as a first step on our way to planning behaviors and paths for self-driving cars. We'll also introduce the concepts of path prediction and collision checking as we go along. 
+Welcome to the sixth module of our Motion Planning course. In this module, we'll introduce you to some of the concepts required for you to take a kinematic bicycle model and build a reactive motion planner from it. A reactive motion planner is one that takes in local information from the robot's surroundings in order to generate a trajectory that is collision-free and makes progress towards some goal location. **We'll stick to static environments in this module as a first step on our way to planning behaviors and paths for self-driving cars.** We'll also introduce the concepts of path prediction and collision checking as we go along. 
 
 In this video, we'll be discussing how to generate trajectories in a discrete setting for a sequence of control inputs to our robot model. By the end of this video, you should understand the difference between a kinematic and dynamic motion model and you should have a firm grasp of the bicycle model that we introduced in course one. In addition, you should be able to generate trajectories from control inputs for our bicycle model. Let's get started. 
 
@@ -27,11 +27,11 @@ In this video, we'll be discussing how to generate trajectories in a discrete se
 
 ### 1. Kinematic vs. Dynamic Model
 
-First, we want to do a brief review of what a kinematic model is. A kinematic model gives the equations of motion for our robot while disregarding the impacts of mass and inertia on its motion. 
+First, we want to do a brief review of what a kinematic model is. **A kinematic model gives the equations of motion for our robot while disregarding the impacts of mass and inertia on its motion.** 
 
 ![1565433716027](assets/1565433716027.png)
 
-We can contrast this with a dynamic model which instead takes mass and inertia into consideration at the cost of being more complex. Kinematic models focus on linear and angular velocities and occasionally, their derivatives as inputs, whereas dynamic models focus on forces and torques as inputs. To illustrate this, we have a kinematic particle model contrasted with the dynamic particle model with friction shown here. For path planning and trajectory optimization, we often focus on kinematic models to make the motion planning problem more computationally tractable and leave the issues raised by the simplification of the dynamics to the controller. 
+We can contrast this with a dynamic model which instead takes mass and inertia into consideration at the cost of being more complex. Kinematic models focus on linear and angular velocities and occasionally, their derivatives as inputs, whereas dynamic models focus on forces and torques as inputs. To illustrate this, we have a kinematic particle model contrasted with the dynamic particle model with friction shown here. **For path planning and trajectory optimization, we often focus on kinematic models to make the motion planning problem more computationally tractable and leave the issues raised by the simplification of the dynamics to the controller.** 
 
 ---
 
@@ -189,10 +189,202 @@ To summarize in this video, we discussed how we can use the occupancy grid devel
 
 ## Lesson 3: Trajectory Rollout Algorithm
 
-Hi everyone, and welcome to this lesson on reactive planning. In this video, we'll combine some of the knowledge we acquired from the two previous lessons, to develop a reactive motion planning algorithm known as the trajectory roll-out planner. This will introduce us to the task of trajectory planning, which will lay the groundwork for us to progress to more advanced planning methods presented later in module seven. By the end of this video, you should be able to implement the trajectory roll-out algorithm. This includes the trajectory propagation step, the collision checking step, and the path selection step in order to achieve the desired goal state. You should also understand how to apply the receding horizon concept to planning and the main drawbacks associated with this type of planner. At a high level, the trajectory roll-out planner uses the method of trajectory propagation discussed in lesson one to generate a set of candidate trajectories that the robot can follow from its current point in the workspace. We then take the obstacle information local to the robot and determine which paths are collision-free and which aren't. Of these collision-free paths, we then select the one that maximizes an objective function, which will include a term that rewards progress towards the goal. By performing this repeatedly, we end up with a receding horizon planner that reacts to the environment while making steady progress towards the goal. Let's go over each of these steps in more detail so you can implement this yourself. The first step of the algorithm is to generate the set of trajectories at each time step. How do we do this? For trajectory roll-out, each trajectory will correspond to applying a fixed input to the robot for multiple steps over a constant time horizon. We uniformly sample these fixed inputs across the range of available input values in order to generate a variety of potential candidate trajectories. By reaching a wide variety of trajectories across the input spectrum, we improve the quality of our trajectory search and our maneuverability as we are exploring a broader set of candidate paths for the robot to take. If we only use a small range of inputs, then our computation time improves. But there may be potential trajectory candidates that we miss out on in our computation, which could reduce the quality of the trajectory generated by our planner. However, sampling too many candidate trajectories means that we have additional computational overhead at each step as each additional trajectory will need to be generated, checked for collisions, and scored. Once we've chosen our set of inputs, we then need to generate the future states along the trajectory by propagating the state forward using the kinematic model of the vehicle as we discussed in lesson one. Recall that for the bicycle model, the two inputs are the velocity in the steering angle. If we hold the velocity constant, but vary the steering angle across the range minus pie over four to pie over four, we now have a set of arcs as our candidate trajectories. These arcs are generated by evaluating the kinematic equations recursively as we discussed in lesson one. Now that we have the set of arcs, we can check to see which ones are collision-free. For a collision checking algorithm, we're going to assume that we are given an occupancy grid that represents a discretization of the vehicles workspace. This discretization will be stored in the form of a matrix where each value of the matrix will denote if the corresponding position in the workspace is occupied or not. We can then perform collision checking using the swath-based method we discussed in the previous video. Recall that we generate the swath by sweeping the body of the robot along the path, and taking the union of all the footprints at each time step of a given trajectory. The footprint of the car will correspond to a set of indices in the occupancy grid. So each rotated and translated point along the path will also correspond to different indices in the occupancy grid. These indices will be stored in a set data structure to eliminate duplicates. We can then check each point of the swath to see which points of the swath overlap with occupied elements of the occupancy grid. We do this by iterating through each point in the swath set and checking the associated index in the occupancy grid for an obstacle. If any point in the swath is occupied, then that trajectory contains a collision. Once we've iterated through every trajectory generated in the previous step, we will be left with a set of collision-free kinematically feasible trajectories that we can then score using our objective function. The primary element that every objective function needs is some way of rewarding progress towards some goal point or region, which is the ultimate goal of our motion planning problem. A simple and effective way to do this is to have a term in the objective function that is proportional to the distance from the end of the candidate trajectory to the goal node. However, sometimes we will also want to encourage other behavior in our reactive planner. As we saw in module one, some examples of objective functions include minimizing the distance from the center line of a lane, we're penalizing the curvature of a path. Sometimes, we also want to reward paths that maximize the distance to the nearest obstacle, to maximize the flexibility of feasible paths available to future time steps in the planner. As we discussed in module one, there is no perfect objective function, and you will need to craft your own objective functions to fit your application. For our reactive planner, we will use the distance to the goal as our objective function to minimize, which is the first equation shown here. Once we have the objective function, we can iterate over the collision-free trajectories, and pick the path that maximizes the objective function, or minimizes the penalty depending on how you formulate the objective. Let's go over a concrete example to bring the whole algorithm together. Pictured here, we have the obstacles in the occupancy grid given in red, the goal region in yellow, and the initial point to the car at zero, zero, zero. Suppose our range of steering angles is between minus pie over four and pie over four with a pie over eight step size, and suppose we are using a constant velocity of 0.5 meters per second. In addition, let's assume our planner is using a time step of 0.1 seconds and each plan trajectory lasts for two seconds in total. If we apply our trajectory propagation algorithm that we outlined in lesson one using our bicycle kinematics model, we can then generate a set of paths for each selected steering angle in our steering range. The first trajectory has a steering angle of minus pie over four and as a result, we can see that the trajectory curves to the right. Our next trajectory has a steering angle of minus pie over eight and as you can see, the trajectory generated has a smaller curvature than the first one. Next, we have the zero steering angle trajectory which results in the car driving forward in a straight line. The positive steering angle trajectories are symmetrical to the negative steering angle trajectories and as expected, turn the car to the left. Now that we have a candidate set of trajectories, we need to check each one to see if they are collision-free using the collision checking algorithm we outlined in the last video, and reviewed earlier in this one. After translating and rotating the footprints along each trajectory, we check each occupancy grid index in the resulting swath to see if an obstacle is present. If any of the indices contain an obstacle, then that path is marked as having a collision, which we've denoted by the color red. All collision-free paths are colored green, which we can then evaluate using our objective function to find the best one. Recall that our objective function is the distance to the goal. The path that minimizes this distance to the goal is now colored in black. This completes our first planning iteration. At this point, we now have a trajectory for the vehicle to execute. However, we will not fully execute this trajectory before the next planning cycle. Instead, the vehicle will execute only the first few points of the cycle. The exact number depends on the planning frequency and our planning horizon will be shifted forward depending on our progress. This is exactly the receding horizon approach you applied to vehicle control in the first course in this specialization. Bringing this all together, at each time step, we plan a two-second trajectory, but only execute one second of it at a time. By doing this, the end time of our planning horizon shifts forward by one second for each planning cycle. This is known as a receding horizon planner because at each planning cycle we have a fixed planning time horizon whose n times slowly recedes towards the time point at which we reach the goal. This is illustrated here where the black is the portion of the trajectory that will be executed on the current cycle and the orange part is the leftover portion. Once the next planning cycle begins, we repeat the whole process again. We continue this process until we compute a trajectory that reaches the goal region, which we check at the end of each iteration. You can now see the rest of the steps that the planner took to the goal region in our example problem. One caveat to notice about this planner is that it is myopic. That is, it doesn't plan a path directly to the goal. It instead greedily sample sub-paths according to how close they get the robot to the goal. This can cause the planner to be shortsighted, to get stuck in dead ends, and in general, will cause the planner to find sub-optimal paths. However, this planner greatly reduces the complexity of the planning problem to the goal region and is fast enough that it can be used as an online planner. To summarize this video, we introduce the steps of the trajectory roll-out motion planning algorithm. Combining the concepts introduced in the first two lessons regarding trajectory propagation, as well as, collision checking. To cement this concept, we went over an example from this algorithm in action. Finally, we introduced the concept of receding horizon planners and discussed how they can be shortsighted when planning to the goal region. By now, you should have a good idea of how the trajectory roll-out algorithm works. In our next lesson, we'll be discussing dynamic windowing, and how it can help our trajectory roll-out algorithm generate more comfortable trajectories. Until then.
+### Learning Objectives
+
+> - Implement the trajectory rollout algorithm
+>   - Trajectory propagation
+>   - Collision checking
+>   - Path selection
+> - Understand the concept of receding horizon planning
+
+Hi everyone, and welcome to this lesson on reactive planning. In this video, we'll combine some of the knowledge we acquired from the two previous lessons, to develop a reactive motion planning algorithm known as the trajectory roll-out planner. This will introduce us to the task of trajectory planning, which will lay the groundwork for us to progress to more advanced planning methods presented later in module seven. By the end of this video, you should be able to implement the trajectory roll-out algorithm. This includes the trajectory propagation step, the collision checking step, and the path selection step in order to achieve the desired goal state. You should also understand how to apply the receding horizon concept to planning and the main drawbacks associated with this type of planner. 
+
+---
+
+### 1. Trajectory Rollout Planner
+
+At a high level, the trajectory roll-out planner uses the method of trajectory propagation discussed in lesson one to generate a set of candidate trajectories that the robot can follow from its current point in the workspace. We then take the obstacle information local to the robot and determine which paths are collision-free and which aren't. Of these collision-free paths, we then select the one that maximizes an objective function, which will include a term that rewards progress towards the goal. 
+
+![1565611340064](assets/1565611340064.png)
+
+By performing this repeatedly, we end up with a receding horizon planner that reacts to the environment while making steady progress towards the goal. Let's go over each of these steps in more detail so you can implement this yourself. 
+
+---
+
+### 2. Trajectory Set Generation
+
+The first step of the algorithm is to generate the set of trajectories at each time step. How do we do this? For trajectory roll-out, each trajectory will correspond to applying a fixed input to the robot for multiple steps over a constant time horizon. We uniformly sample these fixed inputs across the range of available input values in order to generate a variety of potential candidate trajectories. By reaching a wide variety of trajectories across the input spectrum, we improve the quality of our trajectory search and our maneuverability as we are exploring a broader set of candidate paths for the robot to take. 
+
+![1565611522226](assets/1565611522226.png)
+
+If we only use a small range of inputs, then our computation time improves. But there may be potential trajectory candidates that we miss out on in our computation, which could reduce the quality of the trajectory generated by our planner. However, sampling too many candidate trajectories means that we have additional computational overhead at each step as each additional trajectory will need to be generated, checked for collisions, and scored. 
+
+---
+
+### 3. Trajectory Propagation & Swath Based Collision Checking
+
+Once we've chosen our set of inputs, we then need to generate the future states along the trajectory by propagating the state forward using the kinematic model of the vehicle as we discussed in lesson one. Recall that for the bicycle model, the two inputs are the velocity in the steering angle. If we hold the velocity constant, but vary the steering angle across the range minus pie over four to pie over four, we now have a set of arcs as our candidate trajectories. 
+
+![1565611503061](assets/1565611503061.png)
+
+These arcs are generated by evaluating the kinematic equations recursively as we discussed in lesson one. Now that we have the set of arcs, we can check to see which ones are collision-free.
+
+![1565613638847](assets/1565613638847.png)
+
+For a collision checking algorithm, we're going to assume that we are given an occupancy grid that represents a discretization of the vehicles workspace. This discretization will be stored in the form of a matrix where each value of the matrix will denote if the corresponding position in the workspace is occupied or not. We can then perform collision checking using the swath-based method we discussed in the previous video. Recall that we generate the swath by sweeping the body of the robot along the path, and taking the union of all the footprints at each time step of a given trajectory. 
+
+The footprint of the car will correspond to a set of indices in the occupancy grid. So each rotated and translated point along the path will also correspond to different indices in the occupancy grid. These indices will be stored in a set data structure to eliminate duplicates. We can then check each point of the swath to see which points of the swath overlap with occupied elements of the occupancy grid. We do this by iterating through each point in the swath set and checking the associated index in the occupancy grid for an obstacle. If any point in the swath is occupied, then that trajectory contains a collision. Once we've iterated through every trajectory generated in the previous step, we will be left with a set of collision-free kinematically feasible trajectories that we can then score using our objective function. 
+
+---
+
+### 4. Objective Function
+
+The primary element that every objective function needs is some way of rewarding progress towards some goal point or region, which is the ultimate goal of our motion planning problem. A simple and effective way to do this is to have a term in the objective function that is proportional to the distance from the end of the candidate trajectory to the goal node. However, sometimes we will also want to encourage other behavior in our reactive planner. As we saw in module one, some examples of objective functions include minimizing the distance from the center line of a lane, we're penalizing the curvature of a path. Sometimes, we also want to reward paths that maximize the distance to the nearest obstacle, to maximize the flexibility of feasible paths available to future time steps in the planner. As we discussed in module one, there is no perfect objective function, and you will need to craft your own objective functions to fit your application. For our reactive planner, we will use the distance to the goal as our objective function to minimize, which is the first equation shown here. 
+
+![1565613818806](assets/1565613818806.png)
+
+Once we have the objective function, we can iterate over the collision-free trajectories, and pick the path that maximizes the objective function, or minimizes the penalty depending on how you formulate the objective. 
+
+---
+
+### 5. Example
+
+Let's go over a concrete example to bring the whole algorithm together.
+
+![1565613992777](assets/1565613992777.png)
+
+Pictured here, we have the obstacles in the occupancy grid given in red, the goal region in yellow, and the initial point to the car at zero, zero, zero. Suppose our range of steering angles is between minus pie over four and pie over four with a pie over eight step size, and suppose we are using a constant velocity of 0.5 meters per second. In addition, let's assume our planner is using a time step of 0.1 seconds and each plan trajectory lasts for two seconds in total. If we apply our trajectory propagation algorithm that we outlined in lesson one using our bicycle kinematics model, we can then generate a set of paths for each selected steering angle in our steering range. 
+
+![1565614099253](assets/1565614099253.png)
+
+The first trajectory has a steering angle of minus pie over four and as a result, we can see that the trajectory curves to the right. Our next trajectory has a steering angle of minus pie over eight and as you can see, the trajectory generated has a smaller curvature than the first one. 
+
+![1565614167281](assets/1565614167281.png)
+
+Next, we have the zero steering angle trajectory which results in the car driving forward in a straight line. 
+
+![1565614236599](assets/1565614236599.png)
+
+The positive steering angle trajectories are symmetrical to the negative steering angle trajectories and as expected, turn the car to the left. 
+
+![1565614283548](assets/1565614283548.png)
+
+Now that we have a candidate set of trajectories, we need to check each one to see if they are collision-free using the collision checking algorithm we outlined in the last video, and reviewed earlier in this one. 
+
+![1565614319376](assets/1565614319376.png)
+
+After translating and rotating the footprints along each trajectory, we check each occupancy grid index in the resulting swath to see if an obstacle is present. If any of the indices contain an obstacle, then that path is marked as having a collision, which we've denoted by the color red. All collision-free paths are colored green, which we can then evaluate using our objective function to find the best one. 
+
+![1565614390707](assets/1565614390707.png)
+
+Recall that our objective function is the distance to the goal. The path that minimizes this distance to the goal is now colored in black. This completes our first planning iteration. At this point, we now have a trajectory for the vehicle to execute. However, we will not fully execute this trajectory before the next planning cycle. Instead, the vehicle will execute only the first few points of the cycle. 
+
+![1565614453602](assets/1565614453602.png)
+
+The exact number depends on the planning frequency and our planning horizon will be shifted forward depending on our progress. This is exactly the receding horizon approach you applied to vehicle control in the first course in this specialization. 
+
+---
+
+### 6. Receding Horizon Example
+
+Bringing this all together, at each time step, we plan a two-second trajectory, but only execute one second of it at a time. By doing this, the end time of our planning horizon shifts forward by one second for each planning cycle. 
+
+![1565614590980](assets/1565614590980.png)
+
+This is known as a receding horizon planner because at each planning cycle we have a fixed planning time horizon whose n times slowly recedes towards the time point at which we reach the goal. This is illustrated here where the black is the portion of the trajectory that will be executed on the current cycle and the orange part is the leftover portion. 
+
+---
+
+### 7. Example
+
+Once the next planning cycle begins, we repeat the whole process again. We continue this process until we compute a trajectory that reaches the goal region, which we check at the end of each iteration. 
+
+![1565614630935](assets/1565614630935.png)
+
+You can now see the rest of the steps that the planner took to the goal region in our example problem. One caveat to notice about this planner is that it is myopic. That is, it doesn't plan a path directly to the goal. It instead greedily sample sub-paths according to how close they get the robot to the goal. This can cause the planner to be shortsighted, to get stuck in dead ends, and in general, will cause the planner to find sub-optimal paths. However, this planner greatly reduces the complexity of the planning problem to the goal region and is fast enough that it can be used as an online planner. 
+
+---
+
+### 8. Summary
+
+> - Introduced the steps of the trajectory rollout motion planning algorithm
+> - Illustrated an example situation and planning solution
+> - Discussed receding horizon planners
+
+To summarize this video, we introduce the steps of the trajectory roll-out motion planning algorithm. Combining the concepts introduced in the first two lessons regarding trajectory propagation, as well as, collision checking. To cement this concept, we went over an example from this algorithm in action. Finally, we introduced the concept of receding horizon planners and discussed how they can be shortsighted when planning to the goal region. By now, you should have a good idea of how the trajectory roll-out algorithm works. In our next lesson, we'll be discussing dynamic windowing, and how it can help our trajectory roll-out algorithm generate more comfortable trajectories. Until then.
 
 ---
 
 ## Lesson 4: Dynamic Windowing
 
-Hello everyone, and welcome to our final lesson in module six. In this video, we'll discuss how to augment the trajectory rollout algorithm we developed in the previous lesson with a technique known as dynamic windowing. Dynamic windowing will allow us to place linear and angular acceleration constraints on the vehicle's trajectory, in order to promote comfort as the vehicle progresses between planning cycles. Specifically, by the end of this video, you should be able to add acceleration constraints to the bicycle model derived in course one, and you should be able to modify the trajectory rollout algorithm to accommodate these new constraints using dynamic windowing. Let's get started. First, let's revisit lesson one where we discussed the kinematic equations for a bicycle model. Essentially, the two inputs to the bicycle model are the linear velocity in the steering angle, which change the position and heading of the robot over time. One thing to notice with this entire set of kinematic equations is that there is no consideration of higher-order terms, such as acceleration or jerk. These higher-order terms are what cause discomfort for passengers in the car, so we should try to address this in our kinematic model. Even without incorporating the full dynamic models discussed in course one into the trajectory planning process, we can restrict the selected inputs to consider the effects of rapid changes on ride comfort. We can do this by adding a constraint for the range of linear and angular accelerations permitted for our bicycle model. This will limit the extent to which passengers in our vehicle will experience forces and torques while our vehicle traverses its planned trajectory. However, this comes with a trade-off. Our motion planner will lose some maneuverability at each planning iteration. Specifically, after adding this angular acceleration constraint, we may not be able to move to every possible steering angle in our steering angle set, because they may induce too high of an angular acceleration. In addition, we may not be able to ramp our velocity up or down as quickly between planning iterations. Let's focus on the angular acceleration constraint and derive the resulting steering angle restriction. Recall that the angular velocity for the bicycle model is given by vtandelta over L. The magnitude of the angular acceleration is therefore approximately given by the absolute difference between the angular velocities of our start and ending steering angles divided by the time step we're using. Rearranging the terms using the fact that v and L are always positive for our planner, we have the requirement that the absolute value of the tan of delta at time two minus the tan of delta at time one must be less than or equal to theta double-dot max times L over v. To help solidify how this impacts our planner, let's analyze a concrete example. Suppose our bicycle model is moving at a constant linear velocity of one meter per second across all candidate trajectories, and has a current steering angle of pi over eight. Suppose the maximum and minimum steering angle for this robot or pi over four and minus pi over four respectively, and that our steering angle step size is pi over eight. In addition, suppose our trajectories are sampled at a time resolution of 0.1 seconds, and that our bicycle model robot has a length of one meter. Finally, let's constrain our angular acceleration to 0.6 radians per second squared. Let's apply our derived steering angle constraints to this example problem. We have that our current steering angle delta one is pi over eight. By substituting each potential steering angle into our steering angle set, we see that the angular acceleration constraint is violated if we were to change our steering angle to minus pi over eight or minus pi over four. However, changing it to pi over four zero or keeping it the same at pi over eight, are all valid selections according to our new constraints. To illustrate this, we have colored the disallowed trajectories red. The remaining trajectories colored in green are still available to the subsequent step of the reactive planner that we developed in the previous lesson. This illustrates that in general, the added constraints will reduce the maneuverability of the robot to a certain extent, while promoting more comfortable trajectories. The more restrictive the set of constraints, the less maneuverable the robot will be. We can also apply similar logic to the case of a linear acceleration constraint and a range of linear velocity inputs available to us, or even have both constraints applied to the robot at the same time. In general, the dynamic window approach allows us to incorporate more restrictions on how the trajectory evolves during planning, resulting in motion that better satisfies a broad set of objectives simultaneously. To summarize this lesson, we first introduced additional acceleration constraints to our bicycle model. We then derive the process of dynamic windowing to restrict our trajectory set at each time step in order to satisfy these new constraints for our trajectory rollout algorithm. Congratulations, you've now reached the end of this module. Let's review what we've covered. We first developed the concept of trajectory propagation in order to generate trajectories for a given motion model. We then moved on to collision checking, which is necessary for developing collision-free motion plans for our autonomous vehicle. Then, we combined these two concepts into the trajectory rollout planner and augmented it using dynamic windowing to handle acceleration constraints. By now, you should have a strong foundation in reactive planning centered on the trajectory rollout algorithm. This is a compact and effective general motion planning strategy suitable for a wide range of planning tasks, with a wide variety of objectives and constraints. In the next module, we will start our discussion of dynamic environments and use trajectory propagation and collision detection to predict the motion of other objects and determine whether a collision might occur. See you there.
+### Learning Objectives
+
+> - Know how to add linear and angular acceleration constraints to the bicycle model
+> - Understand how these constraints impact our planner
+> - Handle these constraints in the planning process using dynamic windowing
+
+Hello everyone, and welcome to our final lesson in module six. In this video, we'll discuss how to augment the trajectory rollout algorithm we developed in the previous lesson with a technique known as dynamic windowing. Dynamic windowing will allow us to place linear and angular acceleration constraints on the vehicle's trajectory, in order to promote comfort as the vehicle progresses between planning cycles. Specifically, by the end of this video, you should be able to add acceleration constraints to the bicycle model derived in course one, and you should be able to modify the trajectory rollout algorithm to accommodate these new constraints using dynamic windowing. Let's get started. 
+
+---
+
+### 1. Recall : Kinematic Bicycle Model
+
+First, let's revisit lesson one where we discussed the kinematic equations for a bicycle model. Essentially, the two inputs to the bicycle model are the linear velocity in the steering angle, which change the position and heading of the robot over time. One thing to notice with this entire set of kinematic equations is that there is no consideration of higher-order terms, such as acceleration or jerk. These higher-order terms are what cause discomfort for passengers in the car, so we should try to address this in our kinematic model. Even without incorporating the full dynamic models discussed in course one into the trajectory planning process, we can restrict the selected inputs to consider the effects of rapid changes on ride comfort. 
+
+![1565615052965](assets/1565615052965.png)
+
+**Bicycle Model + Acceleration Constraints**
+
+We can do this by adding a constraint for the range of linear and angular accelerations permitted for our bicycle model. This will limit the extent to which passengers in our vehicle will experience forces and torques while our vehicle traverses its planned trajectory. However, this comes with a trade-off. Our motion planner will lose some maneuverability at each planning iteration. 
+
+![1565615135296](assets/1565615135296.png)
+
+---
+
+### 2. Constraint in Terms of Steering Angle
+
+Specifically, after adding this angular acceleration constraint, we may not be able to move to every possible steering angle in our steering angle set, because they may induce too high of an angular acceleration. In addition, we may not be able to ramp our velocity up or down as quickly between planning iterations. Let's focus on the angular acceleration constraint and derive the resulting steering angle restriction. 
+
+![1565615315884](assets/1565615315884.png)
+
+Recall that the angular velocity for the bicycle model is given by vtandelta over L. The magnitude of the angular acceleration is therefore approximately given by the absolute difference between the angular velocities of our start and ending steering angles divided by the time step we're using. Rearranging the terms using the fact that v and L are always positive for our planner, we have the requirement that the absolute value of the tan of delta at time two minus the tan of delta at time one must be less than or equal to theta double-dot max times L over v. 
+
+---
+
+### 3. Example
+
+To help solidify how this impacts our planner, let's analyze a concrete example. Suppose our bicycle model is moving at a constant linear velocity of one meter per second across all candidate trajectories, and has a current steering angle of pi over eight. 
+
+![1565615413016](assets/1565615413016.png)
+
+Suppose the maximum and minimum steering angle for this robot or pi over four and minus pi over four respectively, and that our steering angle step size is pi over eight. In addition, suppose our trajectories are sampled at a time resolution of 0.1 seconds, and that our bicycle model robot has a length of one meter. Finally, let's constrain our angular acceleration to 0.6 radians per second squared. 
+
+![1565615436239](assets/1565615436239.png)
+
+---
+
+### 4. Comparing Trajectories
+
+Let's apply our derived steering angle constraints to this example problem. We have that our current steering angle delta one is pi over eight. By substituting each potential steering angle into our steering angle set, we see that the angular acceleration constraint is violated if we were to change our steering angle to minus pi over eight or minus pi over four. However, changing it to pi over four zero or keeping it the same at pi over eight, are all valid selections according to our new constraints. 
+
+![1565615573757](assets/1565615573757.png)
+
+To illustrate this, we have colored the disallowed trajectories red. The remaining trajectories colored in green are still available to the subsequent step of the reactive planner that we developed in the previous lesson. This illustrates that in general, the added constraints will reduce the maneuverability of the robot to a certain extent, while promoting more comfortable trajectories. The more restrictive the set of constraints, the less maneuverable the robot will be. We can also apply similar logic to the case of a linear acceleration constraint and a range of linear velocity inputs available to us, or even have both constraints applied to the robot at the same time. In general, the dynamic window approach allows us to incorporate more restrictions on how the trajectory evolves during planning, resulting in motion that better satisfies a broad set of objectives simultaneously. 
+
+---
+
+### 5. Summary
+
+> - Introduced linear and angular acceleration constraints to our motion planning problem
+> - Discussed dynamic windowing and how it allows us to handle these new constraints in the trajectory rollout alogrithm
+
+To summarize this lesson, we first introduced additional acceleration constraints to our bicycle model. We then derive the process of dynamic windowing to restrict our trajectory set at each time step in order to satisfy these new constraints for our trajectory rollout algorithm. Congratulations, you've now reached the end of this module. 
+
+Let's review what we've covered. 
+
+- Given a kinematic model for a robot, calculate trajectories based on control inputs.
+- Understand how to apply **swath-based** and **circle-based** collision checking.
+- Implement the trajectory rollout algorithm.
+- Understand the tradeoffs and advantages of applying dynamic windowing to the trajectory rollout algorithm.
+
+We first developed the concept of trajectory propagation in order to generate trajectories for a given motion model. We then moved on to collision checking, which is necessary for developing collision-free motion plans for our autonomous vehicle. Then, we combined these two concepts into the trajectory rollout planner and augmented it using dynamic windowing to handle acceleration constraints. By now, you should have a strong foundation in reactive planning centered on the trajectory rollout algorithm. This is a compact and effective general motion planning strategy suitable for a wide range of planning tasks, with a wide variety of objectives and constraints. In the next module, we will start our discussion of dynamic environments and use trajectory propagation and collision detection to predict the motion of other objects and determine whether a collision might occur. See you there.
