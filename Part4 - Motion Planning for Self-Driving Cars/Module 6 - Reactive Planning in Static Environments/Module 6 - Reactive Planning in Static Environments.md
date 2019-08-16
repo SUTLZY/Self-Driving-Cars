@@ -277,7 +277,7 @@ After translating and rotating the footprints along each trajectory, we check ea
 
 ![1565614390707](assets/1565614390707.png)
 
-Recall that our objective function is the distance to the goal. The path that minimizes this distance to the goal is now colored in black. This completes our first planning iteration. At this point, we now have a trajectory for the vehicle to execute. However, we will not fully execute this trajectory before the next planning cycle. Instead, the vehicle will execute only the first few points of the cycle. 
+Recall that our objective function is the distance to the goal. The path that minimizes this distance to the goal is now colored in black. This completes our first planning iteration. At this point, we now have a trajectory for the vehicle to execute. **However, we will not fully execute this trajectory before the next planning cycle. Instead, the vehicle will execute only the first few points of the cycle.** 
 
 ![1565614453602](assets/1565614453602.png)
 
@@ -323,13 +323,13 @@ To summarize this video, we introduce the steps of the trajectory roll-out motio
 > - Understand how these constraints impact our planner
 > - Handle these constraints in the planning process using dynamic windowing
 
-Hello everyone, and welcome to our final lesson in module six. In this video, we'll discuss how to augment the trajectory rollout algorithm we developed in the previous lesson with a technique known as dynamic windowing. Dynamic windowing will allow us to place linear and angular acceleration constraints on the vehicle's trajectory, in order to promote comfort as the vehicle progresses between planning cycles. Specifically, by the end of this video, you should be able to add acceleration constraints to the bicycle model derived in course one, and you should be able to modify the trajectory rollout algorithm to accommodate these new constraints using dynamic windowing. Let's get started. 
+Hello everyone, and welcome to our final lesson in module six. In this video, we'll discuss how to augment the trajectory rollout algorithm we developed in the previous lesson with a technique known as dynamic windowing. **Dynamic windowing will allow us to place linear and angular acceleration constraints on the vehicle's trajectory, in order to promote comfort as the vehicle progresses between planning cycles.** Specifically, by the end of this video, you should be able to add acceleration constraints to the bicycle model derived in course one, and you should be able to modify the trajectory rollout algorithm to accommodate these new constraints using dynamic windowing. Let's get started. 
 
 ---
 
 ### 1. Recall : Kinematic Bicycle Model
 
-First, let's revisit lesson one where we discussed the kinematic equations for a bicycle model. Essentially, the two inputs to the bicycle model are the linear velocity in the steering angle, which change the position and heading of the robot over time. One thing to notice with this entire set of kinematic equations is that there is no consideration of higher-order terms, such as acceleration or jerk. These higher-order terms are what cause discomfort for passengers in the car, so we should try to address this in our kinematic model. Even without incorporating the full dynamic models discussed in course one into the trajectory planning process, we can restrict the selected inputs to consider the effects of rapid changes on ride comfort. 
+First, let's revisit lesson one where we discussed the kinematic equations for a bicycle model. Essentially, the two inputs to the bicycle model are **the linear velocity in the steering angle**, which change the position and **heading of the robot over time**. One thing to notice with this entire set of kinematic equations is that there is no consideration of higher-order terms, such as acceleration or jerk. These higher-order terms are what cause discomfort for passengers in the car, so we should try to address this in our kinematic model. Even without incorporating the full dynamic models discussed in course one into the trajectory planning process, we can restrict the selected inputs to consider the effects of rapid changes on ride comfort. 
 
 ![1565615052965](assets/1565615052965.png)
 
@@ -347,7 +347,7 @@ Specifically, after adding this angular acceleration constraint, we may not be a
 
 ![1565615315884](assets/1565615315884.png)
 
-Recall that the angular velocity for the bicycle model is given by vtandelta over L. The magnitude of the angular acceleration is therefore approximately given by the absolute difference between the angular velocities of our start and ending steering angles divided by the time step we're using. Rearranging the terms using the fact that v and L are always positive for our planner, we have the requirement that the absolute value of the tan of delta at time two minus the tan of delta at time one must be less than or equal to theta double-dot max times L over v. 
+Recall that the angular velocity for the bicycle model is given by $\frac{v tang(\delta)}{L}$. The magnitude of the angular acceleration is therefore approximately given by the absolute difference between the angular velocities of our start and ending steering angles divided by the time step we're using. Rearranging the terms using the fact that v and L are always positive for our planner, we have the requirement that the absolute value of the tan of delta at time two minus the tan of delta at time one must be less than or equal to theta double-dot max times L over v. 
 
 ---
 
