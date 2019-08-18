@@ -139,7 +139,7 @@ Hi everyone. In this lesson, we will discuss how to incorporate some of the obje
 
 ### 1. Cubic Spiral and Boundary Conditions
 
-If you recall from the previous lesson, our boundary conditions described the absolute minimum requirements for a path being planned between two points. Essentially, they require that for a given starting position heading and curvature, our planned path ends at a specific position heading and curvature as well. This will give us our first set of constraints on our optimization problem known as boundary conditions which we can see here. 
+If you recall from the previous lesson, our boundary conditions described the absolute minimum requirements for a path being planned between two points. **Essentially, they require that for a given starting position heading and curvature, our planned path ends at a specific position heading and curvature as well.** This will give us our first set of constraints on our optimization problem known as boundary conditions which we can see here. 
 
 ![1565783391180](assets/1565783391180.png)
 
@@ -211,7 +211,7 @@ This means that the initial boundary value constraints can be removed since they
 
 ### 8. Soft Constraints
 
-The main issue we can see here has to do with the equality constraints of the final position and heading. Because equality constraints must be satisfied exactly, it is quite hard for a numerical optimizer to generate a feasible solution from an infeasible starting point which is often what is given to the optimizer for an arbitrary problem instance. To alleviate this issue, it is common in optimization to soft inequality constraints to improve optimizer performance. Soft constraints convert a strict constraint into a heavily penalized term in the objective function. By heavily penalized, we mean that the constraint penalty term coefficient should be at least an order of magnitude larger than the general optimization objective. 
+The main issue we can see here has to do with the equality constraints of the final position and heading. Because equality constraints must be satisfied exactly, it is quite hard for a numerical optimizer to generate a feasible solution from an infeasible starting point which is often what is given to the optimizer for an arbitrary problem instance. **To alleviate this issue, it is common in optimization to soft inequality constraints to improve optimizer performance.** Soft constraints convert a strict constraint into a heavily penalized term in the objective function. By heavily penalized, we mean that the constraint penalty term coefficient should be at least an order of magnitude larger than the general optimization objective. 
 
 ![1565784241930](assets/1565784241930.png)
 
@@ -221,7 +221,7 @@ Although this allows the optimizer to violate the boundary condition equality co
 
 ### 9. Parameter Remapping
 
-The final issue we can address has to do with the optimization parameters. While there is more intuition to using the cubic spiral coefficients in our objective function, we can actually reduce the number of parameters we are searching over by taking the final curvature boundary constraint into consideration. Let's redefine our cubic spiral using a different set of parameters denoted by the vector p where p has five elements. First, we have p naught through p3, which denote the curvature at the start, one-third point and two-thirds point and the endpoint. The final term p4 is the final arc length of the path. Conveniently, we have a closed form mapping between the curvature parameter and the spiral parameters as shown here. We can therefore easily compute all of our constraints and objective terms as a function of these new p variables instead of the coefficients of the spiral. 
+The final issue we can address has to do with the **optimization parameters**. While there is more intuition to using the cubic spiral coefficients in our objective function, we can actually reduce the number of parameters we are searching over by taking the final curvature boundary constraint into consideration. vLet's redefine our cubic spiral using a different set of parameters denoted by the vector p where p has five elements. First, we have p naught through p3, which denote the curvature at the start, one-third point and two-thirds point and the endpoint. The final term p4 is the final arc length of the path. Conveniently, we have a closed form mapping between the curvature parameter and the spiral parameters as shown here. We can therefore easily compute all of our constraints and objective terms as a function of these new p variables instead of the coefficients of the spiral. 
 
 ![1565784385646](assets/1565784385646.png)
 
@@ -266,7 +266,7 @@ Hello everyone. In this lesson, we're going to go over the basics of optimizatio
 
 The field of optimization is a wonderfully rich area of study which we cannot explore in detail in this specialization. The SciPy optimized library covers a handful of some of the most popular optimization algorithms making them easily accessible and ensuring reasonable efficiency in their implementation. Many of the implemented optimization methods have a similar structure in terms of what type of parameters they require. So to abstract this away into a simple interface, the SciPy optimized library contains a generic minimize function. ![1565784958799](assets/1565784958799.png)
 
-Some examples of the available optimization methods include conjugate gradient, Nelder-Mead, dogleg, and BFGS. For more details on these methods, see the links in the supplemental materials. The specific optimization algorithm run by the library will depend on the method parameter that you pass to this function. The method parameter will also determine which additional parameters the optimization algorithm requires. For example, in the L-BFGS-B algorithm that we'll use, we require not only the model to minimize, but also the models Jacobian and variable bounds. 
+Some examples of the available optimization methods include `conjugate gradient`, `Nelder-Mead`, `dogleg`, and `BFGS`. For more details on these methods, see the links in the supplemental materials. The specific optimization algorithm run by the library will depend on the method parameter that you pass to this function. The method parameter will also determine which additional parameters the optimization algorithm requires. For example, in the `L-BFGS-B` algorithm that we'll use, we require not only the model to minimize, but also the models Jacobian and variable bounds. 
 
 ```python
 result = sp.minimize(objective_function, x_0, method='L-BFGS-B',
@@ -274,13 +274,13 @@ result = sp.minimize(objective_function, x_0, method='L-BFGS-B',
 					 options={'disp' : True})
 ```
 
-In the case where the model is a single scalar valued function, the Jacobian reduces to the gradient. This Jacobian is passed to the minimize function through the jac parameter as shown in this function call. The actual function we wish to minimize is the first argument to the minimize function. The constraints are passed to the constraints variable as a list of constraint dictionaries or objects. In addition, there is also the optional options parameter which advanced users can use to customize things like what is output by the optimizer. These optimization algorithms also require an initial guess for the optimization variables for the model or objective function, and this is given by x naught in the function call. Let's look at the BFGS algorithm for a concrete example of how to implement an optimization with SciPy. 
+In the case where the model is a single scalar valued function, the Jacobian reduces to the gradient. This Jacobian is passed to the minimize function through the jac parameter as shown in this function call. The actual function we wish to minimize is the first argument to the minimize function. The constraints are passed to the constraints variable as a list of constraint dictionaries or objects. In addition, there is also the optional options parameter which advanced users can use to customize things like what is output by the optimizer. **These optimization algorithms also require an initial guess for the optimization variables for the model or objective function, and this is given by x naught in the function call.** Let's look at the `BFGS `algorithm for a concrete example of how to implement an optimization with `SciPy`. 
 
 ---
 
 ### 2. Objective Function and Jacobian
 
-Essentially for the BFGS algorithm, we are required to pass in the function pointer to the actual objective function we wish to minimize as well as a function pointer to a function that evaluates the Jacobian of the objective function. 
+Essentially for the `BFGS` algorithm, we are required to pass in the function pointer to the actual objective function we wish to minimize as well as a function pointer to a function that evaluates the Jacobian of the objective function. 
 
 ![1565785053775](assets/1565785053775.png)
 
@@ -298,11 +298,11 @@ Once the optimization is complete, the minimize function will return a result va
 
 ### 4. Bounds
 
-As we mentioned earlier, we can also specify constraints for our optimization problems. For most algorithms, these constraints are given in the form of lists or dictionaries. The simplest type of constraints are in equality constraints on the objective variables called bounds. 
+As we mentioned earlier, we can also specify constraints for our optimization problems. For most algorithms, these constraints are given in the form of lists or dictionaries. The simplest type of constraints are inequality constraints on the objective variables called bounds. 
 
 ![1565785229316](assets/1565785229316.png)
 
-Bounds are specified by the L-BFGS-B algorithm as a list of lists, where each sub-list is of length two and contains the upper and lower bound for each optimization variable. In other words, the first sub-list corresponds to the bounds for x 0, and the second sub-list for x 1 etc. These bounds are then passed to the constraints optional parameter of the minimize function. 
+Bounds are specified by the `L-BFGS-B` algorithm as a list of lists, where each sub-list is of length two and contains the upper and lower bound for each optimization variable. In other words, the first sub-list corresponds to the bounds for x0, and the second sub-list for x1 etc. These bounds are then passed to the constraints optional parameter of the minimize function. 
 
 ---
 
@@ -314,11 +314,7 @@ Linear and non-linear constraints can also be passed to the optimizer, but for n
 
 For more details, you can take a look at the SciPy optimization documentation online. You can also combine multiple types of constraints by passing in a Python list of each constraint object that you would like to use in the optimizer function. 
 
----
-
-### 6. Summary
-
-```python 
+```python
 #nlopt
 import scipy.optimize as sp
 import numpy as np
@@ -335,9 +331,13 @@ def objective_function(x):
 def objective_jacobian(x):
 	return np.array([2*x[0] + 4*x[1], 4*x[0]])
 
-result = sp.minimize(objective_function, x_0,
-method='L-BFGS-B', jac=objective_jacobian,
-bounds=bounds, options={'disp' : True})
+result = sp.minimize(objective_function, 
+                     x_0,
+					 method='L-BFGS-B', 
+                     jac=objective_jacobian,
+					 bounds=bounds, 
+                     options={'disp' : True}
+                     )
 
 print(result.x)
 
@@ -346,10 +346,14 @@ Solution:
 >>> [-8. 4.]
 ```
 
-> - Introduced how to set up an optimization problem(L-BFGS) using SciPy
+---
+
+### 6. Summary
+
+> - Introduced how to set up an optimization problem(`L-BFGS`) using `SciPy`
 > - Showed how to pass Jacobians and parameter bounds to the library's optimizer
 
-To summarize, in this video we introduced how to set up an optimization problem using the SciPy optimization library. In particular, we discussed how to pass in user-defined objective functions in Jacobian's as well as parameter bounds to the optimizer. You should now have a good idea of how to solve general optimization problems using a Python library. For more information, you can consult the SciPy optimization library documentation. After this lesson, we have a programming assignment to give you a chance to practice the concepts we've discussed here and to prepare you for the end of module project.
+To summarize, in this video we introduced how to set up an optimization problem using the `SciPy` optimization library. In particular, we discussed how to pass in user-defined objective functions in Jacobian's as well as parameter bounds to the optimizer. You should now have a good idea of how to solve general optimization problems using a Python library. For more information, you can consult the `SciPy` optimization library documentation. After this lesson, we have a programming assignment to give you a chance to practice the concepts we've discussed here and to prepare you for the end of module project.
 
 ---
 
@@ -367,7 +371,7 @@ Hi everyone. In this lesson, we'll use the optimization techniques we've develop
 
 ### 1. Conformal Lattice
 
-As an introduction, let's go over the high level objective and structure of the conformal lattice planner. As with all path planners, the goal is to plan a feasible collision-free path from the autonomous cars current position, to a given goal state. The conformal lattice planner exploits the structured nature of roads, to speed up the planning process while avoiding obstacles. By focusing on only those smooth path options that swerve slightly to the left or right of the goal path, the conformal lattice planner produces plans that closely resemble human driving. When planning paths over roadways, a car should typically never consider leaving the road, unless there is an emergency stop scenario. 
+As an introduction, let's go over the high level objective and structure of the conformal lattice planner. As with all path planners, the goal is to plan a feasible collision-free path from the autonomous cars current position, to a given goal state. **The conformal lattice planner exploits the structured nature of roads, to speed up the planning process while avoiding obstacles.** By focusing on only those smooth path options that swerve slightly to the left or right of the goal path, the conformal lattice planner produces plans that closely resemble human driving. When planning paths over roadways, a car should typically never consider leaving the road, unless there is an emergency stop scenario. 
 
 ![1565785725969](assets/1565785725969.png)
 
@@ -387,7 +391,7 @@ For simplicity in this module however, we will use a fixed goal horizon. We will
 
 ### 3. Generating Spirals & Getting Spiral Parameters
 
-Once these goals states have been found, we can then calculate the spirals required to reach each one of them. At this point, we don't worry about whether the paths are collision free, we just want kinematically feasible paths to each of our goal states. We can therefore use the optimization formulation we developed in lesson two, to solve for a cubic spiral, from our current location, to each end location. If any of the spirals are kinematically infeasible or are unable to reach the required goal state, we discard those spiral so that they are no longer considered as potential paths. 
+Once these goals states have been found, we can then calculate the spirals required to reach each one of them. **At this point, we don't worry about whether the paths are collision free, we just want kinematically feasible paths to each of our goal states**. We can therefore use the optimization formulation we developed in lesson two, to solve for a cubic spiral, from our current location, to each end location. If any of the spirals are kinematically infeasible or are unable to reach the required goal state, we discard those spiral so that they are no longer considered as potential paths. 
 
 ![1565785990326](assets/1565785990326.png)
 
@@ -399,7 +403,7 @@ Note that once an optimization problem is solved, we only have the resulting par
 
 ### 4. Trapezoidal Rule Integration
 
-Since we don't have a closed form solution of the position along the spiral, we again need to perform numerical integration. However, since this time, we are evaluating the integral and numerous points along the entire spiral, a more efficient method is needed to solve these integrals. Here we apply a linear interpolation approach. The trapezoid rule. The trapezoid rule is significantly more efficient than Simpson's rule in this context, because each subsequent point along the curve, can be constructed from the previous one. So we only have to do one sweep through the spiral to get all of the required points. Simpson's rule, on the other hand, would require us to solve an integral approximation for each point, which is much less efficient. 
+Since we don't have a closed form solution of the position along the spiral, we again need to perform numerical integration. However, since this time, we are evaluating the integral and numerous points along the entire spiral, a more efficient method is needed to solve these integrals. Here we apply a linear interpolation approach. The trapezoid rule. **The trapezoid rule is significantly more efficient than Simpson's rule in this context, because each subsequent point along the curve, can be constructed from the previous one.** So we only have to do one sweep through the spiral to get all of the required points. Simpson's rule, on the other hand, would require us to solve an integral approximation for each point, which is much less efficient. 
 
 ![1565786148510](assets/1565786148510.png)
 
@@ -456,7 +460,7 @@ To summarize in this video, we first define the conformal state lattice planner 
 ### Learning Objectives
 
 > - Know how to use leading vehicle time-to-collision(TTC) to inform velocity profile generation
-> - Know how to use reference velocities from behavioural planner in velocity profile generation
+> - Know how to use reference velocities from behavioral planner in velocity profile generation
 > - Integrate comfort constraints into velocity profile generation
 > - Know how to implement a linear ramp and trapezoidal velocity profile
 
@@ -528,19 +532,19 @@ It's useful when a car is approaching a stop sign, and we want to decelerate fro
 
 #### First Segment
 
-The first step with this planner is to calculate the distance we will travel during our initial deceleration to our desired transit speed. This is the arc length traveled during the first segment of the trapezoidal profile and is given by the first equation here for Sa. From this, we know how much arc length along our initial path should be dedicated to our initial deceleration. The parameters for this initial calculation include our initial speed, vi, the transit speed, vt, and our gentle deceleration value, a naught. Once we have this arc length value, we can iterate through the points up to that arc length and use the second equation shown to calculate the required speed for the ith point. 
+The first step with this planner is to calculate the distance we will travel during our initial deceleration to our desired transit speed. This is the arc length traveled during the first segment of the trapezoidal profile and is given by the first equation here for $S_a$. From this, we know how much arc length along our initial path should be dedicated to our initial deceleration. The parameters for this initial calculation include our initial speed, $v_i$, the transit speed, $v_t$, and our gentle deceleration value, a naught. Once we have this arc length value, we can iterate through the points up to that arc length and use the second equation shown to calculate the required speed for the ith point. 
 
 ![1565787578961](assets/1565787578961.png)
 
 #### Third Segment
 
-We can then repeat a similar process for the final deceleration from the transit velocity to rest at our stopped point. We will denote the entire arc length of our path as Sf. So the third segment of our profile has length Sf minus Sb. We can then solve for Sb as follows. Once we have Sb, we can then iterate through the points in this arc length range and assign them the required velocities for a gentle deceleration to a stop. The remaining points in the middle of the profile then take our constant transit speed, v sub t. 
+We can then repeat a similar process for the final deceleration from the transit velocity to rest at our stopped point. We will denote the entire arc length of our path as $S_f$. So the third segment of our profile has length $S_f$ minus $S_b$. We can then solve for $S_b$ as follows. Once we have Sb, we can then iterate through the points in this arc length range and assign them the required velocities for a gentle deceleration to a stop. The remaining points in the middle of the profile then take our constant transit speed, v sub t. 
 
 ![1565787627759](assets/1565787627759.png)
 
 #### All Segments
 
-Putting everything together, we have three regions in our velocity profile; an initial ramp down to our slow transit speed, a constant traversal at this transit speed, and a final ramp down to our stop point. We've shown you two methods here for generating a velocity profile, but there are many other options available as well. Using higher-order methods such as biquadratic velocity planners, we can minimize jerk along the trajectory as well. It's also possible to apply higher-order functions in our velocity ramp in the two methods we've shown here, which can generate smoother and more comfortable velocity profiles. 
+Putting everything together, we have three regions in our velocity profile; an initial ramp down to our slow transit speed, a constant traversal at this transit speed, and a final ramp down to our stop point. We've shown you two methods here for generating a velocity profile, but there are many other options available as well. Using higher-order methods such as` biquadratic` velocity planners, we can minimize jerk along the trajectory as well. It's also possible to apply higher-order functions in our velocity ramp in the two methods we've shown here, which can generate smoother and more comfortable velocity profiles. 
 
 ![1565787674751](assets/1565787674751.png)
 
@@ -550,8 +554,8 @@ Ultimately, velocity profiles can be optimized to meet multiple objectives simul
 
 ### 8. Summary
 
-> - Discussed how to incorporate behavioural planner reference velocity into velocity generation
-> - Discussed how to use TTC to inform velocity profile generation
+> - Discussed how to incorporate behavioral planner reference velocity into velocity generation
+> - Discussed how to use `TTC` to inform velocity profile generation
 > - Integrated lateral acceleration constraints into velocity profile generation
 > - Showed how to calculate linear and trapezoidal ramp velocity profiles
 
@@ -559,8 +563,63 @@ To summarize, in this video, we discussed how to incorporate the output referenc
 
 Let's summarize the main points. You first learn to work with two kinds of curves for path planning; splines and spirals. You then define the objectives and constraints needed to formulate the path planning problem. You developed experience with the psi pi optimize function and applied it to a conformal lattice planner to identify collision-free paths. Finally, you learned how to construct the velocity profile along the path to satisfy multiple constraints. You should now have enough knowledge to integrate a path planner and velocity profile planner to build your very own local planner from the ground up. You'll learn more about this in the final project in the next module. We'll see you there.
 
+- A. Kelly and B. Nagy, “[Reactive Nonholonomic Trajectory Generation via Parametric Optimal Control,](https://journals.sagepub.com/doi/abs/10.1177/02783649030227008?casa_token=1eJaU-j-rQMAAAAA%3AkOxyZCACePcPX12nrkI9ytr-xQC0KY9nZ_TZ4m7ClMuSbHmpA8TOnlmNMDQVxa7-K_9bEtOFm820&)” The International Journal of Robotics Research, vol. 22, no. 7, pp. 583–601, 2003. This paper discusses the math behind generating spirals to desired terminal states.
+- A. Piazzi and C. G. L. Bianco, “[Quintic G/sup 2/-splines for trajectory planning of autonomous vehicles](https://ieeexplore.ieee.org/abstract/document/898341),” Proceedings of the IEEE Intelligent Vehicles Symposium 2000 (Cat. No.00TH8511). This paper discusses the math behind generating quintic splines to desired terminal states.
+- M. Mcnaughton, C. Urmson, J. M. Dolan, and J.-W. Lee, “[Motion planning for autonomous driving with a conformal spatiotemporal lattice](https://ieeexplore.ieee.org/abstract/document/5980223),” 2011 IEEE International Conference on Robotics and Automation, 2011. This paper introduces the concepts behind generating a conformal spatiotemporal lattice for on-road motion planning.
+
 ---
 
 ## Final Project Overview
 
-Congratulations. You've almost completed this specialization on self-driving cars. Now it's time to take everything you've learned in the fourth course on planning and apply it in a real-world project. In this project we'll be tying together many of the concepts we've discussed throughout this course to create a fully functional motion planner for an autonomous car. By doing this, you will have created a complete motion planner that is able to handle real-world scenarios that are consistently encountered by autonomous vehicles every day. In particular, by the end of this project you should be able to use the polynomial spiral optimization formulation we've covered in Module seven lectures to generate paths for an autonomous car. From these paths, you should be able to perform static obstacle avoidance using a circle-based collision checking method we developed in Module four. From a feasible collision-free path you should then be able to generate a velocity profile that takes a leading dynamic obstacles into consideration. Finally, you should be able to implement a state machine behavioral planner that can handle a stop sign scenario using the concepts discussed in Module six. The main objective of this project is to integrate the knowledge that we've discussed throughout the modules of this course to create a full motion planner for an autonomous vehicle. To do this, you will be writing Python code to interact with the CARLA simulator, and which we've prepared a scenario that you must navigate. We will be reusing the controller developed in course one for our autonomous vehicle, so we can focus solely on the planning aspects for the car. We will also be assuming that all relevant knowledge of our surroundings is available to us as the car traverses the scenario. This means we will not be integrating the sensing and image processing methods developed in course two on state estimation and localization, and in course three on visual perception. In this project, you will be following a set of way-points in a given road network until you reach a goal. There are three main challenges in this scenario that you will face before reaching the goal. The first will be a static parked obstacle that will be blocking your current lane. You'll be given discrete samples of the footprint of the obstacle, and you will need to use circles to approximate the footprint of the ego vehicle along each plan path in order to quickly compute whether or not the path is in collision with the obstacle. By removing the paths in collision with this obstacle from our planning process, you will be able to avoid the obstacle entirely. Next, you will encounter a lead vehicle. This vehicle will be moving below the speed limit, and as such you will have to regulate your velocity profile accordingly to prevent a collision. Finally, you will reach a stop-sign controlled intersection. You will need to develop a state machine that can handle the stop sign, which means it must have the ability to decelerate to a stop, briefly weight once stopped, and then proceed through the intersection. Once this is complete, you will have fully progressed through our simulation scenario, and you will have constructed emotion planner that can handle many of the challenges that are present in autonomous driving. Your vehicle will be operating in one of CARLA tests environments, so don't hesitate to build out your planning solution to handle vehicles at other intersections, or to navigate from a start to a goal location, or even to pass a lead vehicle if the roadway is clear ahead. There are many more scenarios that you can consider based on what you've learned in this course, and we encourage you to explore as many of the concepts from this specialization as you wish. If you have any questions that I didn't answer in this video, there are further instructions in the programming assignment itself, and you can always ask in the discussion forums as well. I hope you have fun with this final project. I'll see you again once it's completed to close out the course and the overall specialization. Best of luck on this final project of this specialization.
+### 1. Project Goals
+
+> - Use spiral optimization to generate paths (most of the math is implemented for to you)
+>   - Avoid static obstacles
+> - Generate velocity profiles that avoid dynamic obstacles
+> - Develop a state machine for behavioral planning
+
+Congratulations. You've almost completed this specialization on self-driving cars. Now it's time to take everything you've learned in the fourth course on planning and apply it in a real-world project. In this project we'll be tying together many of the concepts we've discussed throughout this course to create a fully functional motion planner for an autonomous car. By doing this, you will have created a complete motion planner that is able to handle real-world scenarios that are consistently encountered by autonomous vehicles every day. In particular, by the end of this project you should be able to use the polynomial spiral optimization formulation we've covered in Module seven lectures to generate paths for an autonomous car. 
+
+From these paths, you should be able to perform static obstacle avoidance using a circle-based collision checking method we developed in Module four. From a feasible collision-free path you should then be able to generate a velocity profile that takes a leading dynamic obstacles into consideration. Finally, you should be able to implement a state machine behavioral planner that can handle a stop sign scenario using the concepts discussed in Module six. 
+
+---
+
+### 2. Objective
+
+> - Write a planner in Python to navigate the given scenario
+>
+> - Interface with the CARLA simulator
+> - Build upon controller from Course 1 (given to you)
+> - Assuming perfect information to simplify planning
+
+The main objective of this project is to integrate the knowledge that we've discussed throughout the modules of this course to create a full motion planner for an autonomous vehicle. To do this, you will be writing Python code to interact with the CARLA simulator, and which we've prepared a scenario that you must navigate. We will be reusing the controller developed in course one for our autonomous vehicle, so we can focus solely on the planning aspects for the car. We will also be assuming that all relevant knowledge of our surroundings is available to us as the car traverses the scenario. This means we will not be integrating the sensing and image processing methods developed in course two on state estimation and localization, and in course three on visual perception. 
+
+---
+
+### 3. High Level Challenge
+
+In this project, you will be following a set of way-points in a given road network until you reach a goal. There are three main challenges in this scenario that you will face before reaching the goal. 
+
+![1566021911295](assets/1566021911295.png)
+
+The first will be a static parked obstacle that will be blocking your current lane. You'll be given discrete samples of the footprint of the obstacle, and you will need to use circles to approximate the footprint of the ego vehicle along each plan path in order to quickly compute whether or not the path is in collision with the obstacle. By removing the paths in collision with this obstacle from our planning process, you will be able to avoid the obstacle entirely. 
+
+![1566021977902](assets/1566021977902.png)
+
+Next, you will encounter a lead vehicle. This vehicle will be moving below the speed limit, and as such you will have to regulate your velocity profile accordingly to prevent a collision. 
+
+![1566022000705](assets/1566022000705.png)
+
+Finally, you will reach a stop-sign controlled intersection. You will need to develop a state machine that can handle the stop sign, which means it must have the ability to decelerate to a stop, briefly weight once stopped, and then proceed through the intersection. 
+
+![1566022029247](assets/1566022029247.png)
+
+---
+
+### 4. Scenario Completion
+
+> - After completing the final turn from the stop sign,the simulation is complete
+> - Try to think of other scenarios to handle based on the content in Course 1 and 4
+> - Further detailed instructions available with the Programming Assignment
+
+Once this is complete, you will have fully progressed through our simulation scenario, and you will have constructed emotion planner that can handle many of the challenges that are present in autonomous driving. Your vehicle will be operating in one of CARLA tests environments, so don't hesitate to build out your planning solution to handle vehicles at other intersections, or to navigate from a start to a goal location, or even to pass a lead vehicle if the roadway is clear ahead. There are many more scenarios that you can consider based on what you've learned in this course, and we encourage you to explore as many of the concepts from this specialization as you wish. If you have any questions that I didn't answer in this video, there are further instructions in the programming assignment itself, and you can always ask in the discussion forums as well. I hope you have fun with this final project. I'll see you again once it's completed to close out the course and the overall specialization. Best of luck on this final project of this specialization.

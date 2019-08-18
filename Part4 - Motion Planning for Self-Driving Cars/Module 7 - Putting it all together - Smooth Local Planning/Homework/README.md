@@ -20,13 +20,13 @@ After successfully downloading CARLA and the assessment script, you can now begi
 
 # Implementing the Motion Planner
 
-In this project, you will be editing the "**behavioural_planner.py**", "**collision_checker.py**", "**local_planner.py**", "**path_optimizer.py**", and "**velocity_planner.py**" class files (found inside the "**PythonClient\Course4FinalProject**" (for Windows) or "**PythonClient/Course4FinalProject**" (for Ubuntu) folder). This is where you will implement your motion planner. There are 5 main aspects of the planner you will need to implement, behaviour planning logic, path generation, static collision checking, path selection, and velocity profile generation. Let's go over each of these in kind.
+In this project, you will be editing the "**behavioral_planner.py**", "**collision_checker.py**", "**local_planner.py**", "**path_optimizer.py**", and "**velocity_planner.py**" class files (found inside the "**PythonClient\Course4FinalProject**" (for Windows) or "**PythonClient/Course4FinalProject**" (for Ubuntu) folder). This is where you will implement your motion planner. There are 5 main aspects of the planner you will need to implement, behaviour planning logic, path generation, static collision checking, path selection, and velocity profile generation. Let's go over each of these in kind.
 
 ## Behaviour Planning Logic
 
-In this part of the project, you will implement the behavioural logic required to handle a stop sign. As in the lecture videos, you will be implementing a state machine that transitions between lane following, deceleration to the stop sign, staying stopped, and back to lane following, when it encounters a stop sign. All of the code for the behavioural planner is contained in behavioural_planner.py.
+In this part of the project, you will implement the behavioral logic required to handle a stop sign. As in the lecture videos, you will be implementing a state machine that transitions between lane following, deceleration to the stop sign, staying stopped, and back to lane following, when it encounters a stop sign. All of the code for the behavioral planner is contained in behavioral_planner.py.
 
-To do this, you will first implement the helper functions get_closest_index() and get_goal_index(). These will let the behavioural planner know where it is relative to the global path, and to compute the current goal point from the global path. Once these are done, you will then implement the transition_state() function, which contains the behavioural state machine logic. The required details about each of these functions are given in the code comments. Please complete all TODOs for this assignment.
+To do this, you will first implement the helper functions get_closest_index() and get_goal_index(). These will let the behavioral planner know where it is relative to the global path, and to compute the current goal point from the global path. Once these are done, you will then implement the transition_state() function, which contains the behavioral state machine logic. The required details about each of these functions are given in the code comments. Please complete all TODOs for this assignment.
 
 ## Path Generation
 
